@@ -1,0 +1,41 @@
+# https://github.com/astropy/astropy/blob/master/appveyor.yml
+
+branches:
+  only:
+    - master
+    - dev
+#  except:
+
+
+environment:
+
+    global:
+        PYTHON: "C:\\conda"
+        MINICONDA_VERSION: "latest"
+        PYTHON_ARCH: "64"
+        # CONDA_DEPENDENCIES: "pyqt matplotlib"
+        # PIP_DEPENDENCIES: "objgraph"
+
+    matrix:
+        - PYTHON_VERSION: "3.6"
+          NUMPY_VERSION: "stable"
+
+matrix:
+    fast_finish: true
+
+platform:
+    -x64
+
+# os: Visual Studio 2015 Update 2
+
+install:
+    - "git clone git://github.com/astropy/ci-helpers.git"
+    - "powershell ci-helpers/appveyor/install-miniconda.ps1"
+    - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
+    - "activate test"
+
+# Not a .NET project, we build Astropy in the install step instead
+build: false
+
+test_script:
+    - "%CMD_IN_ENV% python setup.py test"

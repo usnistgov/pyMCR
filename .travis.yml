@@ -1,0 +1,70 @@
+language: python
+matrix:
+  include:
+  - os: linux
+    dist: trusty
+    sudo: required
+    python: '3.4'
+  - os: linux
+    dist: trusty
+    sudo: required
+    python: '3.5'
+  - os: linux
+    dist: trusty
+    sudo: false
+    python: '3.6'
+  - os: linux
+    dist: trusty
+    sudo: false
+    python: 3.6-dev
+cache:
+  apt: true
+  pip: true
+  ccache: true
+  directories:
+  
+before_install:
+# - if [[ "$TRAVIS_PYTHON_VERSION" != "3.4" && "$TRAVIS_PYTHON_VERSION" != "3.5" ]];
+#   then pip install pyqt5; else source $TRAVIS_BUILD_DIR/.travis/build_pyqt5.sh; fi
+# - pip install matplotlib
+# - pip install sphinx
+# - pip install numpydoc
+# - pip install sphinx_rtd_theme
+install:
+# - cd $TRAVIS_BUILD_DIR
+# - if [[ "$TRAVIS_PYTHON_VERSION" != "3.4" && "$TRAVIS_PYTHON_VERSION" != "3.5" ]];
+#   then python setup.py egg_info;
+#   python setup.py dist_info;
+#   python setup.py build_sphinx;
+#   python setup.py sdist; 
+  # fi
+- python setup.py install
+# - python setup.py sdist
+# - cd $TRAVIS_BUILD_DIR/docs/
+# - sphinx-apidoc -o ./source ../sciplot
+# - make html
+# - pip uninstall -y sciplot-pyqt
+# - cd $TRAVIS_BUILD_DIR
+# - python setup.py install
+script:
+- pytest
+# branches:
+#   only:
+#   - master
+#   - dev
+#   - test_deploy
+#   - release
+#   - releases
+deploy:
+  provider: pypi
+  server: https://test.pypi.org/legacy/ # Remove this line for official deployment
+  user: ccampjr
+  password:
+    # TestPyPi password 
+    secure: VU3ssaA1XuH2qbFS8GR8ZRFc0sQiTVcezUsZQmkSudrqRP62Ys9Cztx3WQxeafBhsqM/eFAWgArGWMp6V1X2m6ELQ/ZRVzY7LGrb6Ma1XjdQcjHfoiZakioIJz3QasNZa+SrR+9ayxqq68LbFXM7Ywfg7WJYJxKvc8vcYr+ek07p6dlDZ9I22iPL/Mpb0BI4oWCibbIhlI5DxfvV45rIFLvg/KEBdiOJI/A8+3KkLR5GieQM6ZvSFN5KAgN7w4/CFHhFcMplDylU8+a30yKRnZXnBGRF3neQ6xcSH5eoCFzh4rsjV1CxIVR90Wkkt/TImJS8GxA6DT73rJRQmtBhPQSaEBnXv3fX02TsNVn8IpWYYP5SX6CdGeVRYtXJ+32MSAxRfQSyaI8b5nbW9mgcFyDZqa2uUu/oJBYd9TpoeGBbj+pqZa5/9QDlQOEVgTJVe0JAhVGULp340DkX2TzwVDF3Hh3cqSbizWRMI5KbnhoDqwr48TwrjEDs03LY7t29WsgPyvr2N6Nsewr+0/5T4aUlybRoUZP0sD4+6m5dV6SUjm9SP2G3lrRcGsE2gvK6rXdJzg6rAxVYy5CRgNDO650vlDWb+ynYk29q045AVbZzkv6wgxikbUderHU1FSScrTZQRMICNMqUI5yYzBsKv9vDvqvC+MElYq48KWS+Ijk=
+    
+    # PyPi
+    # secure: KuDFdP90JasGj9Vr+UVruD8TVeY0y1MM/8q6Kx/JGFoj70eD5fJZwTy5/p+omxSoB+CM0qCKGP6iznnZt0oFuX2GWqKOAYTPnpWoMeyW2OaHk5CooZd4dEyTBovrv1caUI5o0ySQU30VfmckOjghsp1QL30BvA7VSApXeJ/qMn8xKVzDFJ5E3RYxqocCUI+5/iOTBUXfMndA8k6YZppGQrRaT51bBiyyX+uEzshxiQSUYT1/bL/7XOqvh7nLkJm4tbe494gR7egkfSBL2VOt/rCkstMGY6swHBJP9ymqCUVFdwGXY7VIexhPC0O7TUszcPpqqkqFgtz+xLiyI84etjRQjiRbsCHhI/tacp6jaqgfXiEIxjQdEiLSpL7OWoGyMcdeXhK3xUC5ccNF2TfVmHT7SXBJvPRi2D0/nLxoUEwVnBRzQfpjcBpJQNvOhyUSLONYbIcHLCh6Pvc6XFYsNttJ77Hb9VlHH8fZv1jo7hvYY7aj6FhgM/F0fT2T0h1Rkwj168GEYrDN4Q9GVEHAFOGx+SprxM7XPcZMqw9VbbVEQ/29LcTFl7rIzoxjplRMOXmif6p8oSAGO0IfoqU21IxJa/8aTff6EQcsqAhLfE+E1m5/xvlnXF6JWrOBFym7hKlCiNMyUCYVxrxoQACucPcxnv6QN2cVvUqnlsN4Zns=
+  on:
+    tags: true
+    python: 3.6
