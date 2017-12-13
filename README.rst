@@ -19,15 +19,6 @@ packages may work.
     
     - Tested with 1.11.3+mkl
 
--   Sphinx (1.5.2) (Only for building documentation)
-    
-    - Tested with 1.4.5, 1.6.4
-
--   numpydoc (0.6.0) (Only for building documentation)
-
--   sphinx_rtd_theme (0.2.5b2) (Only for building documentation)
-
-
 Known Issues
 ------------
 
@@ -96,7 +87,19 @@ Usage
 
     from pymcr.mcr import McrAls
     mcrals = McrAls()
-    mcrals.fit(data, initial_spectra)
+    
+    # Data that you will provide
+    # data [n_samples, n_features]  # Measurements
+    #
+    # initial_spectra [n_components, n_features]  ## S^T in the literature
+    # OR
+    # initial_conc [n_samples, n_components]   ## C in the literature
+
+    # If you have an initial estimate of the spectra
+    mcrals.fit(data, initial_spectra=initial_spectra)
+
+    # Otherwise, if you have an initial estimate of the concentrations
+    mcrals.fit(data, initial_conc=initial_conc)
     
 Contact
 -------
