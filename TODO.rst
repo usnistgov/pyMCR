@@ -1,0 +1,6 @@
+-   Adjust constraint list to be more mathematically accurate
+-   Expand docstring
+    - References
+-   Select LICENSE
+-   Develop tests
+-   Add examples to README file (in lieu of documentation)
