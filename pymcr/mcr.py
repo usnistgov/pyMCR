@@ -4,11 +4,13 @@ Simple implementation of Alternating Least-Squares Multivariate Curve Resolution
 
 import numpy as _np
 
+from pymcr.metrics import mse, mean_rel_dif as mrd
+
 class McrAls:
     """Simple implementation of Alternating Least-Squares Multivariate Curve Resolution (ALS-MCR)"""
     alg_list = ['auto', 'inv', 'tinv']
 
-    def __init__(self, tol_dif_spect=0.1, tol_dif_conc=0.1, tol_rss=1e-6, max_iter=50,
+    def __init__(self, tol_dif_spect=1e-6, tol_dif_conc=1e-6, tol_mse=1e-6, max_iter=50,
                  alg='auto', **kwargs):
         """
         MCR-ALS: Multivariate Curve Resolution - Alternating Least Squares
@@ -22,8 +24,8 @@ class McrAls:
         tol_dif_conc : float
             Tolerance of difference between retrieved concentrations between iterations.
 
-        tol_rss : float
-            Tolerance of RSS value between iterations.
+        tol_mse : float
+            Tolerance of mean squared error (MSE) value between iterations.
 
         max_iter : int
             Maximum number of iterations
@@ -46,7 +48,7 @@ class McrAls:
         n_components : int
             Number of endmembers/components to solve for
 
-        rss : ndarray (1D)
+        mse : ndarray (1D)
             Residual sum-of-squares for each iteration
 
         Methods
@@ -63,7 +65,7 @@ class McrAls:
 
         self.tol_dif_spect = tol_dif_spect
         self.tol_dif_conc = tol_dif_conc
-        self.tol = tol_rss
+        self.tol = tol_mse
         self.max_iter = max_iter
 
         self._alg = None
@@ -81,7 +83,7 @@ class McrAls:
         self._n_samples = None
         self._n_components = None
 
-        self.rss = None
+        self.mse = None
 
         self.constraints = {'nonnegative': True,
                             'max_lim': True,
@@ -298,7 +300,7 @@ estimate, NOT both')
             self._st_now = _np.zeros((self._n_components, self._n_features))
             self._st_last = _np.zeros((self._n_components, self._n_features))
 
-        self.rss = []
+        self.mse = []
         for num in range(self.max_iter):
             if (num > 0) | ((self._initial_conc is None) & (num == 0)):
                 self._c_last *= 0.0
@@ -334,15 +336,75 @@ estimate, NOT both')
             if self.constraints['nonnegative']:
                 self._st_now[_np.where(self._st_now < 0.0)] = 0.0
 
-            self.rss.append(_np.sum((data - _np.dot(self._c_now,self._st_now))**2))
-            # /(self._n_features*self._n_samples)
-            print('iteration {} : RSS {:.2e}'.format(num+1, self.rss[-1]))
+            self.mse.append(mse(data, _np.dot(self._c_now,self._st_now)))
+            print('iteration {} : MSE {:.2e}'.format(num+1, self.mse[-1]))
 
-            if (self.rss[-1] <= self.tol) & (num > 0):
+            c_mrd = mrd(self._c_now, self._c_last, only_non_zero=True)
+            st_mrd = mrd(self._st_now, self._st_last, only_non_zero=True)
+            
+            if (self.mse[-1] <= self.tol) & (num > 0):
+                print('MSE less than tolerance. Finishing...')
                 break
-        self.rss = _np.array(self.rss)
+
+            if c_mrd is not None:
+                if (_np.abs(c_mrd) <= self.tol_dif_conc) & (num > 0):
+                    print('Mean rel. diff. in concentration less than tolerance. Finishing...')
+                    break
+            
+            if st_mrd is not None:
+                if (_np.abs(st_mrd) <= self.tol_dif_spect) & (num > 0):
+                    print(st_mrd)
+                    print('Mean rel. diff. in spectra less than tolerance. Finishing...')
+                    break
+        
+        self.mse = _np.array(self.mse)
 
 
 if __name__ == '__main__':
-    mcrals = McrAls()
+
+    n_colors = 200
+    wn = _np.linspace(400,2800,n_colors)
+
+    n_components = 3
+    sp0 = _np.exp(-(wn-1200)**2/(2*200**2))
+    sp1 = _np.exp(-(wn-1600)**2/(2*200**2))
+    sp2 = _np.exp(-(wn-2000)**2/(2*200**2))
+
+    M = 80
+    N = 120
+    n_spectra = M*N
+
+    conc = _np.zeros((M,N,n_components))
+
+    x0 = 25
+    y0 = 25
+
+    x1 = 75
+    y1 = 25
+
+    x2 = 50
+    y2 = 50
+
+    R = 20
+
+    X,Y = _np.meshgrid(_np.arange(N), _np.arange(M))
+
+    conc[...,0] = _np.exp(-(X-x0)**2/(2*R**2))*_np.exp(-(Y-y0)**2/(2*R**2))
+    conc[...,1] = _np.exp(-(X-x1)**2/(2*R**2))*_np.exp(-(Y-y1)**2/(2*R**2))
+    conc[...,2] = _np.exp(-(X-x2)**2/(2*R**2))*_np.exp(-(Y-y2)**2/(2*R**2))
+
+    conc /= conc.sum(axis=-1)[:,:,None]
+
+    for num in range(n_components):
+        idx = _np.unravel_index(conc[...,num].argmax(), conc[...,num].shape)
+        tmp = _np.zeros(3)
+        tmp[num] = 1
+        conc[idx[0],idx[1],:] = 1*tmp
     
+    spectra = _np.vstack((sp0, sp1, sp2))
+    hsi = _np.dot(conc, spectra)
+
+    mcrals = McrAls(max_iter=100, tol_mse=1e-7, tol_dif_conc=1e-6, tol_dif_spect=1e-8)
+    mcrals.fit(hsi.reshape((-1,wn.size)), initial_spectra=(spectra*wn))
+
+
