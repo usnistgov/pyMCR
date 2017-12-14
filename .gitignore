@@ -3,6 +3,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+#VS Code Files
+.vscode/
+
 # C extensions
 *.so
 
@@ -62,7 +65,7 @@ instance/
 .scrapy
 
 # Sphinx documentation
-docs/_build/
+#docs/_build/
 
 # PyBuilder
 target/
