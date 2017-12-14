@@ -1,0 +1,20 @@
+[run]
+omit = 
+    # QT-related
+    */ui/*
+
+    */setup.py
+
+    */__main__.py
+	
+	*scipy*
+	
+	*numpy*
+	
+	*timeit*
+	
+	*PIL*
+	
+	*pyfftw*
+	
+	*/__init__.py
