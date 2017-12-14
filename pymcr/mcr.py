@@ -127,28 +127,6 @@ class McrAls:
         print('Cannot delete algorithm. Setting to \'auto\'')
         self.alg = 'auto'
 
-#     @property
-#     def data(self):
-#         return self._data
-
-#     @data.setter
-#     def data(self, value):
-#         if value is not None:
-#             if value.ndim == 2:
-# #                 self._data = 1*value
-#                 self._n_features = self._data.shape[-1]
-#                 self._n_samples = self._data.shape[0]
-#             else:
-#                 raise ValueError('Only 2D data inputs supported [n_samples, n_features]')
-
-#             self._set_alg_auto()
-
-#     @data.deleter
-#     def data(self):
-#         self._data = None
-#         self._n_features = None
-#         self._n_samples = None
-
     @property
     def n_features(self):
         return self._n_features
@@ -160,22 +138,6 @@ class McrAls:
     @property
     def n_components(self):
         return self._n_components
-
-#     @property
-#     def ST_last(self):
-#         return self._st_last
-
-#     @property
-#     def ST_now(self):
-#         return self._st_now
-
-#     @property
-#     def C_last(self):
-#         return self._c_last
-
-#     @property
-#     def C_now(self):
-#         return self._c_now
 
     @property
     def conc_(self):
