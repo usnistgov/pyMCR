@@ -8,7 +8,7 @@ from pymcr.metrics import mse, mean_rel_dif as mrd
 
 class McrAls:
     """Simple implementation of Alternating Least-Squares Multivariate Curve Resolution (ALS-MCR)"""
-    alg_list = ['auto', 'inv', 'tinv']
+    alg_list = ['auto', 'inv', 'cls']
 
     def __init__(self, tol_dif_spect=1e-6, tol_dif_conc=1e-6, tol_mse=1e-6, max_iter=50,
                  alg='auto', **kwargs):
@@ -51,6 +51,12 @@ class McrAls:
         mse : ndarray (1D)
             Residual sum-of-squares for each iteration
 
+        conc_ : 2D ndarray ([n_samples, n_components])
+            Concentration
+
+        spectra_ : 2D ndarray ([n_components, n_features])
+
+
         Methods
         -------
 
@@ -58,8 +64,14 @@ class McrAls:
 
         Notes
         -----
-        - Algorithm info goes here...
-        - Constraint info goes here
+        -   Algorithm info goes here...
+        -   Available constraints (bool) are 'nonnegative','max_lim', and 'sum_to_one'.
+            Additionally, 'max_lim_const' is a modifier if the 'max_lim' = True.
+            - 'nonnegative': both conc_ and spectra_ results must be >= 0
+            - 'max_lim': conc_ values above 'max_lim_const' (another constraint keyword)
+              are set to ='max_lim_const'. Also known as a **closure** constraint.
+            - 'sum_to_one': conc_ values across n_components is 1.0 (i.e, the total
+              concentration for a given sample is 1.0)
 
         """
 
@@ -225,8 +237,8 @@ features [data cols] ({})'.format(n_cols_spectra, self._n_features))
         if ((self._alg == 'auto') & (self._n_components is not None) & 
                 (self._n_features is not None)):
             if multiplier*self._n_components < self._n_features:
-                print('n_components >> n_features: using \'tinv\'')
-                self.alg = 'tinv'
+                print('n_components >> n_features: using \'cls\'')
+                self.alg = 'cls'
             else:
                 self.alg = 'pinv'
                 print('n_components is NOT << n_features: using \'pinv\'')
@@ -307,7 +319,7 @@ estimate, NOT both')
                 self._c_last += 1*self._c_now
 
                 self._c_now *= 0.0
-                if self._alg == 'tinv':
+                if self._alg == 'cls':
                     self._c_now += _np.dot(_np.dot(data, self._st_now.T), 
                                            _np.linalg.pinv(_np.dot(self._st_now, self._st_now.T)))
                 else:
@@ -327,7 +339,7 @@ estimate, NOT both')
             self._st_last += 1*self._st_now
 
             self._st_now *= 0
-            if self._alg == 'tinv':
+            if self._alg == 'cls':
                 self._st_now += _np.dot(_np.dot(_np.linalg.pinv(_np.dot(self._c_now.T, self._c_now)), self._c_now.T),
                                        data)
             else:
