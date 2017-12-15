@@ -5,11 +5,11 @@ matrix:
   include:
   - os: linux
     dist: trusty
-    sudo: required
+    sudo: false
     python: '3.4'
   - os: linux
     dist: trusty
-    sudo: required
+    sudo: false
     python: '3.5'
   - os: linux
     dist: trusty
