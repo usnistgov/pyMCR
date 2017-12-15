@@ -1,12 +1,15 @@
 .. -*- mode: rst -*-
 
-|Travis|_ |AppVeyor|_ |Py34|_ |Py35|_ |Py36|_ |PyPi|_
+|Travis|_ |AppVeyor|_ |CodeCov|_ |Py34|_ |Py35|_ |Py36|_ |PyPi|_
 
 .. |Travis| image:: https://travis-ci.org/CCampJr/PyMCR.svg?branch=dev
 .. _Travis: https://travis-ci.org/CCampJr/PyMCR
 
 .. |AppVeyor| image:: https://ci.appveyor.com/api/projects/status/github/CCampJr/PyMCR?branch=dev&svg=true
 .. _AppVeyor: https://ci.appveyor.com/project/CCampJr/PyMCR
+
+.. |CodeCov| image:: https://codecov.io/gh/CCampJr/pyMCR/branch/dev/graph/badge.svg
+.. _CodeCov: https://codecov.io/gh/CCampJr/pyMCR
 
 .. |Py34| image:: https://img.shields.io/badge/Python-3.4-blue.svg
 .. _Py34: https://www.python.org/downloads/
