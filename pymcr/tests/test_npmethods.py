@@ -146,4 +146,4 @@ def test_nnls_conc_guess(phantom):
     assert np.abs(mcrals._c_mrd) > 1e-6
     assert np.abs(mcrals._st_mrd) > 1e-6
     assert np.abs(mcrals._c_mrd) < 1e-2
-    assert np.abs(mcrals._st_mrd) < 1e-1
+    assert np.abs(mcrals._st_mrd) < 1
