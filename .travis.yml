@@ -1,3 +1,5 @@
+# http://lmjohns3.com/2015/06/using-travis-ci-with-miniconda-scipy-and-nose.html
+
 language: python
 matrix:
   include:
@@ -23,21 +25,30 @@ cache:
   ccache: true
   directories:
   
+addons:
+  apt:
+    packages:
+    - libatlas-dev
+    - libatlas-base-dev
+    - liblapack-dev
+    - gfortran
+
 before_install:
-# - if [[ "$TRAVIS_PYTHON_VERSION" != "3.4" && "$TRAVIS_PYTHON_VERSION" != "3.5" ]];
-#   then pip install pyqt5; else source $TRAVIS_BUILD_DIR/.travis/build_pyqt5.sh; fi
+- if [[ "$TRAVIS_PYTHON_VERSION" != "3.4" && "$TRAVIS_PYTHON_VERSION" != "3.5" ]];
+  then wget http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh;
+  bash miniconda.sh -b -p $HOME/miniconda;
+  export PATH="$HOME/miniconda/bin:$PATH";
+  conda update --yes conda; 
+  fi
 # - pip install matplotlib
 # - pip install sphinx
 # - pip install numpydoc
 # - pip install sphinx_rtd_theme
 install:
 # - cd $TRAVIS_BUILD_DIR
-# - if [[ "$TRAVIS_PYTHON_VERSION" != "3.4" && "$TRAVIS_PYTHON_VERSION" != "3.5" ]];
-#   then python setup.py egg_info;
-#   python setup.py dist_info;
-#   python setup.py build_sphinx;
-#   python setup.py sdist; 
-  # fi
+- if [[ "$TRAVIS_PYTHON_VERSION" != "3.4" && "$TRAVIS_PYTHON_VERSION" != "3.5" ]];
+  conda install --yes python=$TRAVIS_PYTHON_VERSION pip numpy scipy;
+  fi
 - python setup.py install
 # - python setup.py sdist
 # - cd $TRAVIS_BUILD_DIR/docs/
