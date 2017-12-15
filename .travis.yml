@@ -68,7 +68,9 @@ script:
 - pytest --cov=./
 
 after_success:
-- codecov
+- if [[ "$TRAVIS_PYTHON_VERSION" == "3.6"]];
+  then codecov;
+  fi
 # branches:
 #   only:
 #   - master
