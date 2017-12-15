@@ -53,7 +53,7 @@ install:
   # then conda install --yes python=$TRAVIS_PYTHON_VERSION pip numpy scipy;
   # fi
 - pip install pytest-cov
-- if [[ "$TRAVIS_PYTHON_VERSION" == "3.6"]];
+- if ["$TRAVIS_PYTHON_VERSION" == "3.6"];
   then pip install --user codecov;
   fi
 - python setup.py install
@@ -68,7 +68,7 @@ script:
 - pytest --cov=./
 
 after_success:
-- if [[ "$TRAVIS_PYTHON_VERSION" == "3.6"]];
+- if ["$TRAVIS_PYTHON_VERSION" == "3.6"];
   then codecov;
   fi
 # branches:
