@@ -19,6 +19,8 @@ packages may work.
     
     - Tested with 1.11.3+mkl
 
+-   scipy
+
 Known Issues
 ------------
 
