@@ -168,16 +168,16 @@ References
 ----------
 
 -   `W. H. Lawton and E. A. Sylvestre, "Self Modeling Curve Resolution", 
-    Technometrics **13**, 617–633 (1971). <https://www.jstor.org/stable/1267173>`_
+    Technometrics 13, 617–633 (1971). <https://www.jstor.org/stable/1267173>`_
 -   https://mcrals.wordpress.com/theory/
 -   `J. Jaumot, R. Gargallo, A. de Juan, and R. Tauler, "A graphical user-friendly 
     interface for MCR-ALS: a new tool for multivariate curve resolution in
-    MATLAB", Chemometrics and Intelligent Laboratory Systems **76**, 101-110 
+    MATLAB", Chemometrics and Intelligent Laboratory Systems 76, 101-110 
     (2005). <http://www.sciencedirect.com/science/article/pii/S0169743904002874>`_
 -   `J. Felten, H. Hall, J. Jaumot, R. Tauler, A. de Juan, and A. Gorzsás, 
     "Vibrational spectroscopic image analysis of biological material using 
     multivariate curve resolution–alternating least squares (MCR-ALS)", Nature Protocols 
-    **10**, 217-240 (2015). <https://www.nature.com/articles/nprot.2015.008>`_
+    10, 217-240 (2015). <https://www.nature.com/articles/nprot.2015.008>`_
     
 
 Contact
