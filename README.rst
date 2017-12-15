@@ -35,7 +35,7 @@ MCR-ALS, in general, is a constrained implementation of alternating
 least squares (ALS) nonnegative matrix factorization (NMF). Historically,
 other names were used for MCR as well:
 
--   Self modeling mixture analysis (SMMS)
+-   Self modeling mixture analysis (SMMA)
 -   Self modeling curve resolution (SMCR)
 
 Available methods:
@@ -167,6 +167,8 @@ From ``Examples/Demo.ipynb``:
 References
 ----------
 
+-   `W. H. Lawton and E. A. Sylvestre, "Self Modeling Curve Resolution", 
+    Technometrics **13**, 617–633 (1971). <www.jstor.org/stable/1267173>`_
 -   https://mcrals.wordpress.com/theory/
 -   `J. Jaumot, R. Gargallo, A. de Juan, and R. Tauler, "A graphical user-friendly 
     interface for MCR-ALS: a new tool for multivariate curve resolution in
