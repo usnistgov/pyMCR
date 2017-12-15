@@ -47,8 +47,8 @@ before_install:
 install:
 # - cd $TRAVIS_BUILD_DIR
 - if [[ "$TRAVIS_PYTHON_VERSION" == "3.4" && "$TRAVIS_PYTHON_VERSION" == "3.5" ]];
-  then pip install -qq --upgrade pip setuptools wheel
-  pip install -qq --only-binary=numpy,scipy numpy
+  then pip install -qq --upgrade pip setuptools wheel;
+  pip install -qq --only-binary=numpy,scipy numpy;
   fi
   # then conda install --yes python=$TRAVIS_PYTHON_VERSION pip numpy scipy;
   # fi
