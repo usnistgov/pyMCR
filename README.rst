@@ -1,3 +1,26 @@
+.. -*- mode: rst -*-
+
+|Travis|_ |AppVeyor|_ |Py34|_ |Py35|_ |Py36|_ |PyPi|_
+
+.. |Travis| image:: https://travis-ci.org/CCampJr/PyMCR.svg?branch=dev
+.. _Travis: https://travis-ci.org/CCampJr/PyMCR
+
+.. |AppVeyor| image:: https://ci.appveyor.com/api/projects/status/github/CCampJr/PyMCR?branch=dev&svg=true
+.. _AppVeyor: https://ci.appveyor.com/project/CCampJr/PyMCR
+
+.. |Py34| image:: https://img.shields.io/badge/Python-3.4-blue.svg
+.. _Py34: https://www.python.org/downloads/
+
+.. |Py35| image:: https://img.shields.io/badge/Python-3.5-blue.svg
+.. _Py35: https://www.python.org/downloads/
+
+.. |Py36| image:: https://img.shields.io/badge/Python-3.6-blue.svg
+.. _Py36: https://www.python.org/downloads/
+
+.. |PyPi| image:: https://badge.fury.io/py/PyMCR.svg
+.. _PyPi: https://badge.fury.io/py/PyMCR
+
+
 pyMCR: Multivariate Curve Resolution in Python
 ===============================================================
 
