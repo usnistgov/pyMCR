@@ -47,7 +47,7 @@ before_install:
 install:
 # - cd $TRAVIS_BUILD_DIR
 - if [[ "$TRAVIS_PYTHON_VERSION" != "3.4" && "$TRAVIS_PYTHON_VERSION" != "3.5" ]];
-  conda install --yes python=$TRAVIS_PYTHON_VERSION pip numpy scipy;
+  then conda install --yes python=$TRAVIS_PYTHON_VERSION pip numpy scipy;
   fi
 - python setup.py install
 # - python setup.py sdist
