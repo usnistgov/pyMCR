@@ -2,11 +2,11 @@
 
 |Travis|_ |AppVeyor|_ |CodeCov|_ |Py34|_ |Py35|_ |Py36|_ |PyPi|_
 
-.. |Travis| image:: https://travis-ci.org/CCampJr/PyMCR.svg?branch=master
-.. _Travis: https://travis-ci.org/CCampJr/PyMCR
+.. |Travis| image:: https://travis-ci.org/CCampJr/pyMCR.svg?branch=master
+.. _Travis: https://travis-ci.org/CCampJr/pyMCR
 
-.. |AppVeyor| image:: https://ci.appveyor.com/api/projects/status/github/CCampJr/PyMCR?branch=master&svg=true
-.. _AppVeyor: https://ci.appveyor.com/project/CCampJr/PyMCR
+.. |AppVeyor| image:: https://ci.appveyor.com/api/projects/status/github/CCampJr/pyMCR?branch=master&svg=true
+.. _AppVeyor: https://ci.appveyor.com/project/CCampJr/pyMCR
 
 .. |CodeCov| image:: https://codecov.io/gh/CCampJr/pyMCR/branch/master/graph/badge.svg
 .. _CodeCov: https://codecov.io/gh/CCampJr/pyMCR
