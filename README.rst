@@ -50,6 +50,7 @@ What it **does** do:
     non-negativity, normalization, maximum limits (closure)
 
 What it **does not** do:
+
 -   Estimate the number of components in the sample. This is a bonus feature in 
     some more-advanced MCR-ALS packages.
     - In MATLAB: https://mcrals.wordpress.com/
