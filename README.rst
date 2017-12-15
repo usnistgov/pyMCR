@@ -2,13 +2,13 @@
 
 |Travis|_ |AppVeyor|_ |CodeCov|_ |Py34|_ |Py35|_ |Py36|_ |PyPi|_
 
-.. |Travis| image:: https://travis-ci.org/CCampJr/PyMCR.svg?branch=dev
+.. |Travis| image:: https://travis-ci.org/CCampJr/PyMCR.svg?branch=master
 .. _Travis: https://travis-ci.org/CCampJr/PyMCR
 
-.. |AppVeyor| image:: https://ci.appveyor.com/api/projects/status/github/CCampJr/PyMCR?branch=dev&svg=true
+.. |AppVeyor| image:: https://ci.appveyor.com/api/projects/status/github/CCampJr/PyMCR?branch=master&svg=true
 .. _AppVeyor: https://ci.appveyor.com/project/CCampJr/PyMCR
 
-.. |CodeCov| image:: https://codecov.io/gh/CCampJr/pyMCR/branch/dev/graph/badge.svg
+.. |CodeCov| image:: https://codecov.io/gh/CCampJr/pyMCR/branch/master/graph/badge.svg
 .. _CodeCov: https://codecov.io/gh/CCampJr/pyMCR
 
 .. |Py34| image:: https://img.shields.io/badge/Python-3.4-blue.svg
@@ -179,6 +179,21 @@ References
     multivariate curve resolution–alternating least squares (MCR-ALS)", Nature Protocols 
     10, 217-240 (2015). <https://www.nature.com/articles/nprot.2015.008>`_
     
+
+NONLICENSE
+----------
+This software was developed at the National Institute of Standards and Technology (NIST) by
+employees of the Federal Government in the course of their official duties. Pursuant to
+`Title 17 Section 105 of the United States Code <http://www.copyright.gov/title17/92chap1.html#105>`_,
+this software is not subject to copyright protection and is in the public domain.
+NIST assumes no responsibility whatsoever for use by other parties of its source code,
+and makes no guarantees, expressed or implied, about its quality, reliability, or any other characteristic.
+
+Specific software products identified in this open source project were used in order
+to perform technology transfer and collaboration. In no case does such identification imply
+recommendation or endorsement by the National Institute of Standards and Technology, nor
+does it imply that the products identified are necessarily the best available for the
+purpose.
 
 Contact
 -------
