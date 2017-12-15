@@ -133,9 +133,9 @@ Usage
 Examples
 --------
 
-Command line and Jupyter notebook examples are provided in the `Examples/` folder.
+Command line and Jupyter notebook examples are provided in the ``Examples/`` folder.
 
-From `Examples/Demo.ipynb':
+From ``Examples/Demo.ipynb``:
 
 .. image:: ./Examples/mcr_spectra_retr.png
 
