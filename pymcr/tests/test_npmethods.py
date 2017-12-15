@@ -101,3 +101,49 @@ def test_mcr_conc_guess(phantom):
     assert np.abs(mcrals._st_mrd) > 1e-6
     assert np.abs(mcrals._c_mrd) < 1e-2
     assert np.abs(mcrals._st_mrd) < 1e-2
+
+def test_nnls_spectral_guess(phantom):
+    """ Basic test with spectral guessing"""
+
+    from pymcr.mcr import McrAls_NNLS
+
+    mcrals = McrAls_NNLS(max_iter=20, tol_mse=1e-7, tol_dif_conc=1e-7, 
+                    tol_dif_spect=1e-7)
+
+    initial_guess = (phantom.spectra * phantom.wn)
+    mcrals.fit(phantom.hsi.reshape((-1,phantom.wn.size)), 
+                                   initial_spectra=initial_guess)
+
+    assert mcrals._n_iters == 20
+    assert mcrals.mse[-1] < 1e-5
+    assert np.abs(mcrals._c_mrd) > 1e-6
+    assert np.abs(mcrals._st_mrd) > 1e-6
+    assert np.abs(mcrals._c_mrd) < 1e-2
+    assert np.abs(mcrals._st_mrd) < 1e-2
+
+def test_nnls_conc_guess(phantom):
+    """ Basic test with concentration guessing"""
+
+    from pymcr.mcr import McrAls_NNLS
+
+    
+    initial_guess = np.zeros((phantom.M,phantom.N,phantom.n_components))
+    initial_guess[...,0] = np.dot(np.ones(phantom.M)[:,None], (np.arange(phantom.N,0,-1)/phantom.N)[None,:])
+    initial_guess[...,1] = np.dot(np.ones(phantom.M)[:,None], (np.arange(phantom.N)/phantom.N)[None,:])
+    initial_guess[...,2] = np.dot((np.arange(phantom.M)/phantom.M)[:,None], np.ones(phantom.N)[None,:])
+    initial_guess += np.random.rand(phantom.M,phantom.N,3)
+
+    # reshape
+    initial_guess = initial_guess.reshape((-1, phantom.n_components))
+
+    mcrals = McrAls_NNLS(max_iter=20, tol_mse=1e-7, tol_dif_conc=1e-7, 
+                    tol_dif_spect=1e-7)
+    mcrals.fit(phantom.hsi.reshape((-1,phantom.wn.size)), 
+                                   initial_conc=initial_guess)
+
+    assert mcrals._n_iters == 20
+    assert mcrals.mse[-1] < 2e-6
+    assert np.abs(mcrals._c_mrd) > 1e-6
+    assert np.abs(mcrals._st_mrd) > 1e-6
+    assert np.abs(mcrals._c_mrd) < 1e-2
+    assert np.abs(mcrals._st_mrd) < 1e-1
