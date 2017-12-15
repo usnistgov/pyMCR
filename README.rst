@@ -53,6 +53,7 @@ What it **does not** do:
 
 -   Estimate the number of components in the sample. This is a bonus feature in 
     some more-advanced MCR-ALS packages.
+
     - In MATLAB: https://mcrals.wordpress.com/
     - In R: https://cran.r-project.org/web/packages/ALS/index.html
 
