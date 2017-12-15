@@ -39,13 +39,14 @@ packages may work.
 
 -   python >= 3.4
     
-    - Tested with 3.4.4, 3.5.2, 3.6.1
+    - Tested with 3.4.6, 3.5.4, 3.6.3
 
 -   numpy (1.9.3)
     
-    - Tested with 1.11.3+mkl
+    - Tested with 1.12.1, 1.13.1, 1.13.3
 
--   scipy
+-   scipy (1.0.0)
+    - Tested with 1.0.0
 
 Known Issues
 ------------
