@@ -31,12 +31,29 @@ pyMCR is a small package for performing multivariate curve resolution.
 Currently, it implements a simple alternating least squares method
 (i.e., MCR-ALS).
 
+MCR-ALS, in general, is a constrained implementation of alternating
+least squares (ALS) nonnegative matrix factorization (NMF).
+
 Available methods:
 
 -   Ordinary least squares with `Moore-Penrose pseudo-inverse 
-    <https://docs.scipy.org/doc/numpy-1.13.0/reference/generated/numpy.linalg.pinv.html>`_ (default, McrAls)
+    <https://docs.scipy.org/doc/numpy-1.13.0/reference/generated/numpy.linalg.pinv.html>`_ 
+    (default, McrAls)
 -   Ordinary least squares with `non-negative least squares 
     <https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.nnls.html>`_ (McrAls_NNLS)
+
+What it **does** do:
+
+-   Approximate the concentration and spectral matrices via minimization routines. 
+    This is the core the MCR-ALS methods.
+-   Enable the application of certain constraints (currently): sum-to-one, 
+    non-negativity, normalization, maximum limits (closure)
+
+What it **does not** do:
+-   Estimate the number of components in the sample. This is a bonus
+    feature in some more-advanced MCR-ALS packages.
+    - In MATLAB: https://mcrals.wordpress.com/
+    - In R: https://cran.r-project.org/web/packages/ALS/index.html
 
 Dependencies
 ------------
@@ -141,6 +158,20 @@ From ``Examples/Demo.ipynb``:
 
 .. image:: ./Examples/mcr_conc_retr.png
     
+References
+----------
+
+-   https://mcrals.wordpress.com/theory/
+-   `J. Jaumot, R. Gargallo, A. de Juan, and R. Tauler, "A graphical user-friendly 
+    interface for MCR-ALS: a new tool for multivariate curve resolution in
+    MATLAB", Chemometrics and Intelligent Laboratory Systems **76**, 101-110 
+    (2005). <http://www.sciencedirect.com/science/article/pii/S0169743904002874>`_
+-   `J. Felten, H. Hall, J. Jaumot, R. Tauler, A. de Juan, and A. Gorzsás, 
+    "Vibrational spectroscopic image analysis of biological material using 
+    multivariate curve resolution–alternating least squares (MCR-ALS)", Nature Protocols 
+    **10**, 217-240 (2015). <https://www.nature.com/articles/nprot.2015.008>`_
+    
+
 Contact
 -------
 Charles H Camp Jr: `charles.camp@nist.gov <mailto:charles.camp@nist.gov>`_
