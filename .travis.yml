@@ -74,9 +74,7 @@ after_success:
 #   only:
 #   - master
 #   - dev
-#   - test_deploy
-#   - release
-#   - releases
+
 deploy:
   provider: pypi
   server: https://test.pypi.org/legacy/ # Remove this line for official deployment
