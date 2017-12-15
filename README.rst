@@ -32,6 +32,7 @@ Currently, it implements a simple alternating least squares method
 (i.e., MCR-ALS).
 
 Available methods:
+
 -   Ordinary least squares with `Moore-Penrose pseudo-inverse 
     <https://docs.scipy.org/doc/numpy-1.13.0/reference/generated/numpy.linalg.pinv.html>`_ (default, McrAls)
 -   Ordinary least squares with `non-negative least squares 
