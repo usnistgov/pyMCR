@@ -278,17 +278,15 @@ estimate, NOT both')
                 print('MSE less than tolerance. Finishing...')
                 break
 
-            if self._c_mrd is not None:
+            if (self._c_mrd is not None) & (self._st_mrd is not None):
                 if (_np.abs(self._c_mrd) <= self.tol_dif_conc) & \
                     (self._c_mrd != 0.0) & (num > 0):
-                    print('Mean rel. diff. in concentration less than tolerance. Finishing...')
-                    break
-            
-            if self._st_mrd is not None:
-                if (_np.abs(self._st_mrd) <= self.tol_dif_spect) & \
+                    if (_np.abs(self._st_mrd) <= self.tol_dif_spect) & \
                     (self._st_mrd != 0.0) & (num > 0):
-                    print('Mean rel. diff. in spectra less than tolerance. Finishing...')
-                    break
+                        print('Mean rel. diff. in concentration and spectra less \
+than tolerances. Finishing...')
+                        break
+            
         self._tmr -= _timer()
         self._tmr *= -1
         self._n_iters = num+1
