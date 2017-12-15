@@ -33,8 +33,7 @@ Currently, it implements a simple alternating least squares method
 
 Available methods:
 -   Ordinary least squares with `Moore-Penrose pseudo-inverse 
-    <https://docs.scipy.org/doc/numpy-1.13.0/reference/generated/numpy.linalg.pinv.html>`_ 
-    (default, McrAls)
+    <https://docs.scipy.org/doc/numpy-1.13.0/reference/generated/numpy.linalg.pinv.html>`_ (default, McrAls)
 -   Ordinary least squares with `non-negative least squares 
     <https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.nnls.html>`_ (McrAls_NNLS)
 
