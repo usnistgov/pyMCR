@@ -71,7 +71,7 @@ Using pip (soft install [can update with git])
 
 .. code::
     
-    # Make new directory for sciplot-pyqt and enter it
+    # Make new directory for pyMCR and enter it
     # Clone from github
     git clone https://github.com/CCampJr/pyMCR
 
@@ -129,6 +129,17 @@ Usage
 
     # Otherwise, if you have an initial estimate of the concentrations
     mcrals.fit(data, initial_conc=initial_conc)
+
+Examples
+--------
+
+Command line and Jupyter notebook examples are provided in the `Examples/` folder.
+
+From `Examples/Demo.ipynb':
+
+.. image:: ./Examples/mcr_spectra_retr.png
+
+.. image:: ./Examples/mcr_conc_retr.png
     
 Contact
 -------
