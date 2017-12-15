@@ -31,6 +31,13 @@ pyMCR is a small package for performing multivariate curve resolution.
 Currently, it implements a simple alternating least squares method
 (i.e., MCR-ALS).
 
+Available methods:
+-   Ordinary least squares with `Moore-Penrose pseudo-inverse 
+    <https://docs.scipy.org/doc/numpy-1.13.0/reference/generated/numpy.linalg.pinv.html>`_ 
+    (default, McrAls)
+-   Ordinary least squares with `non-negative least squares 
+    <https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.nnls.html>`_ (McrAls_NNLS)
+
 Dependencies
 ------------
 
@@ -96,17 +103,10 @@ or clone the repository with git:
     # Clone from github
     git clone https://github.com/CCampJr/pyMCR
 
-Perform the install **without building the documentation**:
+Perform the install:
 
 .. code::
 
-    python setup.py install
-
-Perform the install **and build the documentation** (see dependencies above):
-
-.. code::
-
-    python setup.py build_sphinx
     python setup.py install
 
 Usage
