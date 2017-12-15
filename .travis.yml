@@ -76,6 +76,7 @@ after_success:
 #   - dev
 
 deploy:
+  all_branches: true
   provider: pypi
   server: https://test.pypi.org/legacy/ # Remove this line for official deployment
   user: ccampjr
