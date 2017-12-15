@@ -53,7 +53,7 @@ install:
   # fi
 - pip install pytest-cov
 - if [[ "$TRAVIS_PYTHON_VERSION" == "3.6" ]];
-  then pip install --user codecov;
+  then pip install codecov;
   fi
 - python setup.py install
 # - python setup.py sdist
