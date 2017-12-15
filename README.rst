@@ -168,7 +168,7 @@ References
 ----------
 
 -   `W. H. Lawton and E. A. Sylvestre, "Self Modeling Curve Resolution", 
-    Technometrics **13**, 617–633 (1971). <www.jstor.org/stable/1267173>`_
+    Technometrics **13**, 617–633 (1971). <https://www.jstor.org/stable/1267173>`_
 -   https://mcrals.wordpress.com/theory/
 -   `J. Jaumot, R. Gargallo, A. de Juan, and R. Tauler, "A graphical user-friendly 
     interface for MCR-ALS: a new tool for multivariate curve resolution in
