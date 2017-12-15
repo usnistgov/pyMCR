@@ -20,8 +20,8 @@
 .. |Py36| image:: https://img.shields.io/badge/Python-3.6-blue.svg
 .. _Py36: https://www.python.org/downloads/
 
-.. |PyPi| image:: https://badge.fury.io/py/PyMCR.svg
-.. _PyPi: https://badge.fury.io/py/PyMCR
+.. |PyPi| image:: https://badge.fury.io/py/pyMCR.svg
+.. _PyPi: https://badge.fury.io/py/pyMCR
 
 
 pyMCR: Multivariate Curve Resolution in Python
