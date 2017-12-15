@@ -32,7 +32,11 @@ Currently, it implements a simple alternating least squares method
 (i.e., MCR-ALS).
 
 MCR-ALS, in general, is a constrained implementation of alternating
-least squares (ALS) nonnegative matrix factorization (NMF).
+least squares (ALS) nonnegative matrix factorization (NMF). Historically,
+other names were used for MCR as well:
+
+-   Self modeling mixture analysis (SMMS)
+-   Self modeling curve resolution (SMCR)
 
 Available methods:
 
