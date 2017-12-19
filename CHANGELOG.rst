@@ -11,6 +11,7 @@ and Dependency Specification <https://www.python.org/dev/peps/pep-0440/>`_.
 0.1.2a0 (?)
 -----------------
 
+-   Enabled tolerancing on mrd_st and mrd_c
 
 0.1.1a0 (17-12-18)
 -----------------

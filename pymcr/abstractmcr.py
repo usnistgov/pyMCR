@@ -11,7 +11,7 @@ class AbstractMcrAls:
     """Simple implementation of Alternating Least-Squares Multivariate Curve Resolution (ALS-MCR)"""
 
     def __init__(self, tol_dif_spect=1e-6, tol_dif_conc=1e-6, tol_mse=1e-6, 
-                 max_iter=50, **kwargs):
+                 max_iter=50, tol_mrd_st=None, tol_mrd_c=None, **kwargs):
         """
         MCR-ALS: Multivariate Curve Resolution - Alternating Least Squares
 
@@ -30,8 +30,15 @@ class AbstractMcrAls:
         max_iter : int
             Maximum number of iterations
 
-        alg : str
-            ALS algorithm. See Notes
+        tol_mrd_st : float
+            Absolute spectral MRD limit. If the |mrd| is greater than this 
+            threshold, do not update spectra with new values. If None, always 
+            update.
+        
+        tol_mrd_c : float
+            Absolute concentration MRD limit. If the |mrd| is greater than this 
+            threshold, do not update concentration with new values. 
+            If None, always update.
 
         kwargs : dict
             Sets and controls the constraints of the ALS algorithm. See Notes.
@@ -77,6 +84,10 @@ class AbstractMcrAls:
         self.tol_dif_spect = tol_dif_spect
         self.tol_dif_conc = tol_dif_conc
         self.tol = tol_mse
+
+        self.tol_mrd_c = tol_mrd_c
+        self.tol_mrd_st = tol_mrd_st
+
         self.max_iter = max_iter
 
         self.alg_c = None
@@ -259,6 +270,17 @@ estimate, NOT both')
 
                 if self.constraints['sum_to_one']:
                     self._c_now /= self._c_now.sum(axis=-1)[:,None]
+
+                c_mrd_now = mrd(self._c_now, self._c_last, only_non_zero=True)
+                if c_mrd_now is not None:
+                    self._c_mrd.append(1*c_mrd_now)
+                
+                # Check MRD_C tolerance
+                if (self.tol_mrd_c is not None) & (c_mrd_now is not None):
+                    if _np.abs(c_mrd_now) > self.tol_mrd_c:
+                        print('_c_mrd above tol_mrd_c. Regressing _c_now.')
+                        self._c_now = 1*self._c_last 
+                
             else:
                 pass  # Only end up here if given initial concentration guess
             self._st_last *= 0
@@ -271,16 +293,18 @@ estimate, NOT both')
             if self.constraints['nonnegative']:
                 self._st_now[_np.where(self._st_now < 0.0)] = 0.0
 
-            self.mse.append(mse(data, _np.dot(self._c_now,self._st_now)))
-            print('iteration {} : MSE {:.2e}'.format(num+1, self.mse[-1]))
-
-            c_mrd_now = mrd(self._c_now, self._c_last, only_non_zero=True)
-            if c_mrd_now is not None:
-                self._c_mrd.append(1*c_mrd_now)
-
             st_mrd_now = mrd(self._st_now, self._st_last, only_non_zero=True)
             if st_mrd_now is not None:
                 self._st_mrd.append(1*st_mrd_now)
+
+            # Check MRD_ST tolerance
+            if (self.tol_mrd_st is not None) & (st_mrd_now is not None):
+                if _np.abs(st_mrd_now) > self.tol_mrd_st:
+                    print('_st_mrd above tol_mrd_st. Regressing _st_now.')
+                    self._st_now = 1*self._st_last 
+
+            self.mse.append(mse(data, _np.dot(self._c_now,self._st_now)))
+            print('iteration {} : MSE {:.2e}'.format(num+1, self.mse[-1]))
             
             if (self.mse[-1] <= self.tol) & (num > 0):
                 print('MSE less than tolerance. Finishing...')

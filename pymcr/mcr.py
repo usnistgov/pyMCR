@@ -17,8 +17,8 @@ class McrAls(AbstractMcrAls):
     """
     # alg_list = ['auto', 'pinv', 'cls']
 
-    def __init__(self, tol_dif_spect=1e-6, tol_dif_conc=1e-6, tol_mse=1e-6, max_iter=50,
-                 **kwargs):
+    def __init__(self, tol_dif_spect=1e-6, tol_dif_conc=1e-6, tol_mse=1e-6, 
+                 max_iter=50, tol_mrd_st=None, tol_mrd_c=None, **kwargs):
         """
         MCR-ALS: Multivariate Curve Resolution - Alternating Least Squares
 
@@ -87,10 +87,13 @@ class McrAls(AbstractMcrAls):
               concentration for a given sample is 1.0)
 
         """
-        super().__init__(tol_dif_spect=tol_dif_spect, 
-                            tol_dif_conc=tol_dif_conc, 
-                            tol_mse=tol_mse, 
-                            max_iter=max_iter, **kwargs)
+        super().__init__(tol_dif_spect=tol_dif_spect,
+                         tol_dif_conc=tol_dif_conc,
+                         tol_mse=tol_mse, 
+                         max_iter=max_iter,
+                         tol_mrd_st=tol_mrd_st,
+                         tol_mrd_c=tol_mrd_c,
+                         **kwargs)
 
         self.alg_c = ols_c
         self.alg_st = ols_s
@@ -102,8 +105,8 @@ class McrAls_NNLS(AbstractMcrAls):
     """
     # alg_list = ['auto', 'pinv', 'cls']
 
-    def __init__(self, tol_dif_spect=1e-6, tol_dif_conc=1e-6, tol_mse=1e-6, max_iter=50,
-                 **kwargs):
+    def __init__(self, tol_dif_spect=1e-6, tol_dif_conc=1e-6, tol_mse=1e-6, 
+                 max_iter=50, tol_mrd_st=None, tol_mrd_c=None, **kwargs):
         """
         MCR-ALS: Multivariate Curve Resolution - Alternating Least Squares
 
@@ -175,7 +178,10 @@ class McrAls_NNLS(AbstractMcrAls):
         super().__init__(tol_dif_spect=tol_dif_spect, 
                             tol_dif_conc=tol_dif_conc, 
                             tol_mse=tol_mse, 
-                            max_iter=max_iter, **kwargs)
+                            max_iter=max_iter, 
+                            tol_mrd_st=tol_mrd_st,
+                            tol_mrd_c=tol_mrd_c, 
+                            **kwargs)
 
         self.alg_c = nnls_c
         self.alg_st = nnls_s
@@ -224,11 +230,15 @@ if __name__ == '__main__':  # pragma: no cover
     spectra = _np.vstack((sp0, sp1, sp2))
     hsi = _np.dot(conc, spectra)
 
-    mcrals = McrAls_NNLS(max_iter=10, tol_mse=1e-7, tol_dif_conc=1e-6, tol_dif_spect=1e-8)
+    # mcrals = McrAls_NNLS(max_iter=10, tol_mse=1e-7, tol_dif_conc=1e-6, tol_dif_spect=1e-8)
+    mcrals = McrAls(max_iter=100, tol_mse=1e-7, tol_dif_conc=1e-6, 
+                    tol_dif_spect=1e-8, tol_mrd_st=3.2e3)
     # print(mcrals.__dict__)
     mcrals.fit(hsi.reshape((-1,wn.size)), initial_spectra=(spectra*wn))
     # mcrals.fit(hsi.reshape((-1,wn.size)), initial_conc=conc.reshape((-1,n_components)))
-    print(mcrals._c_mrd)
+    # print(mcrals._c_mrd)
     print(mcrals._st_mrd)
-    print(mcrals._tmr)
+    # print(mcrals.tol_mrd_st)
+    # print(mcrals._tmr)
+
 
