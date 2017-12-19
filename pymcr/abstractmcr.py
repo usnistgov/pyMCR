@@ -71,8 +71,12 @@ class AbstractMcrAls:
 
         Notes
         -----
-        -   Available constraints (bool) are 'nonnegative','max_lim', and 'sum_to_one'.
+        -   Available constraints (bool) are 'nonnegative', 'c_nonnegative', 
+            's_nonegative', max_lim', and 'sum_to_one'.
             Additionally, 'max_lim_const' is a modifier if the 'max_lim' = True.
+            - If 'nonnegative' is True, 'c_*' and 's_*' - nonnegative must be 
+              true. If 'nonnegative' is False, 'c_*' and 's_*' will follow how
+              they are set (which may be True and True, respectively)
             - 'nonnegative': both conc_ and spectra_ results must be >= 0
             - 'max_lim': conc_ values above 'max_lim_const' (another constraint keyword)
               are set to ='max_lim_const'. Also known as a **closure** constraint.
@@ -107,6 +111,8 @@ class AbstractMcrAls:
         self._n_components = None
 
         self.constraints = {'nonnegative': True,
+                            'c_nonnegative': True,
+                            's_nonnegative': True,
                             'max_lim': True,
                             'max_lim_const': 1.0,
                             'sum_to_one': True}
@@ -115,6 +121,9 @@ class AbstractMcrAls:
             self.constraints.update(kwargs)
         else:
             pass
+        if self.constraints['nonnegative'] == True:
+            self.constraints['c_nonnegative'] = True
+            self.constraints['s_nonnegative'] = True
 
         # Iteration info
         self.mse = None
@@ -261,7 +270,7 @@ estimate, NOT both')
                 
                 self._c_now += self.alg_c(data, self._st_now)
                 
-                if self.constraints['nonnegative']:
+                if self.constraints['c_nonnegative']:
                     self._c_now[_np.where(self._c_now < 0.0)] = 0.0
 
                 if self.constraints['max_lim']:
@@ -290,7 +299,7 @@ estimate, NOT both')
 
             self._st_now += self.alg_st(data, self._c_now)
             
-            if self.constraints['nonnegative']:
+            if self.constraints['s_nonnegative']:
                 self._st_now[_np.where(self._st_now < 0.0)] = 0.0
 
             st_mrd_now = mrd(self._st_now, self._st_last, only_non_zero=True)

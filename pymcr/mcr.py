@@ -37,8 +37,15 @@ class McrAls(AbstractMcrAls):
         max_iter : int
             Maximum number of iterations
 
-        alg : str
-            ALS algorithm type. See Notes
+        tol_mrd_st : float
+            Absolute spectral MRD limit. If the |mrd| is greater than this 
+            threshold, do not update spectra with new values. If None, always 
+            update.
+        
+        tol_mrd_c : float
+            Absolute concentration MRD limit. If the |mrd| is greater than this 
+            threshold, do not update concentration with new values. 
+            If None, always update.
 
         kwargs : dict
             Sets and controls the constraints of the ALS algorithm. See Notes.
@@ -71,15 +78,12 @@ class McrAls(AbstractMcrAls):
 
         Notes
         -----
-        -   Available algorithm options (alg) are 'auto', 'pinv', and 'cls'
-            - 'pinv' solves the least-squares problem using the pseudoinverse
-              function in numpy.
-            - 'cls' solves the least-squares problem through matrix algebra.
-              This is often a faster methods when n_features >> n_components.
-            - 'auto' will select the fastest method, which by default is
-              'cls' when n_features > 10*n_components.
-        -   Available constraints (bool) are 'nonnegative','max_lim', and 'sum_to_one'.
+        -   Available constraints (bool) are 'nonnegative', 'c_nonnegative', 
+            's_nonegative', max_lim', and 'sum_to_one'.
             Additionally, 'max_lim_const' is a modifier if the 'max_lim' = True.
+            - If 'nonnegative' is True, 'c_*' and 's_*' - nonnegative must be 
+              true. If 'nonnegative' is False, 'c_*' and 's_*' will follow how
+              they are set (which may be True and True, respectively)
             - 'nonnegative': both conc_ and spectra_ results must be >= 0
             - 'max_lim': conc_ values above 'max_lim_const' (another constraint keyword)
               are set to ='max_lim_const'. Also known as a **closure** constraint.
@@ -125,8 +129,15 @@ class McrAls_NNLS(AbstractMcrAls):
         max_iter : int
             Maximum number of iterations
 
-        alg : str
-            ALS algorithm type. See Notes
+        tol_mrd_st : float
+            Absolute spectral MRD limit. If the |mrd| is greater than this 
+            threshold, do not update spectra with new values. If None, always 
+            update.
+        
+        tol_mrd_c : float
+            Absolute concentration MRD limit. If the |mrd| is greater than this 
+            threshold, do not update concentration with new values. 
+            If None, always update.
 
         kwargs : dict
             Sets and controls the constraints of the ALS algorithm. See Notes.
@@ -159,15 +170,12 @@ class McrAls_NNLS(AbstractMcrAls):
 
         Notes
         -----
-        -   Available algorithm options (alg) are 'auto', 'pinv', and 'cls'
-            - 'pinv' solves the least-squares problem using the pseudoinverse
-              function in numpy.
-            - 'cls' solves the least-squares problem through matrix algebra.
-              This is often a faster methods when n_features >> n_components.
-            - 'auto' will select the fastest method, which by default is
-              'cls' when n_features > 10*n_components.
-        -   Available constraints (bool) are 'nonnegative','max_lim', and 'sum_to_one'.
+        -   Available constraints (bool) are 'nonnegative', 'c_nonnegative', 
+            's_nonegative', max_lim', and 'sum_to_one'.
             Additionally, 'max_lim_const' is a modifier if the 'max_lim' = True.
+            - If 'nonnegative' is True, 'c_*' and 's_*' - nonnegative must be 
+              true. If 'nonnegative' is False, 'c_*' and 's_*' will follow how
+              they are set (which may be True and True, respectively)
             - 'nonnegative': both conc_ and spectra_ results must be >= 0
             - 'max_lim': conc_ values above 'max_lim_const' (another constraint keyword)
               are set to ='max_lim_const'. Also known as a **closure** constraint.
