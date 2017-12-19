@@ -237,6 +237,9 @@ estimate, NOT both')
             self._st_last = _np.zeros((self._n_components, self._n_features))
 
         self.mse = []
+        self._st_mrd = []
+        self._c_mrd = []
+
         self._tmr = _timer()
         for num in range(self.max_iter):
             if (num > 0) | ((self._initial_conc is None) & (num == 0)):
@@ -271,18 +274,23 @@ estimate, NOT both')
             self.mse.append(mse(data, _np.dot(self._c_now,self._st_now)))
             print('iteration {} : MSE {:.2e}'.format(num+1, self.mse[-1]))
 
-            self._c_mrd = mrd(self._c_now, self._c_last, only_non_zero=True)
-            self._st_mrd = mrd(self._st_now, self._st_last, only_non_zero=True)
+            c_mrd_now = mrd(self._c_now, self._c_last, only_non_zero=True)
+            if c_mrd_now is not None:
+                self._c_mrd.append(1*c_mrd_now)
+
+            st_mrd_now = mrd(self._st_now, self._st_last, only_non_zero=True)
+            if st_mrd_now is not None:
+                self._st_mrd.append(1*st_mrd_now)
             
             if (self.mse[-1] <= self.tol) & (num > 0):
                 print('MSE less than tolerance. Finishing...')
                 break
 
-            if (self._c_mrd is not None) & (self._st_mrd is not None):
-                if (_np.abs(self._c_mrd) <= self.tol_dif_conc) & \
-                    (self._c_mrd != 0.0) & (num > 0):
-                    if (_np.abs(self._st_mrd) <= self.tol_dif_spect) & \
-                    (self._st_mrd != 0.0) & (num > 0):
+            if (c_mrd_now is not None) & (st_mrd_now is not None):
+                if (_np.abs(self._c_mrd[-1]) <= self.tol_dif_conc) & \
+                    (self._c_mrd[-1] != 0.0) & (num > 0):
+                    if (_np.abs(self._st_mrd[-1]) <= self.tol_dif_spect) & \
+                    (self._st_mrd[-1] != 0.0) & (num > 0):
                         print('Mean rel. diff. in concentration and spectra less \
 than tolerances. Finishing...')
                         break
@@ -291,3 +299,5 @@ than tolerances. Finishing...')
         self._tmr *= -1
         self._n_iters = num+1
         self.mse = _np.array(self.mse)
+        self._c_mrd = _np.array(self._c_mrd)
+        self._st_mrd = _np.array(self._st_mrd)
