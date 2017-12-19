@@ -68,10 +68,10 @@ def test_mcr_spectral_guess(phantom):
 
     assert mcrals._n_iters < 60
     assert mcrals.mse[-1] < 1e-7
-    assert np.abs(mcrals._c_mrd) > 1e-6
-    assert np.abs(mcrals._st_mrd) > 1e-6
-    assert np.abs(mcrals._c_mrd) < 1e-2
-    assert np.abs(mcrals._st_mrd) < 1e-2
+    assert np.abs(mcrals._c_mrd[-1]) > 1e-6
+    assert np.abs(mcrals._st_mrd[-1]) > 1e-6
+    assert np.abs(mcrals._c_mrd[-1]) < 1e-2
+    assert np.abs(mcrals._st_mrd[-1]) < 1e-2
     # np.testing.assert_approx_equal(mcrals._c_mrd, 0.000754519972116, significant=3)
     # np.testing.assert_approx_equal(mcrals._st_mrd, -0.00339178932195, significant=3)
 
@@ -97,10 +97,10 @@ def test_mcr_conc_guess(phantom):
 
     assert mcrals._n_iters < 70
     assert mcrals.mse[-1] < 1e-7
-    assert np.abs(mcrals._c_mrd) > 1e-6
-    assert np.abs(mcrals._st_mrd) > 1e-6
-    assert np.abs(mcrals._c_mrd) < 1e-2
-    assert np.abs(mcrals._st_mrd) < 1e-2
+    assert np.abs(mcrals._c_mrd[-1]) > 1e-6
+    assert np.abs(mcrals._st_mrd[-1]) > 1e-6
+    assert np.abs(mcrals._c_mrd[-1]) < 1e-2
+    assert np.abs(mcrals._st_mrd[-1]) < 1e-2
 
 def test_nnls_spectral_guess(phantom):
     """ Basic test with spectral guessing"""
@@ -116,10 +116,10 @@ def test_nnls_spectral_guess(phantom):
 
     assert mcrals._n_iters == 20
     assert mcrals.mse[-1] < 1e-5
-    assert np.abs(mcrals._c_mrd) > 1e-6
-    assert np.abs(mcrals._st_mrd) > 1e-6
-    assert np.abs(mcrals._c_mrd) < 1e-2
-    assert np.abs(mcrals._st_mrd) < 1e-2
+    assert np.abs(mcrals._c_mrd[-1]) > 1e-6
+    assert np.abs(mcrals._st_mrd[-1]) > 1e-6
+    assert np.abs(mcrals._c_mrd[-1]) < 1e-2
+    assert np.abs(mcrals._st_mrd[-1]) < 1e-2
 
 def test_nnls_conc_guess(phantom):
     """ Basic test with concentration guessing"""
@@ -143,7 +143,7 @@ def test_nnls_conc_guess(phantom):
 
     assert mcrals._n_iters == 20
     assert mcrals.mse[-1] < 2e-6
-    assert np.abs(mcrals._c_mrd) > 1e-6
-    assert np.abs(mcrals._st_mrd) > 1e-6
-    assert np.abs(mcrals._c_mrd) < 1e-2
-    assert np.abs(mcrals._st_mrd) < 1
+    assert np.abs(mcrals._c_mrd[-1]) > 1e-6
+    assert np.abs(mcrals._st_mrd[-1]) > 1e-6
+    assert np.abs(mcrals._c_mrd[-1]) < 1e-2
+    assert np.abs(mcrals._st_mrd[-1]) < 1
