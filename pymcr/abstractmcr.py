@@ -72,8 +72,9 @@ class AbstractMcrAls:
         Notes
         -----
         -   Available constraints (bool) are 'nonnegative', 'c_nonnegative', 
-            's_nonegative', max_lim', and 'sum_to_one'.
-            Additionally, 'max_lim_const' is a modifier if the 'max_lim' = True.
+            's_nonegative', 'c_csum_nonnegative', 's_csum_nonnegative', max_lim',
+            and 'sum_to_one'. Additionally, 'max_lim_const' is a modifier if 
+            the 'max_lim' = True.
             - If 'nonnegative' is True, 'c_*' and 's_*' - nonnegative must be 
               true. If 'nonnegative' is False, 'c_*' and 's_*' will follow how
               they are set (which may be True and True, respectively)
@@ -113,6 +114,8 @@ class AbstractMcrAls:
         self.constraints = {'nonnegative': True,
                             'c_nonnegative': True,
                             's_nonnegative': True,
+                            'c_csum_nonegative': True,
+                            's_csum_nonegative': True,
                             'max_lim': True,
                             'max_lim_const': 1.0,
                             'sum_to_one': True}
@@ -124,6 +127,8 @@ class AbstractMcrAls:
         if self.constraints['nonnegative'] == True:
             self.constraints['c_nonnegative'] = True
             self.constraints['s_nonnegative'] = True
+            self.constraints['c_csum_nonegative'] = True
+            self.constraints['s_csum_nonegative'] = True
 
         # Iteration info
         self.mse = None
@@ -273,6 +278,9 @@ estimate, NOT both')
                 if self.constraints['c_nonnegative']:
                     self._c_now[_np.where(self._c_now < 0.0)] = 0.0
 
+                if self.constraints['c_csum_nonegative']:
+                    self._c_now[_np.where(_np.cumsum(self._c_now) < 0.0)] = 0.0
+                
                 if self.constraints['max_lim']:
                     self._c_now[_np.where(self._c_now > self.constraints['max_lim_const'])] = \
                         self.constraints['max_lim_const']
@@ -301,6 +309,9 @@ estimate, NOT both')
             
             if self.constraints['s_nonnegative']:
                 self._st_now[_np.where(self._st_now < 0.0)] = 0.0
+
+            if self.constraints['s_csum_nonegative']:
+                self._st_now[_np.where(_np.cumsum(self._st_now) < 0.0)] = 0.0
 
             st_mrd_now = mrd(self._st_now, self._st_last, only_non_zero=True)
             if st_mrd_now is not None:
