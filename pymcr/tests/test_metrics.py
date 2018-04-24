@@ -11,6 +11,7 @@ from numpy.testing import assert_array_almost_equal
 import pymcr.metrics
 
 def test_mse():
+    """ Test mean-squared error """
     ideal = np.ones(100)
     under_test = np.zeros(100)
 
@@ -18,6 +19,7 @@ def test_mse():
     np.testing.assert_equal(pymcr.metrics.mse(ideal, ideal), 0.0)
 
 def test_mrd():
+    """ Test mean relative difference """
     new = np.ones(100)
     old = np.zeros(100)
     old2 = 2*np.ones(100)
