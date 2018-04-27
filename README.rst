@@ -22,7 +22,7 @@
 
 .. image:: https://img.shields.io/badge/License-NIST%20%2F%20Nonlicense-green.svg
     :alt: License NIST / Nonlicense
-    :target: https://github.com/CCampJr/pyMCR/blob/dev/NONLICENSE.md
+    :target: https://github.com/CCampJr/pyMCR/blob/dev/LICENSE.md
 
 pyMCR: Multivariate Curve Resolution in Python
 ===============================================================
