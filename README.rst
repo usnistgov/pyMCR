@@ -1,6 +1,8 @@
 .. -*- mode: rst -*-
 
-.. image:: https://img.shields.io/travis/CCampJr/pyMCR/dev.svg   :alt: Travis branch   :target: https://travis-ci.org/CCampJr/pyMCR
+.. image:: https://img.shields.io/travis/CCampJr/pyMCR/dev.svg
+    :alt: Travis branch
+    :target: https://travis-ci.org/CCampJr/pyMCR
 
 .. image:: https://img.shields.io/appveyor/ci/CCampJr/pyMCR/dev.svg   :alt: AppVeyor branch   :target: https://ci.appveyor.com/project/CCampJr/pyMCR
 
