@@ -1,27 +1,14 @@
 .. -*- mode: rst -*-
 
-|Travis|_ |AppVeyor|_ |CodeCov|_ |Py34|_ |Py35|_ |Py36|_ |PyPi|_
+.. image:: https://img.shields.io/travis/CCampJr/pyMCR/dev.svg   :alt: Travis branch   :target: https://travis-ci.org/CCampJr/pyMCR
 
-.. |Travis| image:: https://travis-ci.org/CCampJr/pyMCR.svg?branch=dev
-.. _Travis: https://travis-ci.org/CCampJr/pyMCR
+.. image:: https://img.shields.io/appveyor/ci/CCampJr/pyMCR/dev.svg   :alt: AppVeyor branch   :target: https://ci.appveyor.com/project/CCampJr/pyMCR
 
-.. |AppVeyor| image:: https://ci.appveyor.com/api/projects/status/github/CCampJr/pyMCR?branch=dev&svg=true
-.. _AppVeyor: https://ci.appveyor.com/project/CCampJr/pyMCR
+.. image:: https://img.shields.io/codecov/c/github/CCampJr/pyMCR/dev.svg   :alt: Codecov branch   :target: https://codecov.io/gh/CCampJr/pyMCR
 
-.. |CodeCov| image:: https://codecov.io/gh/CCampJr/pyMCR/branch/dev/graph/badge.svg
-.. _CodeCov: https://codecov.io/gh/CCampJr/pyMCR
+.. image:: https://img.shields.io/pypi/pyversions/pyMCR.svg   :alt: PyPI - Python Version   :target: https://pypi.org/project/pyMCR/
 
-.. |Py34| image:: https://img.shields.io/badge/Python-3.4-blue.svg
-.. _Py34: https://www.python.org/downloads/
-
-.. |Py35| image:: https://img.shields.io/badge/Python-3.5-blue.svg
-.. _Py35: https://www.python.org/downloads/
-
-.. |Py36| image:: https://img.shields.io/badge/Python-3.6-blue.svg
-.. _Py36: https://www.python.org/downloads/
-
-.. |PyPi| image:: https://badge.fury.io/py/pyMCR.svg
-.. _PyPi: https://badge.fury.io/py/pyMCR
+.. image:: https://img.shields.io/pypi/v/pyMCR.svg   :alt: PyPI   :target: https://pypi.org/project/pyMCR/
 
 
 pyMCR: Multivariate Curve Resolution in Python
