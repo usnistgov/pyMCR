@@ -4,13 +4,21 @@
     :alt: Travis branch
     :target: https://travis-ci.org/CCampJr/pyMCR
 
-.. image:: https://img.shields.io/appveyor/ci/CCampJr/pyMCR/dev.svg   :alt: AppVeyor branch   :target: https://ci.appveyor.com/project/CCampJr/pyMCR
+.. image:: https://img.shields.io/appveyor/ci/CCampJr/pyMCR/dev.svg
+    :alt: AppVeyor branch
+    :target: https://ci.appveyor.com/project/CCampJr/pyMCR
 
-.. image:: https://img.shields.io/codecov/c/github/CCampJr/pyMCR/dev.svg   :alt: Codecov branch   :target: https://codecov.io/gh/CCampJr/pyMCR
+.. image:: https://img.shields.io/codecov/c/github/CCampJr/pyMCR/dev.svg
+    :alt: Codecov branch
+    :target: https://codecov.io/gh/CCampJr/pyMCR
 
-.. image:: https://img.shields.io/pypi/pyversions/pyMCR.svg   :alt: PyPI - Python Version   :target: https://pypi.org/project/pyMCR/
+.. image:: https://img.shields.io/pypi/pyversions/pyMCR.svg
+    :alt: PyPI - Python Version
+    :target: https://pypi.org/project/pyMCR/
 
-.. image:: https://img.shields.io/pypi/v/pyMCR.svg   :alt: PyPI   :target: https://pypi.org/project/pyMCR/
+.. image:: https://img.shields.io/pypi/v/pyMCR.svg
+    :alt: PyPI
+    :target: https://pypi.org/project/pyMCR/
 
 
 pyMCR: Multivariate Curve Resolution in Python
