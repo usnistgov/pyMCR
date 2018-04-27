@@ -9,7 +9,7 @@ from numpy.testing import assert_allclose
 
 from pymcr.constraints import ConstraintNonneg, ConstraintNorm
 
-from unittest import TestCase
+import pytest
 
 def test_nonneg():
     A = np.array([[1, 2, 3], [-1, -2, -3], [1, 2, 3]])
@@ -24,16 +24,15 @@ def test_nonneg():
     assert_allclose(A_nn, A)
 
 def test_norm():
-    tc = TestCase()
 
     # A must be dtype.float for in-place math (copy=False)
     constr_norm = ConstraintNorm(axis=0, copy=False)
     A = np.array([[1, 2, 3], [-1, -2, -3], [1, 2, 3]]) # dtype: int32   
-    with tc.assertRaises(TypeError):
+    with pytest.raises(TypeError):
         out = constr_norm.transform(A)
 
     # Axis must be 0,1, or -1  
-    with tc.assertRaises(ValueError):
+    with pytest.raises(ValueError):
         constr_norm = ConstraintNorm(axis=2, copy=False)
 
     A = np.array([[1, 2, 3], [-1, -2, -3], [1, 2, 3]], dtype=np.float)

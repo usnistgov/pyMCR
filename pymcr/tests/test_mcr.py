@@ -1,6 +1,9 @@
 import numpy as np
 
-from numpy.testing import assert_allclose, assert_equal, assert_array_less, assert_raises
+
+from numpy.testing import assert_allclose, assert_equal, assert_array_less
+
+import pytest
 
 from pymcr.mcr import McrAls
 from pymcr.metrics import mse
@@ -95,20 +98,20 @@ def test_mcr():
 def test_mcr_errors():
     
     # Providing both C and S^T estimates
-    with assert_raises(TypeError):
+    with pytest.raises(TypeError):
         mcrals = McrAls()
         mcrals.fit(np.random.randn(10,5), C=np.random.randn(10,3),
                    ST=np.random.randn(3,5))
 
     # Providing no estimates
-    with assert_raises(TypeError):
+    with pytest.raises(TypeError):
         mcrals = McrAls()
         mcrals.fit(np.random.randn(10,5))
 
     # Unknown regression method
-    with assert_raises(ValueError):
+    with pytest.raises(ValueError):
         mcrals = McrAls(c_regr='NOTREAL')
 
     # regression object with no fit method
-    with assert_raises(ValueError):
+    with pytest.raises(ValueError):
         mcrals = McrAls(c_regr=print)
