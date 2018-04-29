@@ -20,7 +20,7 @@
     :alt: PyPI
     :target: https://pypi.org/project/pyMCR/
 
-.. image:: https://img.shields.io/badge/License-NIST-Public-Domain-green.svg
+.. image:: https://img.shields.io/badge/License-NIST%20Public%20Domain-green.svg
     :alt: NIST Public Domain
     :target: https://github.com/CCampJr/pyMCR/blob/dev/LICENSE.md
 
