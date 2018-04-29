@@ -20,8 +20,8 @@
     :alt: PyPI
     :target: https://pypi.org/project/pyMCR/
 
-.. image:: https://img.shields.io/badge/License-NIST%20%2F%20Nonlicense-green.svg
-    :alt: License NIST / Nonlicense
+.. image:: https://img.shields.io/badge/License-NIST-Public-Domain-green.svg
+    :alt: NIST Public Domain
     :target: https://github.com/CCampJr/pyMCR/blob/dev/LICENSE.md
 
 pyMCR: Multivariate Curve Resolution in Python
@@ -183,7 +183,7 @@ References
     10, 217-240 (2015). <https://www.nature.com/articles/nprot.2015.008>`_
     
 
-NONLICENSE
+LICENSE
 ----------
 This software was developed by employees of the National Institute of Standards 
 and Technology (NIST), an agency of the Federal Government. Pursuant to 
