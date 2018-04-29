@@ -143,18 +143,20 @@ Usage
     from pymcr.mcr import McrAls
     mcrals = McrAls()
     
-    # Data that you will provide
-    # data [n_samples, n_features]  # Measurements
+    # MCR assumes a system of the form: D = CS^T
     #
-    # initial_spectra [n_components, n_features]  ## S^T in the literature
+    # Data that you will provide (hyperspectral context):
+    # D [n_pixels, n_frequencies]  # Hyperspectral image unraveled in space (2D)
+    #
+    # initial_spectra [n_components, n_frequencies]  ## S^T in the literature
     # OR
-    # initial_conc [n_samples, n_components]   ## C in the literature
+    # initial_conc [n_pixels, n_components]   ## C in the literature
 
     # If you have an initial estimate of the spectra
-    mcrals.fit(data, ST=initial_spectra)
+    mcrals.fit(D, ST=initial_spectra)
 
     # Otherwise, if you have an initial estimate of the concentrations
-    mcrals.fit(data, C=initial_conc)
+    mcrals.fit(D, C=initial_conc)
 
 Examples
 --------
