@@ -8,10 +8,13 @@ This document records all notable changes to
 This project adheres to `PEP 440 -- Version Identification 
 and Dependency Specification <https://www.python.org/dev/peps/pep-0440/>`_.
 
-0.1.2a0 (?)
------------------
+0.2.0a0 (?)
+------------
 
--   Enabled tolerancing on mrd_st and mrd_c
+-   **Total re-write** that is incompatible with earlier version
+-   Built-in solvers: nonnegative least squares (scipy.optimize.nnls), ordinary 
+    least squares (scipy.linalg.lstsq)
+-   Native support for scikit-learn estimators as least squares solvers / regressor
 
 0.1.1a0 (17-12-18)
 -----------------
