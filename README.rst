@@ -43,11 +43,24 @@ other names were used for MCR as well:
 
 Available methods:
 
--   Ordinary least squares with `Moore-Penrose pseudo-inverse 
-    <https://docs.scipy.org/doc/numpy-1.13.0/reference/generated/numpy.linalg.pinv.html>`_ 
-    (default, McrAls)
--   Ordinary least squares with `non-negative least squares 
-    <https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.nnls.html>`_ (McrAls_NNLS)
+-   Regressors:
+    -   `Ordinary least squares 
+        <https://docs.scipy.org/doc/scipy/reference/generated/scipy.linalg.lstsq.html>`_ 
+        (default)
+    -   `Non-negatively constrained least squares 
+        <https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.nnls.html>`_
+    -   Native support for `scikit-learn linear model regressors 
+        <http://scikit-learn.org/stable/modules/linear_model.html>`_
+        (e.g., `LinearRegression<http://scikit-learn.org/stable/modules/linear_model.html#ordinary-least-squares>`_, 
+        `RidgeRegression<http://scikit-learn.org/stable/modules/linear_model.html#ridge-regression>`_, 
+        `Lasso<http://scikit-learn.org/stable/modules/linear_model.html#lasso>`_)
+
+-   Constraints
+    -   Non-negativity
+    -   Normalization
+
+-   Error metrics / Loss function
+    -   Mean-squared error
 
 What it **does** do:
 
