@@ -1,9 +1,9 @@
 # https://github.com/astropy/astropy/blob/master/appveyor.yml
 
-branches:
-  only:
-    - master
-    - dev
+# branches:
+#   only:
+#     - master
+#     - dev
 #  except:
 
 
