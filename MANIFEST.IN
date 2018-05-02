@@ -3,3 +3,4 @@ include LICENSE.md
 include README.rst
 include CHANGELOG.rst
 recursive-include Examples *
+recursive-include Examples *.ipynb *.png
