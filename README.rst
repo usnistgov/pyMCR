@@ -4,7 +4,7 @@
     :alt: Travis branch
     :target: https://travis-ci.org/CCampJr/pyMCR
 
-.. image:: https://img.shields.io/appveyor/ci/CCampJr/pyMCR/dev.svg
+.. image:: https://ci.appveyor.com/api/projects/status/ajld1bj7jo4oweio/branch/dev?svg=true
     :alt: AppVeyor branch
     :target: https://ci.appveyor.com/project/CCampJr/pyMCR
 
