@@ -1,5 +1,5 @@
 """
-
+Setup for pyMCR
 """
 
 from setuptools import setup, find_packages
@@ -8,7 +8,7 @@ with open('README.rst') as f:
     long_description = f.read()
 
 setup(name='pyMCR',
-      version = '0.2.0a0',
+      version = '0.2.0a1',
       description = 'Multivariate Curve Resolution in Python',
       long_description = long_description,
       url = 'https://github.com/CCampJr/pyMCR',

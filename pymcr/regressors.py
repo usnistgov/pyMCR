@@ -7,14 +7,14 @@ NOTE: coef_ will be X.T, which is the formalism that scikit-learn follows
 
 """
 
-from abc import ABC, abstractmethod
+from abc import (ABC as _ABC, abstractmethod as _abstractmethod)
 
-import numpy as np
+import numpy as _np
 
-from scipy.linalg import lstsq
-from scipy.optimize import nnls
+from scipy.linalg import lstsq as _lstsq
+from scipy.optimize import nnls as _nnls
 
-class LinearRegression(ABC):
+class LinearRegression(_ABC):
     """ Abstract class for linear regression methods """
     def __init__(self):
         self.X_ = None
@@ -28,7 +28,7 @@ class LinearRegression(ABC):
         else:
             return self.X_.T
 
-    @abstractmethod
+    @_abstractmethod
     def fit(self, A, B):
         """ AX = B, solve for X """
 
@@ -67,7 +67,7 @@ class OLS(LinearRegression):
     
     def fit(self, A, B):
         """ Solve for X: AX = B"""
-        self.X_, self.residual_, self.rank, self.svs_ = lstsq(A, B)
+        self.X_, self.residual_, self.rank, self.svs_ = _lstsq(A, B)
 
 class NNLS(LinearRegression):
     """
@@ -101,13 +101,13 @@ class NNLS(LinearRegression):
         else:
             N = 0
 
-        self.X_ = np.zeros((A.shape[-1],N))
-        self.residual_ = np.zeros((N))
+        self.X_ = _np.zeros((A.shape[-1],N))
+        self.residual_ = _np.zeros((N))
         
         # nnls is Ax = b; thus, need to iterate along
         # columns of B
         if N == 0:
-            self.X_, self.residual_ = nnls(A, B)
+            self.X_, self.residual_ = _nnls(A, B)
         else:
             for num in range(N):
-                self.X_[:,num], self.residual_[num] = nnls(A, B[:,num])
+                self.X_[:,num], self.residual_[num] = _nnls(A, B[:,num])
