@@ -1,6 +1,6 @@
 import copy
 
-import numpy as np
+import numpy as _np
 from timeit import default_timer as timer
 
 from pymcr.regressors import OLS, NNLS
@@ -153,12 +153,12 @@ class McrAls:
     @property
     def D_(self):
         """ D matrix with current C and S^T matrices """
-        return np.dot(self.C_, self.ST_)
+        return _np.dot(self.C_, self.ST_)
 
     @property
     def D_opt_(self):
         """ D matrix with optimal C and S^T matrices """
-        return np.dot(self.C_opt_, self.ST_opt_)
+        return _np.dot(self.C_opt_, self.ST_opt_)
     
     def _ismin_err(self, val):
         """ Is the current error the minimum """
@@ -213,7 +213,7 @@ class McrAls:
                 for num_constr, constr in enumerate(self.c_constraints):
                     C_temp = constr.transform(C_temp)
                     
-                D_calc = np.dot(C_temp,self.ST_)
+                D_calc = _np.dot(C_temp,self.ST_)
 
                 err_temp = self.err_fcn(C_temp, self.ST_, D, D_calc)
     
@@ -266,7 +266,7 @@ class McrAls:
                 for num_constr, constr in enumerate(self.st_constraints):
                     ST_temp = constr.transform(ST_temp)
 #                 
-                D_calc = np.dot(self.C_,ST_temp)
+                D_calc = _np.dot(self.C_,ST_temp)
 
                 err_temp = self.err_fcn(self.C_, ST_temp, D, D_calc)
     
@@ -312,8 +312,8 @@ class McrAls:
             #  than abs(tol_err_change)
             
             if ((self.tol_err_change is not None) & (len(self.err) > 2)):
-                err_differ = np.abs(self.err[-1] - self.err[-3])
-                if err_differ < np.abs(self.tol_err_change):
+                err_differ = _np.abs(self.err[-1] - self.err[-3])
+                if err_differ < _np.abs(self.tol_err_change):
                     print('Change in err below tol_err_change ({:.4e}). Exiting.'.format(err_differ))
                     break
                 
@@ -325,17 +325,17 @@ if __name__ == '__main__':  # pragma: no cover
     P = 101
     n_components = 2
 
-    C_img = np.zeros((M,N,n_components))
-    C_img[...,0] = np.dot(np.ones((M,1)),np.linspace(0,1,N)[None,:])
+    C_img = _np.zeros((M,N,n_components))
+    C_img[...,0] = _np.dot(_np.ones((M,1)),_np.linspace(0,1,N)[None,:])
     C_img[...,1] = 1 - C_img[...,0]
 
-    ST_known = np.zeros((n_components, P))
+    ST_known = _np.zeros((n_components, P))
     ST_known[0,40:60] = 1
     ST_known[1,60:80] = 2
 
     C_known = C_img.reshape((-1, n_components))
 
-    D_known = np.dot(C_known, ST_known)
+    D_known = _np.dot(C_known, ST_known)
 
     mcrals = McrAls(max_iter=50, tol_increase=100, tol_n_increase=10, 
                     st_constraints=[ConstraintNonneg()], 
@@ -343,5 +343,5 @@ if __name__ == '__main__':  # pragma: no cover
                     tol_err_change=1e-30)
     mcrals._saveall_st = True
     mcrals._saveall_c = True
-    # mcrals.fit(D_known, ST=ST_known+1*np.random.randn(*ST_known.shape), verbose=True)
+    # mcrals.fit(D_known, ST=ST_known+1*_np.random.randn(*ST_known.shape), verbose=True)
     mcrals.fit(D_known, C=C_known*0+1e-1, verbose=True)

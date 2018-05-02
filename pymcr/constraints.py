@@ -5,14 +5,14 @@ All classes need a transform class. Note, unlike sklearn, transform can copy
 or overwrite input depending on copy attribute.
 """
 
-from abc import ABC, abstractmethod
+from abc import (ABC as _ABC, abstractmethod as _abstractmethod)
 
-import numpy as np
+import numpy as _np
 
-class Constraint(ABC):
+class Constraint(_ABC):
     """ Abstract class for constraints """
     
-    @abstractmethod
+    @_abstractmethod
     def transform(self, A):
         """ Transform A input based on constraint """
 
@@ -63,7 +63,7 @@ class ConstraintNorm(Constraint):
             else:
                 return A / A.sum(axis=self.axis)[:, None]
         else:
-            if A.dtype != np.float:
+            if A.dtype != _np.float:
                 raise TypeError('A.dtype must be float for in-place math (copy=False)')
 
             if self.axis == 0:
