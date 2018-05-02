@@ -1,5 +1,5 @@
 """
-
+Setup for pyMCR
 """
 
 from setuptools import setup, find_packages
