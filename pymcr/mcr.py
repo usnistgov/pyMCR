@@ -222,7 +222,7 @@ class McrAls:
                     self.n_iter_opt = num + 1
 
                 # Calculate error fcn and check for tolerance increase
-                if not self.err == 0:
+                if self.err != 0:
                     self.err.append(1*err_temp)
                     self.C_ = 1*C_temp
                 elif (err_temp <= self.err[-1]*(1+self.tol_increase)):
@@ -262,7 +262,7 @@ class McrAls:
 
 
                 # Apply ST-constraints
-                for num_constr, constr in enumerate(self.st_constraints):
+                for constr in self.st_constraints:
                     ST_temp = constr.transform(ST_temp)
 #
                 D_calc = _np.dot(self.C_, ST_temp)

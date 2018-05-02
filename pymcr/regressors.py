@@ -64,10 +64,10 @@ class OLS(LinearRegression):
         super().__init__()
         self.rank_ = None
         self.svs_ = None
-    
+
     def fit(self, A, B):
         """ Solve for X: AX = B"""
-        self.X_, self.residual_, self.rank, self.svs_ = _lstsq(A, B)
+        self.X_, self.residual_, self.rank_, self.svs_ = _lstsq(A, B)
 
 class NNLS(LinearRegression):
     """
@@ -92,22 +92,22 @@ class NNLS(LinearRegression):
     """
     def __init__(self, *args, **kwargs):
         super().__init__()
-    
+
     def fit(self, A, B):
         """ Solve for X: AX = B"""
 
-        if B.ndim == 2:    
+        if B.ndim == 2:
             N = B.shape[-1]
         else:
             N = 0
 
-        self.X_ = _np.zeros((A.shape[-1],N))
+        self.X_ = _np.zeros((A.shape[-1], N))
         self.residual_ = _np.zeros((N))
-        
+
         # nnls is Ax = b; thus, need to iterate along
         # columns of B
         if N == 0:
             self.X_, self.residual_ = _nnls(A, B)
         else:
             for num in range(N):
-                self.X_[:,num], self.residual_[num] = _nnls(A, B[:,num])
+                self.X_[:, num], self.residual_[num] = _nnls(A, B[:, num])
