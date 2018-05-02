@@ -1,14 +1,14 @@
 .. -*- mode: rst -*-
 
-.. image:: https://img.shields.io/travis/CCampJr/pyMCR/master.svg
+.. image:: https://img.shields.io/travis/CCampJr/pyMCR/dev.svg
     :alt: Travis branch
     :target: https://travis-ci.org/CCampJr/pyMCR
 
-.. image:: https://img.shields.io/appveyor/ci/CCampJr/pyMCR/master.svg
+.. image:: https://img.shields.io/appveyor/ci/CCampJr/pyMCR/dev.svg
     :alt: AppVeyor branch
     :target: https://ci.appveyor.com/project/CCampJr/pyMCR
 
-.. image:: https://img.shields.io/codecov/c/github/CCampJr/pyMCR/master.svg
+.. image:: https://img.shields.io/codecov/c/github/CCampJr/pyMCR/dev.svg
     :alt: Codecov branch
     :target: https://codecov.io/gh/CCampJr/pyMCR
 
@@ -22,7 +22,7 @@
 
 .. image:: https://img.shields.io/badge/License-NIST%20Public%20Domain-green.svg
     :alt: NIST Public Domain
-    :target: https://github.com/CCampJr/pyMCR/blob/master/LICENSE.md
+    :target: https://github.com/CCampJr/pyMCR/blob/dev/LICENSE.md
 
 pyMCR: Multivariate Curve Resolution in Python
 ===============================================================
