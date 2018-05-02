@@ -1,31 +1,34 @@
 .. -*- mode: rst -*-
 
-|Travis|_ |AppVeyor|_ |CodeCov|_ |Py34|_ |Py35|_ |Py36|_ |PyPi|_
+.. image:: https://img.shields.io/travis/CCampJr/pyMCR/master.svg
+    :alt: Travis branch
+    :target: https://travis-ci.org/CCampJr/pyMCR
 
-.. |Travis| image:: https://travis-ci.org/CCampJr/pyMCR.svg?branch=master
-.. _Travis: https://travis-ci.org/CCampJr/pyMCR
+.. image:: https://ci.appveyor.com/api/projects/status/ajld1bj7jo4oweio/branch/master?svg=true
+    :alt: AppVeyor branch
+    :target: https://ci.appveyor.com/project/CCampJr/pyMCR
 
-.. |AppVeyor| image:: https://ci.appveyor.com/api/projects/status/github/CCampJr/pyMCR?branch=master&svg=true
-.. _AppVeyor: https://ci.appveyor.com/project/CCampJr/pyMCR
+.. image:: https://img.shields.io/codecov/c/github/CCampJr/pyMCR/master.svg
+    :alt: Codecov branch
+    :target: https://codecov.io/gh/CCampJr/pyMCR
 
-.. |CodeCov| image:: https://codecov.io/gh/CCampJr/pyMCR/branch/master/graph/badge.svg
-.. _CodeCov: https://codecov.io/gh/CCampJr/pyMCR
+.. image:: https://img.shields.io/pypi/pyversions/pyMCR.svg
+    :alt: PyPI - Python Version
+    :target: https://pypi.org/project/pyMCR/
 
-.. |Py34| image:: https://img.shields.io/badge/Python-3.4-blue.svg
-.. _Py34: https://www.python.org/downloads/
+.. image:: https://img.shields.io/pypi/v/pyMCR.svg
+    :alt: PyPI
+    :target: https://pypi.org/project/pyMCR/
 
-.. |Py35| image:: https://img.shields.io/badge/Python-3.5-blue.svg
-.. _Py35: https://www.python.org/downloads/
-
-.. |Py36| image:: https://img.shields.io/badge/Python-3.6-blue.svg
-.. _Py36: https://www.python.org/downloads/
-
-.. |PyPi| image:: https://badge.fury.io/py/pyMCR.svg
-.. _PyPi: https://badge.fury.io/py/pyMCR
-
+.. image:: https://img.shields.io/badge/License-NIST%20Public%20Domain-green.svg
+    :alt: NIST Public Domain
+    :target: https://github.com/CCampJr/pyMCR/blob/master/LICENSE.md
 
 pyMCR: Multivariate Curve Resolution in Python
 ===============================================================
+
+**Note: Verion 0.2.* is a total re-write from Verion 0.1.* and is not
+compatible.**
 
 pyMCR is a small package for performing multivariate curve resolution.
 Currently, it implements a simple alternating least squares method
@@ -40,11 +43,25 @@ other names were used for MCR as well:
 
 Available methods:
 
--   Ordinary least squares with `Moore-Penrose pseudo-inverse 
-    <https://docs.scipy.org/doc/numpy-1.13.0/reference/generated/numpy.linalg.pinv.html>`_ 
-    (default, McrAls)
--   Ordinary least squares with `non-negative least squares 
-    <https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.nnls.html>`_ (McrAls_NNLS)
+-   Regressors:
+
+    -   `Ordinary least squares <https://docs.scipy.org/doc/scipy/reference/generated/scipy.linalg.lstsq.html>`_ (default)
+    -   `Non-negatively constrained least squares 
+        <https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.nnls.html>`_
+    -   Native support for `scikit-learn linear model regressors 
+        <http://scikit-learn.org/stable/modules/linear_model.html>`_
+        (e.g., `LinearRegression <http://scikit-learn.org/stable/modules/linear_model.html#ordinary-least-squares>`_, 
+        `RidgeRegression <http://scikit-learn.org/stable/modules/linear_model.html#ridge-regression>`_, 
+        `Lasso <http://scikit-learn.org/stable/modules/linear_model.html#lasso>`_)
+
+-   Constraints
+
+    -   Non-negativity
+    -   Normalization
+
+-   Error metrics / Loss function
+
+    -   Mean-squared error
 
 What it **does** do:
 
@@ -76,6 +93,7 @@ packages may work.
     - Tested with 1.12.1, 1.13.1, 1.13.3
 
 -   scipy (1.0.0)
+
     - Tested with 1.0.0
 
 Known Issues
@@ -140,18 +158,20 @@ Usage
     from pymcr.mcr import McrAls
     mcrals = McrAls()
     
-    # Data that you will provide
-    # data [n_samples, n_features]  # Measurements
+    # MCR assumes a system of the form: D = CS^T
     #
-    # initial_spectra [n_components, n_features]  ## S^T in the literature
+    # Data that you will provide (hyperspectral context):
+    # D [n_pixels, n_frequencies]  # Hyperspectral image unraveled in space (2D)
+    #
+    # initial_spectra [n_components, n_frequencies]  ## S^T in the literature
     # OR
-    # initial_conc [n_samples, n_components]   ## C in the literature
+    # initial_conc [n_pixels, n_components]   ## C in the literature
 
     # If you have an initial estimate of the spectra
-    mcrals.fit(data, initial_spectra=initial_spectra)
+    mcrals.fit(D, ST=initial_spectra)
 
     # Otherwise, if you have an initial estimate of the concentrations
-    mcrals.fit(data, initial_conc=initial_conc)
+    mcrals.fit(D, C=initial_conc)
 
 Examples
 --------
@@ -180,20 +200,28 @@ References
     10, 217-240 (2015). <https://www.nature.com/articles/nprot.2015.008>`_
     
 
-NONLICENSE
+LICENSE
 ----------
-This software was developed at the National Institute of Standards and Technology (NIST) by
-employees of the Federal Government in the course of their official duties. Pursuant to
-`Title 17 Section 105 of the United States Code <http://www.copyright.gov/title17/92chap1.html#105>`_,
-this software is not subject to copyright protection and is in the public domain.
-NIST assumes no responsibility whatsoever for use by other parties of its source code,
-and makes no guarantees, expressed or implied, about its quality, reliability, or any other characteristic.
+This software was developed by employees of the National Institute of Standards 
+and Technology (NIST), an agency of the Federal Government. Pursuant to 
+`title 17 United States Code Section 105 <http://www.copyright.gov/title17/92chap1.html#105>`_, 
+works of NIST employees are not subject to copyright protection in the United States and are 
+considered to be in the public domain. Permission to freely use, copy, modify, 
+and distribute this software and its documentation without fee is hereby granted, 
+provided that this notice and disclaimer of warranty appears in all copies.
 
-Specific software products identified in this open source project were used in order
-to perform technology transfer and collaboration. In no case does such identification imply
-recommendation or endorsement by the National Institute of Standards and Technology, nor
-does it imply that the products identified are necessarily the best available for the
-purpose.
+THE SOFTWARE IS PROVIDED 'AS IS' WITHOUT ANY WARRANTY OF ANY KIND, EITHER 
+EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY 
+THAT THE SOFTWARE WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF 
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND FREEDOM FROM INFRINGEMENT, 
+AND ANY WARRANTY THAT THE DOCUMENTATION WILL CONFORM TO THE SOFTWARE, OR ANY 
+WARRANTY THAT THE SOFTWARE WILL BE ERROR FREE. IN NO EVENT SHALL NIST BE LIABLE 
+FOR ANY DAMAGES, INCLUDING, BUT NOT LIMITED TO, DIRECT, INDIRECT, SPECIAL OR 
+CONSEQUENTIAL DAMAGES, ARISING OUT OF, RESULTING FROM, OR IN ANY WAY CONNECTED 
+WITH THIS SOFTWARE, WHETHER OR NOT BASED UPON WARRANTY, CONTRACT, TORT, OR 
+OTHERWISE, WHETHER OR NOT INJURY WAS SUSTAINED BY PERSONS OR PROPERTY OR 
+OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT OF THE 
+RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
 
 Contact
 -------
