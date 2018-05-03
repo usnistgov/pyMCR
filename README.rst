@@ -27,9 +27,6 @@
 pyMCR: Multivariate Curve Resolution in Python
 ===============================================================
 
-**Note: Verion 0.2.* is a total re-write from Verion 0.1.* and is not
-compatible.**
-
 pyMCR is a small package for performing multivariate curve resolution.
 Currently, it implements a simple alternating least squares method
 (i.e., MCR-ALS).
