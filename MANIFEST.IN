@@ -4,3 +4,4 @@ include README.rst
 include CHANGELOG.rst
 recursive-include Examples *
 recursive-include Examples *.ipynb *.png
+prune Examples/.ipynb_checkpoints
