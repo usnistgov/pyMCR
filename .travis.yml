@@ -51,6 +51,7 @@ install:
   fi
   # then conda install --yes python=$TRAVIS_PYTHON_VERSION pip numpy scipy;
   # fi
+- pip install --only-binary=scikit-learn
 - pip install pytest-cov
 - if [[ "$TRAVIS_PYTHON_VERSION" == "3.6" ]];
   then pip install codecov;

@@ -13,7 +13,7 @@ environment:
         PYTHON: "C:\\conda"
         MINICONDA_VERSION: "latest"
         PYTHON_ARCH: "64"
-        CONDA_DEPENDENCIES: "numpy scipy setuptools pytest"
+        CONDA_DEPENDENCIES: "numpy scipy scikit-learn setuptools pytest"
         # PIP_DEPENDENCIES: "objgraph"
 
     matrix:
