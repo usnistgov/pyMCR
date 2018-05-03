@@ -1,14 +1,14 @@
 .. -*- mode: rst -*-
 
-.. image:: https://img.shields.io/travis/CCampJr/pyMCR/master.svg
+.. image:: .. image:: https://travis-ci.org/CCampJr/pyMCR.svg?branch=0.3.X
     :alt: Travis branch
     :target: https://travis-ci.org/CCampJr/pyMCR
 
-.. image:: https://ci.appveyor.com/api/projects/status/ajld1bj7jo4oweio/branch/master?svg=true
+.. image:: https://ci.appveyor.com/api/projects/status/ajld1bj7jo4oweio/branch/0.3.X?svg=true
     :alt: AppVeyor branch
     :target: https://ci.appveyor.com/project/CCampJr/pyMCR
 
-.. image:: https://img.shields.io/codecov/c/github/CCampJr/pyMCR/master.svg
+.. image:: https://img.shields.io/codecov/c/github/CCampJr/pyMCR/0.3.X.svg
     :alt: Codecov branch
     :target: https://codecov.io/gh/CCampJr/pyMCR
 
