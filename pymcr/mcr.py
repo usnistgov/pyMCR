@@ -167,7 +167,8 @@ class McrAls:
             return ([val > x for x in self.err].count(True) == 0)
 
 
-    def fit(self, D, C=None, ST=None, verbose=False):
+    def fit(self, D, C=None, ST=None, verbose=False, post_iter_fcn=None, 
+            post_half_fcn=None):
         """
         Perform MCR-ALS. D = CS^T. Solve for C and S^T iteratively.
 
@@ -184,6 +185,12 @@ class McrAls:
 
         verbose : bool
             Display iteration and per-least squares err results.
+
+        post_iter_fcn : function
+            Function to perform after each iteration
+
+        post_half_fcn : function
+            Function to perform after half-iteration
         """
 
         # Ensure only C or ST provided
@@ -248,6 +255,9 @@ class McrAls:
                 if verbose:
                     print('Iter: {} (C)\t{}: {:.4e}'.format(self.n_iter, self.err_fcn.__name__, err_temp))
 
+                if post_half_fcn is not None:
+                    post_half_fcn(self.C_, self.ST_, D, D_calc)
+
             if self.C_ is not None:
 
                 # Debugging feature -- saves every C matrix in a list
@@ -299,6 +309,12 @@ class McrAls:
 
                 if verbose:
                     print('Iter: {} (ST)\t{}: {:.4e}'.format(self.n_iter, self.err_fcn.__name__, err_temp))
+
+                if post_half_fcn is not None:
+                    post_half_fcn(self.C_, self.ST_, D, D_calc)
+
+                if post_iter_fcn is not None:
+                    post_iter_fcn(self.C_, self.ST_, D, D_calc)
 
             if self.n_iter >= self.max_iter:
                 print('Max iterations reached ({}).'.format(num+1))
