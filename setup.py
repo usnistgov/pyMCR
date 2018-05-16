@@ -8,7 +8,7 @@ with open('README.rst') as f:
     long_description = f.read()
 
 setup(name='pyMCR',
-      version = '0.2.1',
+      version = '0.2.2a0',
       description = 'Multivariate Curve Resolution in Python',
       long_description = long_description,
       url = 'https://github.com/CCampJr/pyMCR',
