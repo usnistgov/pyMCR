@@ -1,7 +1,6 @@
 .. -*- mode: rst -*-
 
-Branch: 0.2.X
---------------
+**Branch: 0.2.X**:
 
 .. image:: https://img.shields.io/travis/CCampJr/pyMCR/0.2.X.svg
     :alt: Travis branch
@@ -15,8 +14,7 @@ Branch: 0.2.X
     :alt: Codecov branch
     :target: https://codecov.io/gh/CCampJr/pyMCR
 
-Branch: 0.3.X
---------------
+**Branch: 0.3.X**:
 
 .. image:: https://img.shields.io/travis/CCampJr/pyMCR/0.3.X.svg
     :alt: Travis branch
@@ -31,10 +29,34 @@ Branch: 0.3.X
     :target: https://codecov.io/gh/CCampJr/pyMCR
 
 pyMCR: Contributing
-===============================================================
+===================
 
-Coming Soon
-    
+**Thank you for your interest in contributing!** This document is in pre-pre-alpha stage, so feel free to make edits and suggestions through Pull Requests.
+
+-    Until pyMCR gets to v1.0.X; the versioning will increment by 0.1 for every new release that adds new functionality. 
+-    Pull-requests that do not add new functionality, will be merged into the **0.2.X** branch prior to being merged into **master**. Functional changes will be merged into the **0.3.X** branch.
+-    All functional contributions should have associated tests added to the */pymcr/tests* directory.
+-    Testing is performed via pytest
+-    Test coverage should be > 90%, with some exceptions
+-    After contributing, please add your name to the bottom of the README file. No matter how small, all contributors will be recognized.
+
+
+Branches
+--------
+
+-    **0.2.X**: Updates to current **master**
+
+    - Non-new functionality
+    - Typos and **master** branch documentation
+
+-    **0.3.X**: Next version of pyMCR
+
+    - New functionality
+    - New regressors
+    - New constraints
+    - Documentation for new features
+
+
 
 LICENSE
 ----------
@@ -62,9 +84,3 @@ RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
 Contact
 -------
 Charles H Camp Jr: `charles.camp@nist.gov <mailto:charles.camp@nist.gov>`_
-
-Contributors
--------------
-
--   Charles H Camp Jr
--   Charles Le Losq (charles.lelosq@anu.edu.au)
