@@ -27,7 +27,7 @@
 pyMCR: Multivariate Curve Resolution in Python
 ===============================================================
 
-**Note: Verion 0.2.* is a total re-write from Verion 0.1.* and is not
+**Note: Verion 0.2.* is a total re-write from Version 0.1.* and is not
 compatible.**
 
 pyMCR is a small package for performing multivariate curve resolution.
@@ -86,15 +86,15 @@ packages may work.
 
 -   python >= 3.4
     
-    - Tested with 3.4.6, 3.5.4, 3.6.3
+    - Tested with 3.4.6, 3.5.4, 3.6.3, 3.6.5
 
 -   numpy (1.9.3)
     
-    - Tested with 1.12.1, 1.13.1, 1.13.3
+    - Tested with 1.12.1, 1.13.1, 1.13.3, 1.14.3
 
 -   scipy (1.0.0)
 
-    - Tested with 1.0.0
+    - Tested with 1.0.0 and 1.0.1
 
 Known Issues
 ------------
