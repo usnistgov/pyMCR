@@ -39,6 +39,7 @@ pyMCR: Contributing
 -    Testing is performed via pytest
 -    Test coverage should be > 90%, with some exceptions
 -    After contributing, please add your name to the bottom of the README file. No matter how small, all contributors will be recognized.
+-    `Gist of the release process <https://gist.github.com/CCampJr/dca856a4322c9640f857956ba08161e6>`_
 
 
 Branches
@@ -55,8 +56,6 @@ Branches
     - New regressors
     - New constraints
     - Documentation for new features
-
-
 
 LICENSE
 ----------
