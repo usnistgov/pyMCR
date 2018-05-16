@@ -8,7 +8,7 @@ This document records all notable changes to
 This project adheres to `PEP 440 -- Version Identification 
 and Dependency Specification <https://www.python.org/dev/peps/pep-0440/>`_.
 
-0.2.1 (?)
+0.2.1 (18-05-16)
 ----------------
 
 - Improved Demo Notebook documentation
