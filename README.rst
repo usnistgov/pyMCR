@@ -27,7 +27,7 @@
 pyMCR: Multivariate Curve Resolution in Python
 ===============================================================
 
-**Note: Verion 0.2.* is a total re-write from Version 0.1.* and is not
+**Note: Version 0.2.* is a total re-write from Version 0.1.* and is not
 compatible.**
 
 pyMCR is a small package for performing multivariate curve resolution.
@@ -230,3 +230,4 @@ Charles H Camp Jr: `charles.camp@nist.gov <mailto:charles.camp@nist.gov>`_
 Contributors
 -------------
 Charles H Camp Jr
+Charles Le Losq (charles.lelosq@anu.edu.au)
