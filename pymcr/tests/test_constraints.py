@@ -8,7 +8,8 @@ import numpy as np
 from numpy.testing import assert_allclose
 
 from pymcr.constraints import (ConstraintNonneg, ConstraintNorm, 
-                               ConstraintCumsumNonneg)
+                               ConstraintCumsumNonneg, ConstraintZeroEndPoints,
+                               ConstraintZeroCumSumEndPoints)
 
 import pytest
 
@@ -39,6 +40,83 @@ def test_cumsumnonneg():
     constr_nn = ConstraintCumsumNonneg(copy=False, axis=0)
     out = constr_nn.transform(A)
     assert_allclose(A_nn_ax0, A)
+
+def test_zeroendpoints():
+    """ 0-Endpoints Constraint """
+    A = np.array([[1, 2, 3, 4], [3, 6, 9, 12], [4, 8, 12, 16]]).astype(np.float)
+    A_ax1 = np.array([[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]).astype(np.float)
+    A_ax0 = np.array([[0, 0, 0, 0], [0.5, 1, 1.5, 2], [0, 0, 0, 0]]).astype(np.float)
+
+    # Axis 0
+    constr_ax0 = ConstraintZeroEndPoints(copy=True, axis=0)
+    out = constr_ax0.transform(A)
+    assert_allclose(A_ax0, out)
+
+    # Axis -1
+    constr_ax1 = ConstraintZeroEndPoints(copy=True, axis=-1)
+    out = constr_ax1.transform(A)
+    assert_allclose(A_ax1, out)
+
+    with pytest.raises(TypeError):
+        constr_ax1 = ConstraintZeroEndPoints(copy=True, axis=3)
+
+    # Axis 0 -- NOT copies
+    constr_ax0 = ConstraintZeroEndPoints(copy=False, axis=0)
+    out = constr_ax0.transform(A)
+    assert_allclose(A_ax0, A)
+
+def test_zeroendpoints_span():
+    """ 0-Endpoints Constraint """
+    A = np.array([[1, 2, 3, 4], [3, 6, 9, 12], [4, 8, 12, 16]]).astype(np.float)
+    
+    # Axis 1
+    constr_ax1 = ConstraintZeroEndPoints(copy=True, axis=1, span=2)
+    out = constr_ax1.transform(A)
+    assert_allclose(out[:, [0,1]].mean(axis=1), 0)
+    assert_allclose(out[:, [1,2]].mean(axis=1), 0)
+
+    # Axis 0
+    constr_ax0 = ConstraintZeroEndPoints(copy=True, axis=0, span=2)
+    out = constr_ax0.transform(A)
+    assert_allclose(out[[0,1], :].mean(axis=0), 0)
+    assert_allclose(out[[1,2], :].mean(axis=0), 0)
+
+    # effective an assert_not_equal
+    assert_allclose([q != 0 for q in out[:,0]], True)
+    assert_allclose([q != 0 for q in out[:,-1]], True)
+
+    # Axis 1 -- no copy
+    constr_ax1 = ConstraintZeroEndPoints(copy=False, axis=1, span=2)
+    out = constr_ax1.transform(A)
+    assert_allclose(A[:, [0,1]].mean(axis=1), 0)
+    assert_allclose(A[:, [1,2]].mean(axis=1), 0)
+
+def test_zerocumsumendpoints():
+    """ Cum-Sum 0-Endpoints Constraint """
+    A = np.array([[1, 2, 3, 4], [4, 5, 6, 7], [7, 8, 9, 10]]).astype(np.float)
+    A_diff1 = np.array([[1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1]]).astype(np.float)
+    A_diff0 = np.array([[3, 3, 3, 3], [3, 3, 3, 3], [3, 3, 3, 3]]).astype(np.float)
+
+    # A_ax1 = np.array([[0, 0, 0], [0, 0, 0], [0, 0, 0]])
+    # A_ax0 = np.array([[0, 0, 0], [0.5, 1, 1.5], [0, 0, 0]])
+
+    # Axis 0
+    constr_ax0 = ConstraintZeroCumSumEndPoints(copy=True, axis=0)
+    out = constr_ax0.transform(A_diff0)
+    assert_allclose(out, 0)
+    assert_allclose(np.cumsum(out, axis=0), 0)
+
+    # Axis -1
+    constr_ax1 = ConstraintZeroCumSumEndPoints(copy=True, axis=-1)
+    out = constr_ax1.transform(A_diff1)
+    assert_allclose(out, 0)
+    assert_allclose(np.cumsum(out, axis=1), 0)
+
+    # Axis = -1 -- NOT copy
+    constr_ax1 = ConstraintZeroCumSumEndPoints(copy=False, axis=-1)
+    out = constr_ax1.transform(A_diff1)
+    assert_allclose(A_diff1, 0)
+    assert_allclose(np.cumsum(A_diff1, axis=1), 0)
 
 def test_norm():
 

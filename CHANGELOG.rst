@@ -15,6 +15,8 @@ and Dependency Specification <https://www.python.org/dev/peps/pep-0440/>`_.
 -   **Constraints**
 
     - Non-negative cumulative summation
+    - Zero end-points
+    - Zero cumulalative summation end-points (approximation)
 
 0.2.1 (18-05-16)
 ----------------
