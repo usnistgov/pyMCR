@@ -106,11 +106,13 @@ def test_mcr_semilearned():
     C_img[...,0] = np.dot(np.ones((M,1)),np.linspace(0,1,N)[None,:])
     C_img[...,1] = np.dot(np.linspace(0,1,M)[:, None], np.ones((1,N)))
     C_img[...,2] = 1 - C_img[...,0] - C_img[...,1]
+    C_img = C_img / C_img.sum(axis=-1)[:,:,None]
 
     ST_known = np.zeros((n_components, P))
     ST_known[0,30:50] = 1
     ST_known[1,50:70] = 2
     ST_known[1,70:90] = 3
+    ST_known += 1
 
     C_known = C_img.reshape((-1, n_components))
 
@@ -125,6 +127,9 @@ def test_mcr_semilearned():
                     tol_err_change=1e-10)
 
     mcrals.fit(D_known, ST=ST_guess, st_fix=[0,1])
+    assert_equal(mcrals.ST_[0,:], ST_known[0,:])
+    assert_equal(mcrals.ST_[1,:], ST_known[1,:])
+    
 
 def test_mcr_errors():
     
