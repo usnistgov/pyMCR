@@ -37,6 +37,29 @@ class ConstraintNonneg(Constraint):
             A *= (A > 0)
             return A
 
+class ConstraintCumsumNonneg(Constraint):
+    """
+    Cumulative-Summation non-negativity constraint. All negative entries made 0.
+
+    Parameters
+    ----------
+    copy : bool
+        Make copy of input data, A; otherwise, overwrite (if mutable)
+    """
+    def __init__(self, axis=-1, copy=False):
+        """ A must be non-negative"""
+        self.copy = copy
+        self.axis = axis
+
+    def transform(self, A):
+        """ Apply cumsum nonnegative constraint"""
+        if self.copy:
+            return A*(_np.cumsum(A, self.axis) > 0)
+        else:
+            A *= (_np.cumsum(A, self.axis) > 0)
+            return A
+
+
 class ConstraintNorm(Constraint):
     """
     Normalization constraint.

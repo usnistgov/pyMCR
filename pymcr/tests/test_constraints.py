@@ -7,7 +7,8 @@ import numpy as np
 
 from numpy.testing import assert_allclose
 
-from pymcr.constraints import ConstraintNonneg, ConstraintNorm
+from pymcr.constraints import (ConstraintNonneg, ConstraintNorm, 
+                               ConstraintCumsumNonneg)
 
 import pytest
 
@@ -22,6 +23,22 @@ def test_nonneg():
     constr_nn = ConstraintNonneg(copy=False)
     out = constr_nn.transform(A)
     assert_allclose(A_nn, A)
+
+def test_cumsumnonneg():
+    """ Cum-Sum Nonnegativity Constraint """
+    A = np.array([[2, -2, 3, -2], [-1, -2, -3, 7], [1, -2, -3, 7]])
+    A_nn_ax1 = np.array([[2, 0, 3, -2], [0, 0, 0, 7], [1, 0, 0, 7]])
+    A_nn_ax0 = np.array([[2, 0, 3, 0], [-1, 0, 0, 7], [1, 0, 0, 7]])
+
+    # Axis -1
+    constr_nn = ConstraintCumsumNonneg(copy=True, axis=-1)
+    out = constr_nn.transform(A)
+    assert_allclose(A_nn_ax1, out)
+
+    # Axis 0
+    constr_nn = ConstraintCumsumNonneg(copy=False, axis=0)
+    out = constr_nn.transform(A)
+    assert_allclose(A_nn_ax0, A)
 
 def test_norm():
 
