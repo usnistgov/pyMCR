@@ -1,6 +1,6 @@
 .. -*- mode: rst -*-
 
-.. image:: .. image:: https://travis-ci.org/CCampJr/pyMCR.svg?branch=0.3.X
+.. image:: https://travis-ci.org/CCampJr/pyMCR.svg?branch=0.3.X
     :alt: Travis branch
     :target: https://travis-ci.org/CCampJr/pyMCR
 
