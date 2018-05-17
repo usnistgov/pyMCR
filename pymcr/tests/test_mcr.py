@@ -95,6 +95,37 @@ def test_mcr():
     mcrals.fit(D_known, C=C_known*0 + 0.1)
     assert_equal(mcrals.n_iter, 50)
 
+def test_mcr_semilearned():
+    """ """
+    M = 21
+    N = 21
+    P = 101
+    n_components = 3
+
+    C_img = np.zeros((M,N,n_components))
+    C_img[...,0] = np.dot(np.ones((M,1)),np.linspace(0,1,N)[None,:])
+    C_img[...,1] = np.dot(np.linspace(0,1,M)[:, None], np.ones((1,N)))
+    C_img[...,2] = 1 - C_img[...,0] - C_img[...,1]
+
+    ST_known = np.zeros((n_components, P))
+    ST_known[0,30:50] = 1
+    ST_known[1,50:70] = 2
+    ST_known[1,70:90] = 3
+
+    C_known = C_img.reshape((-1, n_components))
+
+    D_known = np.dot(C_known, ST_known)
+
+    ST_guess = 1 * ST_known
+    ST_guess[2, :] = np.random.randn(P)
+
+    mcrals = McrAls(max_iter=50, tol_increase=100, tol_n_increase=10, 
+                    st_constraints=[ConstraintNonneg()], 
+                    c_constraints=[ConstraintNonneg(), ConstraintNorm()],
+                    tol_err_change=1e-10)
+
+    mcrals.fit(D_known, ST=ST_guess, st_fix=[0,1])
+
 def test_mcr_errors():
     
     # Providing both C and S^T estimates

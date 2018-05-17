@@ -88,7 +88,7 @@ class McrAls:
     though instantiating an imported class gives more flexibility.
     """
     def __init__(self, c_regr=OLS(), st_regr=OLS(), c_fit_kwargs={},
-                 st_fit_kwargs={}, c_constraints=[ConstraintNonneg()], 
+                 st_fit_kwargs={}, c_constraints=[ConstraintNonneg()],
                  st_constraints=[ConstraintNonneg()],
                  max_iter=50, err_fcn=mse,
                  tol_increase=0.0, tol_n_increase=10, tol_err_change=None
@@ -167,8 +167,8 @@ class McrAls:
             return ([val > x for x in self.err].count(True) == 0)
 
 
-    def fit(self, D, C=None, ST=None, verbose=False, post_iter_fcn=None, 
-            post_half_fcn=None):
+    def fit(self, D, C=None, ST=None, st_fix=None, verbose=False,
+            post_iter_fcn=None, post_half_fcn=None):
         """
         Perform MCR-ALS. D = CS^T. Solve for C and S^T iteratively.
 
@@ -182,6 +182,9 @@ class McrAls:
 
         ST : ndarray
             Initial S^T matrix estimate. Only provide initial C OR S^T.
+
+        st_fix : list
+            The component numbers to keep fixed.
 
         verbose : bool
             Display iteration and per-least squares err results.
@@ -267,14 +270,19 @@ class McrAls:
 
                 self.st_regressor.fit(self.C_, D, **self.st_fit_kwargs)
                 ST_temp = self.st_regressor.coef_.T
-#                 als = AlsCvxopt(smoothness_param=1e-5, asym_param=1e-4, max_iter=2, order=3)
-#                 als = AlsCvxopt(smoothness_param=1e-7, asym_param=1e-8, max_iter=2, order=3)
 
+                # Apply fixed ST's
+                if st_fix:
+                    ST_temp[st_fix] = self.ST_[st_fix]
 
                 # Apply ST-constraints
                 for constr in self.st_constraints:
                     ST_temp = constr.transform(ST_temp)
-#
+
+                # Apply fixed ST's
+                if st_fix:
+                    ST_temp[st_fix] = self.ST_[st_fix]
+
                 D_calc = _np.dot(self.C_, ST_temp)
 
                 err_temp = self.err_fcn(self.C_, ST_temp, D, D_calc)
@@ -338,26 +346,39 @@ if __name__ == '__main__':  # pragma: no cover
     M = 21
     N = 21
     P = 101
-    n_components = 2
+    n_components = 3
 
     C_img = _np.zeros((M,N,n_components))
-    C_img[..., 0] = _np.dot(_np.ones((M, 1)), _np.linspace(0, 1, N)[None, :])
-    C_img[..., 1] = 1 - C_img[..., 0]
+    C_img[...,0] = _np.dot(_np.ones((M,1)),_np.linspace(0,1,N)[None,:])
+    C_img[...,1] = _np.dot(_np.linspace(0,1,M)[:, None], _np.ones((1,N)))
+    C_img[...,2] = 1 - C_img[...,0] - C_img[...,1]
+    C_img = C_img / C_img.sum(axis=-1)[:,:,None]
 
     ST_known = _np.zeros((n_components, P))
-    ST_known[0, 40:60] = 1
-    ST_known[1, 60:80] = 2
+    ST_known[0,30:50] = 1.0
+    ST_known[1,50:70] = 2.0
+    ST_known[2,70:90] = 3.0
+    ST_known += 1.0
 
     C_known = C_img.reshape((-1, n_components))
 
     D_known = _np.dot(C_known, ST_known)
 
     mcrals = McrAls(max_iter=50, tol_increase=100, tol_n_increase=10,
+                    c_regr='NNLS', st_regr='NNLS',
                     st_constraints=[ConstraintNonneg()],
                     c_constraints=[ConstraintNonneg(), ConstraintNorm()],
-                    tol_err_change=1e-30)
-    mcrals._saveall_st = True
-    mcrals._saveall_c = True
-    # mcrals.fit(D_known, ST=ST_known+1*_np.random.randn(*ST_known.shape), verbose=True)
-    mcrals.fit(D_known, C=C_known*0+1e-1, verbose=True)
-    
+                    tol_err_change=1e-8)
+
+    ST_guess = 1 * ST_known
+    ST_guess[1, :] = _np.random.rand(P)
+    ST_guess[2, :] = _np.random.rand(P)
+    mcrals.fit(D_known, ST=ST_guess, st_fix=[0])
+
+    print(mcrals.ST_opt_[0,28:33])
+    print(mcrals.ST_opt_[1,48:53])
+    print(mcrals.ST_opt_[2,68:73])
+
+    print(_np.allclose(mcrals.C_opt_.sum(axis=-1),1))
+
+    # print(mcrals.err)
