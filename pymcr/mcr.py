@@ -254,7 +254,6 @@ class McrAls:
                     print('Maximum error increases reached ({}). Exiting.'.format(self.tol_n_increase))
                     break
 
-
                 if verbose:
                     print('Iter: {} (C)\t{}: {:.4e}'.format(self.n_iter, self.err_fcn.__name__, err_temp))
 

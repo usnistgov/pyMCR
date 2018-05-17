@@ -42,7 +42,7 @@ def test_mcr():
                     st_constraints=[ConstraintNonneg()], 
                     c_constraints=[ConstraintNonneg(), ConstraintNorm()],
                     tol_err_change=1e-10)
-    mcrals.fit(D_known, ST=ST_known)
+    mcrals.fit(D_known, ST=ST_known, verbose=True)
     assert_equal(1, mcrals.n_iter_opt)
     assert ((mcrals.D_ - D_known)**2).mean() < 1e-10
     assert ((mcrals.D_opt_ - D_known)**2).mean() < 1e-10
