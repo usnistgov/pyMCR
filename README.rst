@@ -55,6 +55,10 @@ Available methods:
 
     -   Non-negativity
     -   Normalization
+    -   Zero end-points
+    -   Zero end-points of cumulative summation
+    -   Non-negativity of cumulative summation
+    -   Fix known spectral components (and let others vary)
 
 -   Error metrics / Loss function
 
@@ -64,8 +68,7 @@ What it **does** do:
 
 -   Approximate the concentration and spectral matrices via minimization routines. 
     This is the core the MCR-ALS methods.
--   Enable the application of certain constraints (currently): sum-to-one, 
-    non-negativity, normalization, maximum limits (closure)
+-   Enable the application of certain constraints in a user-defined order.
 
 What it **does not** do:
 
