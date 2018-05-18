@@ -119,7 +119,7 @@ def test_mcr_tol_n_increase(dataset):
     mcrals = McrAls(max_iter=50, c_regr='OLS', st_regr='OLS', 
                     st_constraints=[ConstraintNonneg()], 
                     c_constraints=[ConstraintNonneg(), ConstraintNorm()],
-                    tol_increase=None, tol_n_increase=1,
+                    tol_increase=None, tol_n_increase=0,
                     tol_err_change=None, tol_n_above_min=None)
     mcrals.fit(D_known, C=C_known)
     assert mcrals.exit_tol_n_increase
@@ -146,7 +146,7 @@ def test_mcr_tol_n_above_min(dataset):
                     st_constraints=[ConstraintNonneg()], 
                     c_constraints=[ConstraintNonneg(), ConstraintNorm()],
                     tol_increase=None, tol_n_increase=None,
-                    tol_err_change=None, tol_n_above_min=10)
+                    tol_err_change=None, tol_n_above_min=1)
     mcrals.fit(D_known, C=C_known)
     assert mcrals.exit_tol_n_above_min
     
