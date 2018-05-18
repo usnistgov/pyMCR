@@ -126,7 +126,7 @@ def test_mcr_tol_n_increase(dataset):
                     c_constraints=[ConstraintNonneg(), ConstraintNorm()],
                     tol_increase=None, tol_n_increase=0,
                     tol_err_change=None, tol_n_above_min=None)
-    mcrals.fit(D_known, C=C_known)
+    mcrals.fit(D_known, C=C_known*0 + 0.01)
     assert mcrals.exit_tol_n_increase
 
 def test_mcr_tol_err_change(dataset):
@@ -157,9 +157,7 @@ def test_mcr_tol_n_above_min(dataset):
                     c_constraints=[ConstraintNonneg(), ConstraintNorm()],
                     tol_increase=None, tol_n_increase=None,
                     tol_err_change=None, tol_n_above_min=0)
-    mcrals.fit(D_known, C=C_known)
-    if not mcrals.exit_tol_n_above_min:
-        print(mcrals.err)
+    mcrals.fit(D_known, C=C_known*0 + 0.1)
     assert mcrals.exit_tol_n_above_min
     
 
