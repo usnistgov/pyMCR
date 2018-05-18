@@ -80,16 +80,18 @@ class McrAls:
     n_iter_opt : int
         Iteration when optimal C and ST calculated
 
-    max_iter_reached : bool
+    exit_max_iter_reached : bool
         Was the maximum number of iteration reached (max_iter parameter)
 
     Notes
     -----
-    Built-in regressor classes (str can be used): OLS (ordinary least squares),
+    
+    -   Built-in regressor classes (str can be used): OLS (ordinary least squares),
     NNLS (non-negatively constrained least squares). See mcr.regressors.
-
-    Built-in regressor methods can be given as a string to c_regr, st_regr;
+    -   Built-in regressor methods can be given as a string to c_regr, st_regr;
     though instantiating an imported class gives more flexibility.
+    -   Setting any tolerance to None turns that check off
+
     """
     def __init__(self, c_regr=OLS(), st_regr=OLS(), c_fit_kwargs={},
                  st_fit_kwargs={}, c_constraints=[ConstraintNonneg()],
@@ -103,6 +105,7 @@ class McrAls:
         """
 
         self.max_iter = max_iter
+        
         self.tol_increase = tol_increase
         self.tol_n_increase = tol_n_increase
         self.tol_err_change = tol_err_change
@@ -129,7 +132,12 @@ class McrAls:
         self.n_iter = None
         self.n_increase = None
         self.n_above_min = None
-        self.max_iter_reached = False
+
+        self.exit_max_iter_reached = False
+        self.exit_tol_increase = False
+        self.exit_tol_n_increase = False
+        self.exit_tol_err_change = False
+        self.exit_tol_n_above_min = False
 
         # Saving every C or S^T matrix at each iteration
         # Could create huge memory usage
@@ -243,14 +251,19 @@ class McrAls:
                 else:
                     self.n_above_min += 1
 
-                if self.n_above_min > self.tol_n_above_min:
-                    err_str1 = 'Half-iterated {} times since min '.format(self.n_above_min)
-                    err_str2 = 'error. Exiting.'
-                    print(err_str1 + err_str2)
-                    break
+                if self.tol_n_above_min is not None:
+                    if self.n_above_min > self.tol_n_above_min:
+                        err_str1 = 'Half-iterated {} times since min '.format(self.n_above_min)
+                        err_str2 = 'error. Exiting.'
+                        print(err_str1 + err_str2)
+                        self.exit_tol_n_above_min = True
+                        break
 
                 # Calculate error fcn and check for tolerance increase
                 if len(self.err) == 0:
+                    self.err.append(1*err_temp)
+                    self.C_ = 1*C_temp
+                elif self.tol_increase is None:
                     self.err.append(1*err_temp)
                     self.C_ = 1*C_temp
                 elif (err_temp <= self.err[-1]*(1+self.tol_increase)):
@@ -259,6 +272,7 @@ class McrAls:
                 else:
                     err_str1 = 'Error increased above fractional tol_increase. Exiting'
                     print(err_str1)
+                    self.exit_tol_increase = True
                     break
 
                 # Check if err went up
@@ -269,9 +283,12 @@ class McrAls:
                         self.n_increase *= 0
 
                 # Break if too many error-increases in a row
-                if self.n_increase > self.tol_n_increase:
-                    print('Maximum error increases reached ({}). Exiting.'.format(self.tol_n_increase))
-                    break
+                if self.tol_n_increase is not None:
+                    if self.n_increase > self.tol_n_increase:
+                        out_str1 = 'Maximum error increases reached '
+                        print(out_str1 + '({}). Exiting.'.format(self.tol_n_increase))
+                        self.exit_tol_n_increase = True
+                        break
 
                 if verbose:
                     print('Iter: {} (C)\t{}: {:.4e}'.format(self.n_iter, self.err_fcn.__name__, err_temp))
@@ -314,13 +331,18 @@ class McrAls:
                 else:
                     self.n_above_min += 1
 
-                if self.n_above_min > self.tol_n_above_min:
-                    err_str1 = 'Half-iterated {} times since min '.format(self.n_above_min)
-                    err_str2 = 'error. Exiting.'
-                    print(err_str1 + err_str2)
-                    break
+                if self.tol_n_above_min is not None:
+                    if self.n_above_min > self.tol_n_above_min:
+                        err_str1 = 'Half-iterated {} times since min '.format(self.n_above_min)
+                        err_str2 = 'error. Exiting.'
+                        print(err_str1 + err_str2)
+                        self.exit_tol_n_above_min = True
+                        break
 
                 if len(self.err) == 0:
+                    self.err.append(1*err_temp)
+                    self.ST_ = 1*ST_temp
+                elif self.tol_increase is None:
                     self.err.append(1*err_temp)
                     self.ST_ = 1*ST_temp
                 elif (err_temp <= self.err[-1]*(1+self.tol_increase)):
@@ -329,6 +351,7 @@ class McrAls:
                 else:
                     err_str1 = 'Error increased above fractional tol_increase. Exiting'
                     print(err_str1)
+                    self.exit_tol_increase = True
                     break
 
                 # Check if err went up
@@ -339,9 +362,12 @@ class McrAls:
                         self.n_increase *= 0
 
                 # Break if too many error-increases in a row
-                if self.n_increase > self.tol_n_increase:
-                    print('Maximum error increases reached ({}). Exiting.'.format(self.tol_n_increase))
-                    break
+                if self.tol_n_increase is not None:
+                    if self.n_increase > self.tol_n_increase:
+                        out_str = 'Maximum error increases reached '
+                        print(out_str + '({}). Exiting.'.format(self.tol_n_increase))
+                        self.exit_tol_n_increase = True
+                        break
 
                 if verbose:
                     print('Iter: {} (ST)\t{}: {:.4e}'.format(self.n_iter, self.err_fcn.__name__, err_temp))
@@ -354,7 +380,7 @@ class McrAls:
 
             if self.n_iter >= self.max_iter:
                 print('Max iterations reached ({}).'.format(num+1))
-                self.max_iter_reached = True
+                self.exit_max_iter_reached = True
                 break
 
             self.n_iter = num + 1
@@ -366,6 +392,7 @@ class McrAls:
                 err_differ = _np.abs(self.err[-1] - self.err[-3])
                 if err_differ < _np.abs(self.tol_err_change):
                     print('Change in err below tol_err_change ({:.4e}). Exiting.'.format(err_differ))
+                    self.exit_tol_err_change = True
                     break
 
 
