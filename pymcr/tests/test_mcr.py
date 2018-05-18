@@ -161,8 +161,8 @@ def test_mcr_tol_n_above_min(dataset):
     assert mcrals.exit_tol_n_above_min
     
 
-def test_mcr_semilearned(dataset):
-    """ """
+def test_mcr_st_semilearned(dataset):
+    """ Test when St items are fixed, i.e., enforced to be the same as the input, always """
 
     C_known, D_known, St_known = dataset
     
@@ -180,7 +180,7 @@ def test_mcr_semilearned(dataset):
     St_known = np.zeros((n_components, P))
     St_known[0,30:50] = 1
     St_known[1,50:70] = 2
-    St_known[1,70:90] = 3
+    St_known[2,70:90] = 3
     St_known += 1
 
     C_known = C_img.reshape((-1, n_components))
@@ -198,6 +198,44 @@ def test_mcr_semilearned(dataset):
     mcrals.fit(D_known, ST=ST_guess, st_fix=[0,1])
     assert_equal(mcrals.ST_[0,:], St_known[0,:])
     assert_equal(mcrals.ST_[1,:], St_known[1,:])
+
+def test_mcr_c_semilearned(dataset):
+    """ Test when C items are fixed, i.e., enforced to be the same as the input, always """
+
+    C_known, D_known, St_known = dataset
+    
+    M = 21
+    N = 21
+    P = 101
+    n_components = 3
+
+    C_img = np.zeros((M,N,n_components))
+    C_img[...,0] = np.dot(np.ones((M,1)),np.linspace(0,1,N)[None,:])
+    C_img[...,1] = np.dot(np.linspace(0,1,M)[:, None], np.ones((1,N)))
+    C_img[...,2] = 1 - C_img[...,0] - C_img[...,1]
+    C_img = C_img / C_img.sum(axis=-1)[:,:,None]
+
+    St_known = np.zeros((n_components, P))
+    St_known[0,30:50] = 1
+    St_known[1,50:70] = 2
+    St_known[2,70:90] = 3
+    St_known += 1
+
+    C_known = C_img.reshape((-1, n_components))
+
+    D_known = np.dot(C_known, St_known)
+
+    C_guess = 1 * C_known
+    C_guess[:, 2] = np.random.randn(int(M*N))
+
+    mcrals = McrAls(max_iter=50, tol_increase=100, tol_n_increase=10, 
+                    st_constraints=[ConstraintNonneg()], 
+                    c_constraints=[ConstraintNonneg(), ConstraintNorm()],
+                    tol_err_change=1e-10)
+
+    mcrals.fit(D_known, C=C_guess, c_fix=[0,1])
+    assert_equal(mcrals.C_[:, 0], C_known[:, 0])
+    assert_equal(mcrals.C_[:, 1], C_known[:, 1])
     
 
 def test_mcr_errors():

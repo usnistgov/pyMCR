@@ -59,7 +59,7 @@ Available methods:
     -   Zero end-points of cumulative summation
     -   Non-negativity of cumulative summation
     -   Compress or cut values above or below a threshold value
-    -   Fix known spectral components (and let others vary)
+    -   Fix known concentration or spectral components (and let others vary)
 
 -   Error metrics / Loss function
 

@@ -85,7 +85,7 @@ class McrAls:
 
     Notes
     -----
-    
+
     -   Built-in regressor classes (str can be used): OLS (ordinary least squares),
     NNLS (non-negatively constrained least squares). See mcr.regressors.
     -   Built-in regressor methods can be given as a string to c_regr, st_regr;
@@ -105,7 +105,7 @@ class McrAls:
         """
 
         self.max_iter = max_iter
-        
+
         self.tol_increase = tol_increase
         self.tol_n_increase = tol_n_increase
         self.tol_err_change = tol_err_change
@@ -182,7 +182,7 @@ class McrAls:
             return ([val > x for x in self.err].count(True) == 0)
 
 
-    def fit(self, D, C=None, ST=None, st_fix=None, verbose=False,
+    def fit(self, D, C=None, ST=None, st_fix=None, c_fix=None, verbose=False,
             post_iter_fcn=None, post_half_fcn=None):
         """
         Perform MCR-ALS. D = CS^T. Solve for C and S^T iteratively.
@@ -199,7 +199,10 @@ class McrAls:
             Initial S^T matrix estimate. Only provide initial C OR S^T.
 
         st_fix : list
-            The component numbers to keep fixed.
+            The spectral component numbers to keep fixed.
+
+        c_fix : list
+            The concentration component numbers to keep fixed.
 
         verbose : bool
             Display iteration and per-least squares err results.
@@ -235,9 +238,17 @@ class McrAls:
                 self.c_regressor.fit(self.ST_.T, D.T, **self.c_fit_kwargs)
                 C_temp = self.c_regressor.coef_
 
+                # Apply fixed ST's
+                if c_fix:
+                    C_temp[:, c_fix] = self.C_[:, c_fix]
+
                 # Apply c-constraints
                 for constr in self.c_constraints:
                     C_temp = constr.transform(C_temp)
+
+                # Apply fixed ST's
+                if c_fix:
+                    C_temp[:, c_fix] = self.C_[:, c_fix]
 
                 D_calc = _np.dot(C_temp, self.ST_)
 

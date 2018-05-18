@@ -9,9 +9,11 @@ from abc import (ABC as _ABC, abstractmethod as _abstractmethod)
 
 import numpy as _np
 
-__all__ = ['ConstraintNonneg', 'ConstraintCumsumNonneg', 
+__all__ = ['ConstraintNonneg', 'ConstraintCumsumNonneg',
            'ConstraintZeroEndPoints', 'ConstraintZeroCumSumEndPoints',
-           'ConstraintNorm']
+           'ConstraintNorm', 'ConstraintCutBelow', 'ConstraintCutBelow',
+           'ConstraintCompressBelow', 'ConstraintCutAbove',
+           'ConstraintCompressAbove']
 
 class Constraint(_ABC):
     """ Abstract class for constraints """
@@ -95,8 +97,8 @@ class ConstraintZeroEndPoints(Constraint):
                 slope = (A[-1,:] - A[0,:]) / (pix_vec[-1] - pix_vec[0])
                 intercept = A[0,:]
             else:
-                slope = ((A[-self.span:,:].mean(axis=0) - A[:self.span,:].mean(axis=0)) / 
-                          (pix_vec[-self.span:].mean() - 
+                slope = ((A[-self.span:,:].mean(axis=0) - A[:self.span,:].mean(axis=0)) /
+                          (pix_vec[-self.span:].mean() -
                            pix_vec[:self.span].mean()))
                 intercept = (A[:self.span, :] - _np.dot(pix_vec[:self.span, None],
                                                         slope[None, :])).mean(axis=0)
@@ -110,10 +112,10 @@ class ConstraintZeroEndPoints(Constraint):
                 slope = (A[:, -1] - A[:, 0]) / (pix_vec[-1] - pix_vec[0])
                 intercept = A[:,0]
             else:
-                slope = ((A[:, -self.span:].mean(axis=1) - A[:, :self.span].mean(axis=1)) / 
-                          (pix_vec[-self.span:].mean() - 
+                slope = ((A[:, -self.span:].mean(axis=1) - A[:, :self.span].mean(axis=1)) /
+                          (pix_vec[-self.span:].mean() -
                            pix_vec[:self.span].mean()))
-                intercept = (A[:, :self.span] - _np.dot(slope[:,None], 
+                intercept = (A[:, :self.span] - _np.dot(slope[:,None],
                                                         pix_vec[None,:self.span])).mean(axis=1)
 
             if self.copy:
@@ -229,7 +231,7 @@ class ConstraintCompressBelow(Constraint):
 
     Parameters
     ----------
-    
+
     value : float
         Cutoff value
     copy : bool
@@ -282,7 +284,7 @@ class ConstraintCompressAbove(Constraint):
 
     Parameters
     ----------
-    
+
     value : float
         Cutoff value
     copy : bool

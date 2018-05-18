@@ -11,7 +11,7 @@ and Dependency Specification <https://www.python.org/dev/peps/pep-0440/>`_.
 0.3.0
 ------
 
--   Perform semi-learning assigning some input ST components to be fixed.
+-   Perform semi-learning assigning some input ST or C components to be fixed.
 -   **Constraints**
 
     - Non-negative cumulative summation
