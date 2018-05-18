@@ -9,7 +9,10 @@ from pymcr.mcr import McrAls
 from pymcr.metrics import mse
 from pymcr.constraints import ConstraintNonneg, ConstraintNorm
 
-def test_mcr():
+@pytest.fixture(scope="function")
+def dataset():
+    """ Setups dataset """
+
     M = 21
     N = 21
     P = 101
@@ -19,50 +22,49 @@ def test_mcr():
     C_img[...,0] = np.dot(np.ones((M,1)),np.linspace(0,1,N)[None,:])
     C_img[...,1] = 1 - C_img[...,0]
 
-    ST_known = np.zeros((n_components, P))
-    ST_known[0,40:60] = 1
-    ST_known[1,60:80] = 2
+    St_known = np.zeros((n_components, P))
+    St_known[0,40:60] = 1
+    St_known[1,60:80] = 2
 
     C_known = C_img.reshape((-1, n_components))
 
-    D_known = np.dot(C_known, ST_known)
+    D_known = np.dot(C_known, St_known)
 
-    mcrals = McrAls(max_iter=50, tol_increase=100, tol_n_increase=10, 
-                    st_constraints=[ConstraintNonneg()], 
-                    c_constraints=[ConstraintNonneg(), ConstraintNorm()],
-                    tol_err_change=1e-10)
-    mcrals._saveall_st = False
-    mcrals._saveall_c = False
-    mcrals.fit(D_known, ST=ST_known)
+    yield C_known, D_known, St_known
+    
+def test_mcr_ideal_default(dataset):
+    """ Provides C/St_known so optimal should be 1 iteration """
 
-    assert_equal(1, mcrals.n_iter_opt)
+    C_known, D_known, St_known = dataset
 
-    mcrals = McrAls(max_iter=50, tol_increase=100, tol_n_increase=10,
-                    c_regr='OLS', st_regr='OLS', 
-                    st_constraints=[ConstraintNonneg()], 
-                    c_constraints=[ConstraintNonneg(), ConstraintNorm()],
-                    tol_err_change=1e-10)
-    mcrals.fit(D_known, ST=ST_known, verbose=True)
+    mcrals = McrAls()
+    mcrals.fit(D_known, ST=St_known)
     assert_equal(1, mcrals.n_iter_opt)
     assert ((mcrals.D_ - D_known)**2).mean() < 1e-10
     assert ((mcrals.D_opt_ - D_known)**2).mean() < 1e-10
 
-    mcrals = McrAls(max_iter=50, tol_increase=100, tol_n_increase=10,
-                    c_regr='NNLS', st_regr='NNLS', 
-                    st_constraints=[ConstraintNonneg()], 
-                    c_constraints=[ConstraintNonneg(), ConstraintNorm()],
-                    tol_err_change=1e-10)
-    mcrals.fit(D_known, ST=ST_known)
+    mcrals.fit(D_known, C=C_known)
+    assert_equal(2, mcrals.n_iter_opt)
+    assert ((mcrals.D_ - D_known)**2).mean() < 1e-10
+    assert ((mcrals.D_opt_ - D_known)**2).mean() < 1e-10
+
+def test_mcr_ideal_str_regressors(dataset):
+    """ Test MCR """
+
+    C_known, D_known, St_known = dataset
+
+    mcrals = McrAls(c_regr='OLS', st_regr='OLS')
+    mcrals.fit(D_known, ST=St_known, verbose=True)
+    assert_equal(1, mcrals.n_iter_opt)
+
+    mcrals = McrAls(c_regr='NNLS', st_regr='NNLS')
+    mcrals.fit(D_known, ST=St_known)
     assert_equal(1, mcrals.n_iter_opt)
 
     assert ((mcrals.D_ - D_known)**2).mean() < 1e-10
     assert ((mcrals.D_opt_ - D_known)**2).mean() < 1e-10
 
-    mcrals = McrAls(max_iter=50, tol_increase=100, tol_n_increase=10,
-                    c_regr='OLS', st_regr='OLS', 
-                    st_constraints=[ConstraintNonneg()], 
-                    c_constraints=[ConstraintNonneg(), ConstraintNorm()],
-                    tol_err_change=1e-10)
+    mcrals = McrAls(c_regr='OLS', st_regr='OLS')
     mcrals.fit(D_known, C=C_known)
 
     # Turns out some systems get it in 1 iteration, some in 2
@@ -80,23 +82,25 @@ def test_mcr():
                     c_regr='OLS', st_regr='OLS', 
                     st_constraints=[ConstraintNonneg()], 
                     c_constraints=[ConstraintNonneg(), ConstraintNorm()],
-                    tol_err_change=1e-10)
+                    tol_err_change=1e-10, tol_n_above_min=100)
     mcrals.fit(D_known, C=C_known*0 + 0.1)
 
     # Seeding with a constant of 0.1 for C, actually leads to a bad local
     # minimum; thus, the err_change gets really small with a relatively bad 
-    # error. This is not really a test, but it does test out breaking
-    # from tol_err_change
+    # error. The tol_err_change is set to None, so it makes it to max_iter.
     mcrals = McrAls(max_iter=50, tol_increase=100, tol_n_increase=10,
                     c_regr='OLS', st_regr='OLS', 
                     st_constraints=[ConstraintNonneg()], 
                     c_constraints=[ConstraintNonneg(), ConstraintNorm()],
-                    tol_err_change=None)
+                    tol_err_change=None, tol_n_above_min=100)
     mcrals.fit(D_known, C=C_known*0 + 0.1)
     assert_equal(mcrals.n_iter, 50)
 
-def test_mcr_semilearned():
+def test_mcr_semilearned(dataset):
     """ """
+
+    C_known, D_known, St_known = dataset
+    
     M = 21
     N = 21
     P = 101
@@ -108,17 +112,17 @@ def test_mcr_semilearned():
     C_img[...,2] = 1 - C_img[...,0] - C_img[...,1]
     C_img = C_img / C_img.sum(axis=-1)[:,:,None]
 
-    ST_known = np.zeros((n_components, P))
-    ST_known[0,30:50] = 1
-    ST_known[1,50:70] = 2
-    ST_known[1,70:90] = 3
-    ST_known += 1
+    St_known = np.zeros((n_components, P))
+    St_known[0,30:50] = 1
+    St_known[1,50:70] = 2
+    St_known[1,70:90] = 3
+    St_known += 1
 
     C_known = C_img.reshape((-1, n_components))
 
-    D_known = np.dot(C_known, ST_known)
+    D_known = np.dot(C_known, St_known)
 
-    ST_guess = 1 * ST_known
+    ST_guess = 1 * St_known
     ST_guess[2, :] = np.random.randn(P)
 
     mcrals = McrAls(max_iter=50, tol_increase=100, tol_n_increase=10, 
@@ -127,8 +131,8 @@ def test_mcr_semilearned():
                     tol_err_change=1e-10)
 
     mcrals.fit(D_known, ST=ST_guess, st_fix=[0,1])
-    assert_equal(mcrals.ST_[0,:], ST_known[0,:])
-    assert_equal(mcrals.ST_[1,:], ST_known[1,:])
+    assert_equal(mcrals.ST_[0,:], St_known[0,:])
+    assert_equal(mcrals.ST_[1,:], St_known[1,:])
     
 
 def test_mcr_errors():

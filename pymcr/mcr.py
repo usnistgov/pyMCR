@@ -50,6 +50,10 @@ class McrAls:
     tol_err_change : float
         If err changes less than tol_err_change, per iteration, break.
 
+    tol_n_above_min : int
+        Number of half-iterations that can be performed without reaching a
+        new error-minimum
+
     Parameters
     ----------
     err : list
@@ -91,7 +95,8 @@ class McrAls:
                  st_fit_kwargs={}, c_constraints=[ConstraintNonneg()],
                  st_constraints=[ConstraintNonneg()],
                  max_iter=50, err_fcn=mse,
-                 tol_increase=0.0, tol_n_increase=10, tol_err_change=None
+                 tol_increase=0.0, tol_n_increase=10, tol_err_change=None,
+                 tol_n_above_min=10
                 ):
         """
         Multivariate Curve Resolution - Alternating Regression
@@ -101,9 +106,10 @@ class McrAls:
         self.tol_increase = tol_increase
         self.tol_n_increase = tol_n_increase
         self.tol_err_change = tol_err_change
+        self.tol_n_above_min = tol_n_above_min
 
         self.err_fcn = err_fcn
-        self.err = []
+        self.err = None
 
         self.c_constraints = c_constraints
         self.st_constraints = st_constraints
@@ -122,6 +128,7 @@ class McrAls:
 
         self.n_iter = None
         self.n_increase = None
+        self.n_above_min = None
         self.max_iter_reached = False
 
         # Saving every C or S^T matrix at each iteration
@@ -206,6 +213,8 @@ class McrAls:
             self.ST_ = ST
 
         self.n_increase = 0
+        self.n_above_min = 0
+        self.err = []
 
         for num in range(self.max_iter):
             self.n_iter = num + 1
@@ -230,16 +239,26 @@ class McrAls:
                     self.C_opt_ = 1*C_temp
                     self.ST_opt_ = 1*self.ST_
                     self.n_iter_opt = num + 1
+                    self.n_above_min = 0
+                else:
+                    self.n_above_min += 1
+
+                if self.n_above_min > self.tol_n_above_min:
+                    err_str1 = 'Half-iterated {} times since min '.format(self.n_above_min)
+                    err_str2 = 'error. Exiting.'
+                    print(err_str1 + err_str2)
+                    break
 
                 # Calculate error fcn and check for tolerance increase
-                if self.err != 0:
+                if len(self.err) == 0:
                     self.err.append(1*err_temp)
                     self.C_ = 1*C_temp
                 elif (err_temp <= self.err[-1]*(1+self.tol_increase)):
                     self.err.append(1*err_temp)
                     self.C_ = 1*C_temp
                 else:
-                    print('Mean squared residual increased above tol_increase {:.4e}. Exiting'.format(err_temp))
+                    err_str1 = 'Error increased above fractional tol_increase. Exiting'
+                    print(err_str1)
                     break
 
                 # Check if err went up
@@ -291,6 +310,15 @@ class McrAls:
                     self.ST_opt_ = 1*ST_temp
                     self.C_opt_ = 1*self.C_
                     self.n_iter_opt = num + 1
+                    self.n_above_min = 0
+                else:
+                    self.n_above_min += 1
+
+                if self.n_above_min > self.tol_n_above_min:
+                    err_str1 = 'Half-iterated {} times since min '.format(self.n_above_min)
+                    err_str2 = 'error. Exiting.'
+                    print(err_str1 + err_str2)
+                    break
 
                 if len(self.err) == 0:
                     self.err.append(1*err_temp)
@@ -299,7 +327,8 @@ class McrAls:
                     self.err.append(1*err_temp)
                     self.ST_ = 1*ST_temp
                 else:
-                    print('Mean squared residual increased above tol_increase {:.4e}. Exiting'.format(err_temp))
+                    err_str1 = 'Error increased above fractional tol_increase. Exiting'
+                    print(err_str1)
                     break
 
                 # Check if err went up
@@ -345,39 +374,28 @@ if __name__ == '__main__':  # pragma: no cover
     M = 21
     N = 21
     P = 101
-    n_components = 3
+    n_components = 2
 
     C_img = _np.zeros((M,N,n_components))
-    C_img[...,0] = _np.dot(_np.ones((M,1)),_np.linspace(0,1,N)[None,:])
-    C_img[...,1] = _np.dot(_np.linspace(0,1,M)[:, None], _np.ones((1,N)))
-    C_img[...,2] = 1 - C_img[...,0] - C_img[...,1]
-    C_img = C_img / C_img.sum(axis=-1)[:,:,None]
+    C_img[...,0] = _np.dot(_np.ones((M,1)), _np.linspace(0,1,N)[None,:])
+    C_img[...,1] = 1 - C_img[...,0]
 
-    ST_known = _np.zeros((n_components, P))
-    ST_known[0,30:50] = 1.0
-    ST_known[1,50:70] = 2.0
-    ST_known[2,70:90] = 3.0
-    ST_known += 1.0
+    St_known = _np.zeros((n_components, P))
+    St_known[0,40:60] = 1
+    St_known[1,60:80] = 2
 
     C_known = C_img.reshape((-1, n_components))
 
-    D_known = _np.dot(C_known, ST_known)
+    D_known = _np.dot(C_known, St_known)
 
-    mcrals = McrAls(max_iter=50, tol_increase=100, tol_n_increase=10,
-                    c_regr='NNLS', st_regr='NNLS',
-                    st_constraints=[ConstraintNonneg()],
-                    c_constraints=[ConstraintNonneg(), ConstraintNorm()],
-                    tol_err_change=1e-8)
+    mcrals = McrAls()
+    mcrals.fit(D_known, ST=St_known)
+    # assert_equal(1, mcrals.n_iter_opt)
+    assert ((mcrals.D_ - D_known)**2).mean() < 1e-10
+    assert ((mcrals.D_opt_ - D_known)**2).mean() < 1e-10
 
-    ST_guess = 1 * ST_known
-    ST_guess[1, :] = _np.random.rand(P)
-    ST_guess[2, :] = _np.random.rand(P)
-    mcrals.fit(D_known, ST=ST_guess, st_fix=[0])
-
-    print(mcrals.ST_opt_[0,28:33])
-    print(mcrals.ST_opt_[1,48:53])
-    print(mcrals.ST_opt_[2,68:73])
-
-    print(_np.allclose(mcrals.C_opt_.sum(axis=-1),1))
-
-    # print(mcrals.err)
+    mcrals = McrAls()
+    mcrals.fit(D_known, C=C_known)
+    # assert_equal(1, mcrals.n_iter_opt)
+    assert ((mcrals.D_ - D_known)**2).mean() < 1e-10
+    assert ((mcrals.D_opt_ - D_known)**2).mean() < 1e-10
