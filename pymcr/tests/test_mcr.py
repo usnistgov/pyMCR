@@ -148,6 +148,8 @@ def test_mcr_tol_n_above_min(dataset):
                     tol_increase=None, tol_n_increase=None,
                     tol_err_change=None, tol_n_above_min=1)
     mcrals.fit(D_known, C=C_known)
+    if not mcrals.exit_tol_n_above_min:
+        print(mcrals.err)
     assert mcrals.exit_tol_n_above_min
     
 
