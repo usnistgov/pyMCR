@@ -112,7 +112,12 @@ def test_mcr_tol_increase(dataset):
     assert mcrals.exit_tol_increase
 
 def test_mcr_tol_n_increase(dataset):
-    """ Test MCR exits due iterating n times with an increase in error"""
+    """
+    Test MCR exits due iterating n times with an increase in error
+    
+    Note: On some CI systems, the minimum err bottoms out; thus, tol_n_above_min
+    needed to be set to 0 to trigger a break.
+    """
 
     C_known, D_known, St_known = dataset
 
@@ -138,7 +143,12 @@ def test_mcr_tol_err_change(dataset):
     assert mcrals.exit_tol_err_change
 
 def test_mcr_tol_n_above_min(dataset):
-    """ Test MCR exits due to half-terating n times with error above the minimum error """
+    """
+    Test MCR exits due to half-terating n times with error above the minimum error.
+
+    Note: On some CI systems, the minimum err bottoms out; thus, tol_n_above_min
+    needed to be set to 0 to trigger a break.
+    """
 
     C_known, D_known, St_known = dataset
 
