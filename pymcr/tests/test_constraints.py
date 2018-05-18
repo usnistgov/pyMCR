@@ -9,7 +9,8 @@ from numpy.testing import assert_allclose
 
 from pymcr.constraints import (ConstraintNonneg, ConstraintNorm, 
                                ConstraintCumsumNonneg, ConstraintZeroEndPoints,
-                               ConstraintZeroCumSumEndPoints)
+                               ConstraintZeroCumSumEndPoints, ConstraintCompressAbove,
+                               ConstraintCompressBelow, ConstraintCutAbove, ConstraintCutBelow)
 
 import pytest
 
@@ -119,7 +120,7 @@ def test_zerocumsumendpoints():
     assert_allclose(np.cumsum(A_diff1, axis=1), 0)
 
 def test_norm():
-
+    """ Test normalization """
     # A must be dtype.float for in-place math (copy=False)
     constr_norm = ConstraintNorm(axis=0, copy=False)
     A = np.array([[1, 2, 3], [-1, -2, -3], [1, 2, 3]]) # dtype: int32   
@@ -154,3 +155,44 @@ def test_norm():
     constr_norm = ConstraintNorm(axis=1, copy=False)
     out = constr_norm.transform(A)
     assert_allclose(A_norm1, A)
+
+def test_cut_below():
+    """ Test cutting below (and not equal to) a value """
+    A = np.array([[1, 2, 3, 4], [4, 5, 6, 7], [7, 8, 9, 10]]).astype(np.float)
+    A_transform = np.array([[0, 0, 0, 4], [4, 5, 6, 7], [7, 8, 9, 10]]).astype(np.float)
+    
+    constr = ConstraintCutBelow(copy=True, value=4)
+    out = constr.transform(A)
+
+    assert_allclose(out, A_transform)
+
+def test_compress_below():
+    """ Test compressing below (and not equal to) a value """
+    A = np.array([[1, 2, 3, 4], [4, 5, 6, 7], [7, 8, 9, 10]]).astype(np.float)
+    A_transform = np.array([[4, 4, 4, 4], [4, 5, 6, 7], [7, 8, 9, 10]]).astype(np.float)
+    
+    constr = ConstraintCompressBelow(copy=True, value=4)
+    out = constr.transform(A)
+
+    assert_allclose(out, A_transform)
+
+def test_cut_above():
+    """ Test cutting above (and not equal to) a value """
+    A = np.array([[1, 2, 3, 4], [4, 5, 6, 7], [7, 8, 9, 10]]).astype(np.float)
+    A_transform = np.array([[1, 2, 3, 4], [4, 0, 0, 0], [0, 0, 0, 0]]).astype(np.float)
+    
+    constr = ConstraintCutAbove(copy=True, value=4)
+    out = constr.transform(A)
+
+    assert_allclose(out, A_transform)
+
+def test_compress_above():
+    """ Test compressing above (and not equal to) a value """
+    A = np.array([[1, 2, 3, 4], [4, 5, 6, 7], [7, 8, 9, 10]]).astype(np.float)
+    A_transform = np.array([[1, 2, 3, 4], [4, 4, 4, 4], [4, 4, 4, 4]]).astype(np.float)
+    
+    constr = ConstraintCompressAbove(copy=True, value=4)
+    out = constr.transform(A)
+
+    assert_allclose(out, A_transform)
+

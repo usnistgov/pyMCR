@@ -197,3 +197,109 @@ class ConstraintNorm(Constraint):
             else:
                 A /= A.sum(axis=self.axis)[:, None]
             return A
+
+class ConstraintCutBelow(Constraint):
+    """
+    Cut values below (and not-equal to) a certain threshold
+
+    Parameters
+    ----------
+
+    value : float
+        Cutoff value
+    copy : bool
+        Make copy of input data, A; otherwise, overwrite (if mutable)
+    """
+    def __init__(self, value=0, copy=False):
+        """ """
+        self.copy = copy
+        self.value = value
+
+    def transform(self, A):
+        """ Apply cut-below value constraint"""
+        if self.copy:
+            return A*(A >= self.value)
+        else:
+            A *= (A >= self.value)
+            return A
+
+class ConstraintCompressBelow(Constraint):
+    """
+    Compress values below (and not-equal to) a certain threshold (set to value)
+
+    Parameters
+    ----------
+    
+    value : float
+        Cutoff value
+    copy : bool
+        Make copy of input data, A; otherwise, overwrite (if mutable)
+    """
+
+    def __init__(self, value=0, copy=False):
+        """  """
+        self.copy = copy
+        self.value = value
+
+    def transform(self, A):
+        """ Apply compress-below value constraint"""
+        if self.copy:
+            return A*(A >= self.value) + self.value*(A < self.value)
+        else:
+            temp = self.value*(A < self.value)
+            A *= (A >= self.value)
+            A += temp
+            return A
+
+class ConstraintCutAbove(Constraint):
+    """
+    Cut values above (and not-equal to) a certain threshold
+
+    Parameters
+    ----------
+
+    value : float
+        Cutoff value
+    copy : bool
+        Make copy of input data, A; otherwise, overwrite (if mutable)
+    """
+    def __init__(self, value=0, copy=False):
+        """ """
+        self.copy = copy
+        self.value = value
+
+    def transform(self, A):
+        """ Apply cut-above value constraint"""
+        if self.copy:
+            return A*(A <= self.value)
+        else:
+            A *= (A <= self.value)
+            return A
+
+class ConstraintCompressAbove(Constraint):
+    """
+    Compress values above (and not-equal to) a certain threshold (set to value)
+
+    Parameters
+    ----------
+    
+    value : float
+        Cutoff value
+    copy : bool
+        Make copy of input data, A; otherwise, overwrite (if mutable)
+    """
+
+    def __init__(self, value=0, copy=False):
+        """  """
+        self.copy = copy
+        self.value = value
+
+    def transform(self, A):
+        """ Apply compress-above value constraint"""
+        if self.copy:
+            return A*(A <= self.value) + self.value*(A > self.value)
+        else:
+            temp = self.value*(A > self.value)
+            A *= (A <= self.value)
+            A += temp
+            return A

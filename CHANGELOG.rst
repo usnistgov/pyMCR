@@ -17,6 +17,7 @@ and Dependency Specification <https://www.python.org/dev/peps/pep-0440/>`_.
     - Non-negative cumulative summation
     - Zero end-points
     - Zero cumulalative summation end-points (approximation)
+    - Compress or cut values above or below a threshold value
 
 0.2.1 (18-05-16)
 ----------------
