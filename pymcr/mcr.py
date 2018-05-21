@@ -182,7 +182,7 @@ class McrAls:
             return ([val > x for x in self.err].count(True) == 0)
 
 
-    def fit(self, D, C=None, ST=None, st_fix=None, c_fix=None, verbose=False,
+    def fit(self, D, C=None, ST=None, st_fix=None, c_fix=None, c_first=True, verbose=False,
             post_iter_fcn=None, post_half_fcn=None):
         """
         Perform MCR-ALS. D = CS^T. Solve for C and S^T iteratively.
@@ -204,6 +204,10 @@ class McrAls:
         c_fix : list
             The concentration component numbers to keep fixed.
 
+        c_first : bool
+            Calculate C first when both C and ST are provided. c_fix and st_fix must
+            also be provided in this circumstance.
+
         verbose : bool
             Display iteration and per-least squares err results.
 
@@ -217,8 +221,9 @@ class McrAls:
         # Ensure only C or ST provided
         if (C is None) & (ST is None):
             raise TypeError('C or ST estimate must be provided')
-        elif (C is not None) & (ST is not None):
-            raise TypeError('Only C or ST estimate must be provided, only one')
+        elif (C is not None) & (ST is not None) & ((c_fix is None) | (st_fix is None)):
+            err_str1 = 'Only C or ST estimate must be provided, '
+            raise TypeError(err_str1 + 'unless c_fix and st_fix are both provided')
         else:
             self.C_ = C
             self.ST_ = ST
@@ -227,9 +232,19 @@ class McrAls:
         self.n_above_min = 0
         self.err = []
 
+        # Both C and ST provided. special_skip_c comes into play below
+        both_condition = (self.ST_ is not None) & (self.C_ is not None)
+
         for num in range(self.max_iter):
             self.n_iter = num + 1
-            if self.ST_ is not None:
+
+            # Both st and c provided, but c_first is False
+            if both_condition & (num == 0) & (not c_first):
+                special_skip_c = True
+            else:
+                special_skip_c = False
+
+            if (self.ST_ is not None) & (not special_skip_c):
                 # Debugging feature -- saves every S^T matrix in a list
                 # Can create huge memory usage
                 if self._saveall_st:
