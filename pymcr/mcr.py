@@ -281,7 +281,7 @@ class McrAls:
                     self.err.append(1*err_temp)
                     self.C_ = 1*C_temp
                 else:
-                    err_str1 = 'Error increased above fractional tol_increase. Exiting'
+                    err_str1 = 'Error increased above fractional tol_increase (C iter). Exiting'
                     print(err_str1)
                     self.exit_tol_increase = True
                     break
@@ -297,7 +297,7 @@ class McrAls:
                 if self.tol_n_increase is not None:
                     if self.n_increase > self.tol_n_increase:
                         out_str1 = 'Maximum error increases reached '
-                        print(out_str1 + '({}). Exiting.'.format(self.tol_n_increase))
+                        print(out_str1 + '({}) (C iter). Exiting.'.format(self.tol_n_increase))
                         self.exit_tol_n_increase = True
                         break
 
@@ -360,7 +360,7 @@ class McrAls:
                     self.err.append(1*err_temp)
                     self.ST_ = 1*ST_temp
                 else:
-                    err_str1 = 'Error increased above fractional tol_increase. Exiting'
+                    err_str1 = 'Error increased above fractional tol_increase (ST iter). Exiting'
                     print(err_str1)
                     self.exit_tol_increase = True
                     break
@@ -376,7 +376,7 @@ class McrAls:
                 if self.tol_n_increase is not None:
                     if self.n_increase > self.tol_n_increase:
                         out_str = 'Maximum error increases reached '
-                        print(out_str + '({}). Exiting.'.format(self.tol_n_increase))
+                        print(out_str + '({}) (ST iter). Exiting.'.format(self.tol_n_increase))
                         self.exit_tol_n_increase = True
                         break
 
