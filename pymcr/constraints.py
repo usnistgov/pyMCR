@@ -202,28 +202,41 @@ class ConstraintNorm(Constraint):
 
 class ConstraintCutBelow(Constraint):
     """
-    Cut values below (and not-equal to) a certain threshold
+    Cut values below (and not-equal to) a certain threshold.
 
     Parameters
     ----------
 
     value : float
         Cutoff value
+    axis_sumnz : int
+        If not None, cut below value only applied where sum across specified
+        axis does not go to 0, i.e. all values cut.
     copy : bool
         Make copy of input data, A; otherwise, overwrite (if mutable)
     """
-    def __init__(self, value=0, copy=False):
+    def __init__(self, value=0, axis_sumnz=None, copy=False):
         """ """
         self.copy = copy
         self.value = value
+        self.axis = axis_sumnz
 
     def transform(self, A):
         """ Apply cut-below value constraint"""
-        if self.copy:
-            return A*(A >= self.value)
+        if self.axis is None:
+            if self.copy:
+                return A*(A >= self.value)
+            else:
+                A *= (A >= self.value)
+                return A
         else:
-            A *= (A >= self.value)
-            return A
+            if self.copy:
+                return A*(_np.alltrue(A < self.value, axis=self.axis, keepdims=True) + 
+                          (A >= self.value))
+            else:
+                A *= (_np.alltrue(A < self.value, axis=self.axis, keepdims=True) + 
+                      (A >= self.value))
+                return A
 
 class ConstraintCompressBelow(Constraint):
     """
@@ -262,21 +275,34 @@ class ConstraintCutAbove(Constraint):
 
     value : float
         Cutoff value
+    axis_sumnz : int
+        If not None, cut above value only applied where sum across specified
+        axis does not go to 0, i.e. all values cut.
     copy : bool
         Make copy of input data, A; otherwise, overwrite (if mutable)
     """
-    def __init__(self, value=0, copy=False):
+    def __init__(self, value=0, axis_sumnz=None, copy=False):
         """ """
         self.copy = copy
         self.value = value
+        self.axis = axis_sumnz
 
     def transform(self, A):
         """ Apply cut-above value constraint"""
-        if self.copy:
-            return A*(A <= self.value)
+        if self.axis is None:
+            if self.copy:
+                return A*(A <= self.value)
+            else:
+                A *= (A <= self.value)
+                return A
         else:
-            A *= (A <= self.value)
-            return A
+            if self.copy:
+                return A*(_np.alltrue(A > self.value, axis=self.axis, keepdims=True) + 
+                          (A <= self.value))
+            else:
+                A *= (_np.alltrue(A > self.value, axis=self.axis, keepdims=True) + 
+                      (A <= self.value))
+                return A
 
 class ConstraintCompressAbove(Constraint):
     """

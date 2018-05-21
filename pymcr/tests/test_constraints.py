@@ -163,8 +163,51 @@ def test_cut_below():
     
     constr = ConstraintCutBelow(copy=True, value=4)
     out = constr.transform(A)
-
     assert_allclose(out, A_transform)
+
+    # No Copy
+    constr = ConstraintCutBelow(copy=False, value=4)
+    out = constr.transform(A)
+    assert_allclose(A, A_transform)
+
+def test_cut_below_nonzerosum():
+    """
+    Test cutting below (and not equal to) a value with the constrain that
+        no columns (axis=-1) will all become 0
+    """
+    A = np.array([[0.3, 0.7], [0.4, 0.6], [0.5, 0.5]])
+    cutoff = 0.7
+    A_correct = np.array([[0.0, 0.7], [0.4, 0.6], [0.5, 0.5]])
+        
+    constr = ConstraintCutBelow(copy=True, value=cutoff, axis_sumnz=-1)
+    out = constr.transform(A)
+    assert_allclose(out, A_correct)
+
+    constr = ConstraintCutBelow(copy=False, value=cutoff, axis_sumnz=-1)
+    constr.transform(A)
+    assert_allclose(A, A_correct)
+
+def test_cut_above_nonzerosum():
+    """
+    Test cutting above (and not equal to) a value with the constrain that
+        no columns (axis=-1) will all become 0
+    """
+    A = np.array([[0.3, 0.7], [0.4, 0.6], [0.5, 0.5]])
+    cutoff = 0.4
+    A_correct = np.array([[0.3, 0.0], [0.4, 0.0], [0.5, 0.5]])
+        
+    constr = ConstraintCutAbove(copy=True, value=cutoff, axis_sumnz=-1)
+    out = constr.transform(A)
+    assert_allclose(out, A_correct)
+
+    # NO Copy
+    A = np.array([[0.3, 0.7], [0.4, 0.6], [0.5, 0.5]])
+    cutoff = 0.4
+    A_correct = np.array([[0.3, 0.0], [0.4, 0.0], [0.5, 0.5]])
+        
+    constr = ConstraintCutAbove(copy=False, value=cutoff, axis_sumnz=-1)
+    constr.transform(A)
+    assert_allclose(A, A_correct)
 
 def test_compress_below():
     """ Test compressing below (and not equal to) a value """
@@ -173,8 +216,13 @@ def test_compress_below():
     
     constr = ConstraintCompressBelow(copy=True, value=4)
     out = constr.transform(A)
-
     assert_allclose(out, A_transform)
+
+    # No Copy
+    constr = ConstraintCompressBelow(copy=False, value=4)
+    out = constr.transform(A)
+    assert_allclose(A, A_transform)
+
 
 def test_cut_above():
     """ Test cutting above (and not equal to) a value """
@@ -183,8 +231,12 @@ def test_cut_above():
     
     constr = ConstraintCutAbove(copy=True, value=4)
     out = constr.transform(A)
-
     assert_allclose(out, A_transform)
+
+    # No Copy
+    constr = ConstraintCutAbove(copy=False, value=4)
+    out = constr.transform(A)
+    assert_allclose(A, A_transform)
 
 def test_compress_above():
     """ Test compressing above (and not equal to) a value """
@@ -193,6 +245,10 @@ def test_compress_above():
     
     constr = ConstraintCompressAbove(copy=True, value=4)
     out = constr.transform(A)
-
     assert_allclose(out, A_transform)
+
+    # No Copy
+    constr = ConstraintCompressAbove(copy=False, value=4)
+    out = constr.transform(A)
+    assert_allclose(A, A_transform)
 
