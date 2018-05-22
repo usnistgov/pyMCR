@@ -211,7 +211,7 @@ class ConstraintNorm(Constraint):
                     not_fix_locs = [v for v in _np.arange(A.shape[0]).tolist()
                                     if self.fix.count(v) == 0]
                     scaler = _np.ones(A.shape)
-                    scaler[not_fix_locs, :] = ((1 - A[fix_locs, :]) /
+                    scaler[not_fix_locs, :] = ((1 - A[fix_locs, :].sum(axis=0)[None,:]) /
                                                 A[not_fix_locs, :].sum(axis=0)[None, :])
 
                     return A * scaler
@@ -223,7 +223,7 @@ class ConstraintNorm(Constraint):
                     not_fix_locs = [v for v in _np.arange(A.shape[-1]).tolist()
                                     if self.fix.count(v) == 0]
                     scaler = _np.ones(A.shape)
-                    scaler[:, not_fix_locs] = ((1 - A[:, fix_locs]) /
+                    scaler[:, not_fix_locs] = ((1 - A[:, fix_locs].sum(axis=-1)[:,None]) /
                                                 A[:, not_fix_locs].sum(axis=-1)[:,None])
 
                     return A * scaler
@@ -240,7 +240,7 @@ class ConstraintNorm(Constraint):
                     not_fix_locs = [v for v in _np.arange(A.shape[0]).tolist()
                                     if self.fix.count(v) == 0]
                     scaler = _np.ones(A.shape)
-                    scaler[not_fix_locs, :] = ((1 - A[fix_locs, :]) /
+                    scaler[not_fix_locs, :] = ((1 - A[fix_locs, :].sum(axis=0)[None,:]) /
                                                 A[not_fix_locs, :].sum(axis=0)[None, :])
                     A *= scaler
                     return A
@@ -253,7 +253,7 @@ class ConstraintNorm(Constraint):
                     not_fix_locs = [v for v in _np.arange(A.shape[-1]).tolist()
                                     if self.fix.count(v) == 0]
                     scaler = _np.ones(A.shape)
-                    scaler[:, not_fix_locs] = ((1 - A[:, fix_locs]) /
+                    scaler[:, not_fix_locs] = ((1 - A[:, fix_locs].sum(axis=-1)[:,None]) /
                                                 A[:, not_fix_locs].sum(axis=-1)[:,None])
                     A *= scaler
                     return A
