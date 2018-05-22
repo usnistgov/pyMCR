@@ -173,12 +173,29 @@ class ConstraintNorm(Constraint):
     ----------
     axis : int
         Which axis of input matrix A to apply normalization acorss.
+    fix : list
+        Keep fix-axes as-is and normalize the remaining axes based on the
+        residual of the fixed axes.
     copy : bool
         Make copy of input data, A; otherwise, overwrite (if mutable)
     """
-    def __init__(self, axis=-1, copy=False):
+    def __init__(self, axis=-1, fix=None, copy=False):
         """Normalize along axis"""
         self.copy = copy
+        if fix is None:
+            self.fix = fix
+        elif isinstance(fix, int):
+            self.fix = [fix]
+        elif isinstance(fix, (list, tuple)):
+            self.fix = fix
+        elif isinstance(fix, _np.ndarray):
+            if _np.issubdtype(fix.dtype, _np.integer):
+                self.fix = fix.tolist()
+            else:
+                raise TypeError('ndarrays must be of dtype int')
+        else:
+            raise TypeError('Parameter fix must be of type None, int, list, tuple, ndarray')
+
         if not ((axis == 0) | (axis == 1) | (axis == -1)):
             raise ValueError('Axis must be 0,1, or -1')
         self.axis = axis
@@ -187,18 +204,61 @@ class ConstraintNorm(Constraint):
         """ Apply normalization constraint """
         if self.copy:
             if self.axis == 0:
-                return A / A.sum(axis=self.axis)[None, :]
-            else:
-                return A / A.sum(axis=self.axis)[:, None]
-        else:
+                if not self.fix:  # No fixed axes
+                    return A / A.sum(axis=self.axis)[None, :]
+                else:  # Fixed axes
+                    fix_locs = self.fix
+                    not_fix_locs = [v for v in _np.arange(A.shape[0]).tolist()
+                                    if self.fix.count(v) == 0]
+                    scaler = _np.ones(A.shape)
+                    scaler[not_fix_locs, :] = ((1 - A[fix_locs, :]) /
+                                                A[not_fix_locs, :].sum(axis=0)[None, :])
+
+                    return A * scaler
+            else:  # Axis = 1 / -1
+                if not self.fix:  # No fixed axes
+                    return A / A.sum(axis=self.axis)[:, None]
+                else:  # Fixed axis
+                    fix_locs = self.fix
+                    not_fix_locs = [v for v in _np.arange(A.shape[-1]).tolist()
+                                    if self.fix.count(v) == 0]
+                    scaler = _np.ones(A.shape)
+                    scaler[:, not_fix_locs] = ((1 - A[:, fix_locs]) /
+                                                A[:, not_fix_locs].sum(axis=-1)[:,None])
+
+                    return A * scaler
+        else:  # Overwrite original data
             if A.dtype != _np.float:
                 raise TypeError('A.dtype must be float for in-place math (copy=False)')
 
             if self.axis == 0:
-                A /= A.sum(axis=self.axis)[None, :]
-            else:
-                A /= A.sum(axis=self.axis)[:, None]
-            return A
+                if not self.fix:  # No fixed axes
+                    A /= A.sum(axis=self.axis)[None, :]
+                    return A
+                else:  # Fixed axes
+                    fix_locs = self.fix
+                    not_fix_locs = [v for v in _np.arange(A.shape[0]).tolist()
+                                    if self.fix.count(v) == 0]
+                    scaler = _np.ones(A.shape)
+                    scaler[not_fix_locs, :] = ((1 - A[fix_locs, :]) /
+                                                A[not_fix_locs, :].sum(axis=0)[None, :])
+                    A *= scaler
+                    return A
+            else:  # Axis = 1 / -1
+                if not self.fix:  # No fixed axes
+                    A /= A.sum(axis=self.axis)[:, None]
+                    return A
+                else:  # Fixed axis
+                    fix_locs = self.fix
+                    not_fix_locs = [v for v in _np.arange(A.shape[-1]).tolist()
+                                    if self.fix.count(v) == 0]
+                    scaler = _np.ones(A.shape)
+                    scaler[:, not_fix_locs] = ((1 - A[:, fix_locs]) /
+                                                A[:, not_fix_locs].sum(axis=-1)[:,None])
+                    A *= scaler
+                    return A
+
+
 
 class ConstraintCutBelow(Constraint):
     """
@@ -231,10 +291,10 @@ class ConstraintCutBelow(Constraint):
                 return A
         else:
             if self.copy:
-                return A*(_np.alltrue(A < self.value, axis=self.axis, keepdims=True) + 
+                return A*(_np.alltrue(A < self.value, axis=self.axis, keepdims=True) +
                           (A >= self.value))
             else:
-                A *= (_np.alltrue(A < self.value, axis=self.axis, keepdims=True) + 
+                A *= (_np.alltrue(A < self.value, axis=self.axis, keepdims=True) +
                       (A >= self.value))
                 return A
 
@@ -297,10 +357,10 @@ class ConstraintCutAbove(Constraint):
                 return A
         else:
             if self.copy:
-                return A*(_np.alltrue(A > self.value, axis=self.axis, keepdims=True) + 
+                return A*(_np.alltrue(A > self.value, axis=self.axis, keepdims=True) +
                           (A <= self.value))
             else:
-                A *= (_np.alltrue(A > self.value, axis=self.axis, keepdims=True) + 
+                A *= (_np.alltrue(A > self.value, axis=self.axis, keepdims=True) +
                       (A <= self.value))
                 return A
 

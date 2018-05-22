@@ -253,15 +253,15 @@ class McrAls:
                 self.c_regressor.fit(self.ST_.T, D.T, **self.c_fit_kwargs)
                 C_temp = self.c_regressor.coef_
 
-                # Apply fixed ST's
+                # Apply fixed C's
                 if c_fix:
                     C_temp[:, c_fix] = self.C_[:, c_fix]
-
+                
                 # Apply c-constraints
                 for constr in self.c_constraints:
                     C_temp = constr.transform(C_temp)
 
-                # Apply fixed ST's
+                # Apply fixed C's
                 if c_fix:
                     C_temp[:, c_fix] = self.C_[:, c_fix]
 

@@ -156,6 +156,119 @@ def test_norm():
     out = constr_norm.transform(A)
     assert_allclose(A_norm1, A)
 
+def test_norm_fixed_axes():
+    # AXIS = 1
+    A = np.array([[0.0, 0.2, 1.0], [0.25, 0.25, 0.0], [0.3, 0.9, 0.6]], dtype=np.float)
+    A_fix2_ax1 = np.array([[0.0, 0.0, 1.0], [0.5, 0.5, 0.0], [0.1, 0.3, 0.6]], dtype=np.float)
+    
+    # Fixed axes must be integers
+    with pytest.raises(TypeError):
+        constr_norm = ConstraintNorm(axis=1, fix=2.2, copy=True)
+
+    # Dtype must be integer related
+    with pytest.raises(TypeError):
+        constr_norm = ConstraintNorm(axis=1, fix=np.array([2.2]), copy=True)
+    
+    # COPY: True
+    # Fix of type int
+    constr_norm = ConstraintNorm(axis=1, fix=2, copy=True)
+    out = constr_norm.transform(A)
+    assert_allclose(A_fix2_ax1, out)
+
+    # Fix of type list
+    constr_norm = ConstraintNorm(axis=1, fix=[2], copy=True)
+    out = constr_norm.transform(A)
+    assert_allclose(A_fix2_ax1, out)
+
+    # Fix of type tuple
+    constr_norm = ConstraintNorm(axis=1, fix=(2), copy=True)
+    out = constr_norm.transform(A)
+    assert_allclose(A_fix2_ax1, out)
+
+    # Fix of type ndarray
+    constr_norm = ConstraintNorm(axis=1, fix=np.array([2]), copy=True)
+    out = constr_norm.transform(A)
+    assert_allclose(A_fix2_ax1, out)
+
+    # COPY: False
+    A_fix2_ax1 = np.array([[0.0, 0.0, 1.0], [0.5, 0.5, 0.0], [0.1, 0.3, 0.6]], dtype=np.float)
+    
+    # Fix of type int
+    A = np.array([[0.0, 0.2, 1.0], [0.25, 0.25, 0.0], [0.3, 0.9, 0.6]], dtype=np.float)
+    constr_norm = ConstraintNorm(axis=1, fix=2, copy=False)
+    out = constr_norm.transform(A)
+    assert_allclose(A_fix2_ax1, A)
+
+    # Fix of type list
+    A = np.array([[0.0, 0.2, 1.0], [0.25, 0.25, 0.0], [0.3, 0.9, 0.6]], dtype=np.float)
+    constr_norm = ConstraintNorm(axis=1, fix=[2], copy=False)
+    out = constr_norm.transform(A)
+    assert_allclose(A_fix2_ax1, A)
+
+    # Fix of type tuple
+    A = np.array([[0.0, 0.2, 1.0], [0.25, 0.25, 0.0], [0.3, 0.9, 0.6]], dtype=np.float)
+    constr_norm = ConstraintNorm(axis=1, fix=(2), copy=False)
+    out = constr_norm.transform(A)
+    assert_allclose(A_fix2_ax1, A)
+
+    # Fix of type ndarray
+    A = np.array([[0.0, 0.2, 1.0], [0.25, 0.25, 0.0], [0.3, 0.9, 0.6]], dtype=np.float)
+    constr_norm = ConstraintNorm(axis=1, fix=np.array([2]), copy=False)
+    out = constr_norm.transform(A)
+    assert_allclose(A_fix2_ax1, A)
+
+    # AXIS = 0
+    # Lazy, so just transposed
+    A = np.array([[0.0, 0.2, 1.0], [0.25, 0.25, 0.0], [0.3, 0.9, 0.6]], dtype=np.float).T
+    A_fix2_ax1 = np.array([[0.0, 0.0, 1.0], [0.5, 0.5, 0.0], [0.1, 0.3, 0.6]], dtype=np.float).T
+    # COPY: True
+    # Fix of type int
+    constr_norm = ConstraintNorm(axis=0, fix=2, copy=True)
+    out = constr_norm.transform(A)
+    assert_allclose(A_fix2_ax1, out)
+
+    # Fix of type list
+    constr_norm = ConstraintNorm(axis=0, fix=[2], copy=True)
+    out = constr_norm.transform(A)
+    assert_allclose(A_fix2_ax1, out)
+
+    # Fix of type tuple
+    constr_norm = ConstraintNorm(axis=0, fix=(2), copy=True)
+    out = constr_norm.transform(A)
+    assert_allclose(A_fix2_ax1, out)
+
+    # Fix of type ndarray
+    constr_norm = ConstraintNorm(axis=0, fix=np.array([2]), copy=True)
+    out = constr_norm.transform(A)
+    assert_allclose(A_fix2_ax1, out)
+
+    # COPY: False
+    A_fix2_ax1 = np.array([[0.0, 0.0, 1.0], [0.5, 0.5, 0.0], [0.1, 0.3, 0.6]], dtype=np.float).T
+    
+    # Fix of type int
+    A = np.array([[0.0, 0.2, 1.0], [0.25, 0.25, 0.0], [0.3, 0.9, 0.6]], dtype=np.float).T
+    constr_norm = ConstraintNorm(axis=0, fix=2, copy=False)
+    out = constr_norm.transform(A)
+    assert_allclose(A_fix2_ax1, A)
+
+    # Fix of type list
+    A = np.array([[0.0, 0.2, 1.0], [0.25, 0.25, 0.0], [0.3, 0.9, 0.6]], dtype=np.float).T
+    constr_norm = ConstraintNorm(axis=0, fix=[2], copy=False)
+    out = constr_norm.transform(A)
+    assert_allclose(A_fix2_ax1, A)
+
+    # Fix of type tuple
+    A = np.array([[0.0, 0.2, 1.0], [0.25, 0.25, 0.0], [0.3, 0.9, 0.6]], dtype=np.float).T
+    constr_norm = ConstraintNorm(axis=0, fix=(2), copy=False)
+    out = constr_norm.transform(A)
+    assert_allclose(A_fix2_ax1, A)
+
+    # Fix of type ndarray
+    A = np.array([[0.0, 0.2, 1.0], [0.25, 0.25, 0.0], [0.3, 0.9, 0.6]], dtype=np.float).T
+    constr_norm = ConstraintNorm(axis=0, fix=np.array([2]), copy=False)
+    out = constr_norm.transform(A)
+    assert_allclose(A_fix2_ax1, A)
+
 def test_cut_below():
     """ Test cutting below (and not equal to) a value """
     A = np.array([[1, 2, 3, 4], [4, 5, 6, 7], [7, 8, 9, 10]]).astype(np.float)
