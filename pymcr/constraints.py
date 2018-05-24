@@ -176,8 +176,22 @@ class ConstraintNorm(Constraint):
     fix : list
         Keep fix-axes as-is and normalize the remaining axes based on the
         residual of the fixed axes.
+    set_zeros_to_feature : int
+        Set all samples which sum-to-zero across axis to 1 for a particular feature
+        (See Notes)
     copy : bool
         Make copy of input data, A; otherwise, overwrite (if mutable)
+
+    Notes
+    -----
+
+    -   For set_zeros_to_feature, assuming the data represents concentration with
+     a matrix [n_samples, n_features] and the axis is across the features, for every
+     sample that sums to 0 across axis, would be replaced with a vector [n_features]
+     of zeros except at set_zeros_to_feature, which would equal 1. I.e., this pixel is
+     now pure substance of index value set_zeros_to_feature.
+
+
     """
     def __init__(self, axis=-1, fix=None, copy=False):
         """Normalize along axis"""
@@ -262,7 +276,72 @@ class ConstraintNorm(Constraint):
                     A *= scaler
                     return A
 
+class ConstraintReplaceZeros(Constraint):
+    """
+    Samples that sum-to-zero across axis are replaced with a vector of 0's except
+    for a 1 at feature if a single value. In a concentration context, e.g., samples with 
+    no concentration are replaced with 100% concentration of a set feature. If multiple
+    features given, equal amounts of each feature (summing to 1) are used.
 
+    Parameters
+    ----------
+    axis : int
+        Which axis of input matrix A to apply normalization acorss.
+    feature : int, list, tuple
+        Set all samples which sum-to-zero across axis to fval for a particular feature (or fractional)
+        for multiple features.
+    fval : float
+        Value of summation across axis of replacement vector.
+    copy : bool
+        Make copy of input data, A; otherwise, overwrite (if mutable)
+
+    """
+
+    def __init__(self, axis=-1, feature=None, fval=1, copy=False):
+        """Replace sum-to-zero samples with new feature vector along axis"""
+        self.copy = copy
+        self.fval = fval
+        if feature is None:
+            self.feature = feature
+        elif isinstance(feature, int):
+            self.feature = [feature]
+        elif isinstance(feature, (list, tuple)):
+            self.feature = feature
+        elif isinstance(feature, _np.ndarray):
+            if _np.issubdtype(feature.dtype, _np.integer):
+                self.feature = feature.tolist()
+            else:
+                raise TypeError('ndarrays must be of dtype int')
+        else:
+            raise TypeError('Parameter feature must be of type None, int, list, tuple, ndarray')
+
+        if not ((axis == 0) | (axis == 1) | (axis == -1)):
+            raise ValueError('Axis must be 0,1, or -1')
+        self.axis = axis
+
+    def transform(self, A):
+        """ Apply constraint """
+        if self.feature:
+            replacement = _np.zeros(A.shape[self.axis])
+            replacement[self.feature] = self.fval
+            replacement /= replacement.sum()
+            replacement *= self.fval
+
+            if self.copy:
+                A_out = 1*A
+                if self.axis == 0:
+                    A_out[:, A_out.sum(axis=0)==0] = replacement[:,None]
+                else:  # Axis 1 / -1
+                    A_out[A_out.sum(axis=-1)==0] = replacement
+                return A_out
+            else:
+                if self.axis == 0:
+                    A[:, A.sum(axis=0)==0] = replacement[:,None]
+                else:  # Axis 1 / -1
+                    A[A.sum(axis=-1)==0] = replacement
+                return A
+        else:
+            return A
 
 class ConstraintCutBelow(Constraint):
     """

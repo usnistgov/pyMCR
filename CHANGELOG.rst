@@ -14,10 +14,11 @@ and Dependency Specification <https://www.python.org/dev/peps/pep-0440/>`_.
 -   Perform semi-learning assigning some input ST or C components to be fixed.
 -   **Constraints**
 
-    - Non-negative cumulative summation
-    - Zero end-points
-    - Zero cumulalative summation end-points (approximation)
-    - Compress or cut values above or below a threshold value
+    -   Non-negative cumulative summation
+    -   Zero end-points
+    -   Zero cumulalative summation end-points (approximation)
+    -   Compress or cut values above or below a threshold value
+    -   Replace sum-across-features samples with prescribed features
 
 0.2.1 (18-05-16)
 ----------------
