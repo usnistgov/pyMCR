@@ -32,7 +32,7 @@ def dataset():
     D_known = np.dot(C_known, St_known)
 
     yield C_known, D_known, St_known
-    
+
 def test_mcr_ideal_default(dataset):
     """ Provides C/St_known so optimal should be 1 iteration """
 
@@ -85,10 +85,10 @@ def test_mcr_max_iterations(dataset):
     C_known, D_known, St_known = dataset
 
     # Seeding with a constant of 0.1 for C, actually leads to a bad local
-    # minimum; thus, the err_change gets really small with a relatively bad 
+    # minimum; thus, the err_change gets really small with a relatively bad
     # error. The tol_err_change is set to None, so it makes it to max_iter.
-    mcrals = McrAls(max_iter=50, c_regr='OLS', st_regr='OLS', 
-                    st_constraints=[ConstraintNonneg()], 
+    mcrals = McrAls(max_iter=50, c_regr='OLS', st_regr='OLS',
+                    st_constraints=[ConstraintNonneg()],
                     c_constraints=[ConstraintNonneg(), ConstraintNorm()],
                     tol_increase=None, tol_n_increase=None,
                     tol_err_change=None, tol_n_above_min=None)
@@ -101,10 +101,10 @@ def test_mcr_tol_increase(dataset):
     C_known, D_known, St_known = dataset
 
     # Seeding with a constant of 0.1 for C, actually leads to a bad local
-    # minimum; thus, the err_change gets really small with a relatively bad 
+    # minimum; thus, the err_change gets really small with a relatively bad
     # error.
-    mcrals = McrAls(max_iter=50, c_regr='OLS', st_regr='OLS', 
-                    st_constraints=[ConstraintNonneg()], 
+    mcrals = McrAls(max_iter=50, c_regr='OLS', st_regr='OLS',
+                    st_constraints=[ConstraintNonneg()],
                     c_constraints=[ConstraintNonneg(), ConstraintNorm()],
                     tol_increase=0, tol_n_increase=None,
                     tol_err_change=None, tol_n_above_min=None)
@@ -114,15 +114,15 @@ def test_mcr_tol_increase(dataset):
 def test_mcr_tol_n_increase(dataset):
     """
     Test MCR exits due iterating n times with an increase in error
-    
+
     Note: On some CI systems, the minimum err bottoms out; thus, tol_n_above_min
     needed to be set to 0 to trigger a break.
     """
 
     C_known, D_known, St_known = dataset
 
-    mcrals = McrAls(max_iter=50, c_regr='OLS', st_regr='OLS', 
-                    st_constraints=[ConstraintNonneg()], 
+    mcrals = McrAls(max_iter=50, c_regr='OLS', st_regr='OLS',
+                    st_constraints=[ConstraintNonneg()],
                     c_constraints=[ConstraintNonneg(), ConstraintNorm()],
                     tol_increase=None, tol_n_increase=0,
                     tol_err_change=None, tol_n_above_min=None)
@@ -134,8 +134,8 @@ def test_mcr_tol_err_change(dataset):
 
     C_known, D_known, St_known = dataset
 
-    mcrals = McrAls(max_iter=50, c_regr='OLS', st_regr='OLS', 
-                    st_constraints=[ConstraintNonneg()], 
+    mcrals = McrAls(max_iter=50, c_regr='OLS', st_regr='OLS',
+                    st_constraints=[ConstraintNonneg()],
                     c_constraints=[ConstraintNonneg(), ConstraintNorm()],
                     tol_increase=None, tol_n_increase=None,
                     tol_err_change=1e-20, tol_n_above_min=None)
@@ -152,18 +152,18 @@ def test_mcr_tol_n_above_min(dataset):
 
     C_known, D_known, St_known = dataset
 
-    mcrals = McrAls(max_iter=50, c_regr='OLS', st_regr='OLS', 
-                    st_constraints=[ConstraintNonneg()], 
+    mcrals = McrAls(max_iter=50, c_regr='OLS', st_regr='OLS',
+                    st_constraints=[ConstraintNonneg()],
                     c_constraints=[ConstraintNonneg(), ConstraintNorm()],
                     tol_increase=None, tol_n_increase=None,
                     tol_err_change=None, tol_n_above_min=0)
     mcrals.fit(D_known, C=C_known*0 + 0.1)
     assert mcrals.exit_tol_n_above_min
-    
+
 
 def test_mcr_st_semilearned():
     """ Test when St items are fixed, i.e., enforced to be the same as the input, always """
-    
+
     M = 21
     N = 21
     P = 101
@@ -188,8 +188,8 @@ def test_mcr_st_semilearned():
     ST_guess = 1 * St_known
     ST_guess[2, :] = np.random.randn(P)
 
-    mcrals = McrAls(max_iter=50, tol_increase=100, tol_n_increase=10, 
-                    st_constraints=[ConstraintNonneg()], 
+    mcrals = McrAls(max_iter=50, tol_increase=100, tol_n_increase=10,
+                    st_constraints=[ConstraintNonneg()],
                     c_constraints=[ConstraintNonneg(), ConstraintNorm()],
                     tol_err_change=1e-10)
 
@@ -199,7 +199,7 @@ def test_mcr_st_semilearned():
 
 def test_mcr_c_semilearned():
     """ Test when C items are fixed, i.e., enforced to be the same as the input, always """
-   
+
     M = 21
     N = 21
     P = 101
@@ -224,17 +224,17 @@ def test_mcr_c_semilearned():
     C_guess = 1 * C_known
     C_guess[:, 2] = np.random.randn(int(M*N))
 
-    mcrals = McrAls(max_iter=50, tol_increase=100, tol_n_increase=10, 
-                    st_constraints=[ConstraintNonneg()], 
+    mcrals = McrAls(max_iter=50, tol_increase=100, tol_n_increase=10,
+                    st_constraints=[ConstraintNonneg()],
                     c_constraints=[ConstraintNonneg(), ConstraintNorm()],
                     tol_err_change=1e-10)
 
     mcrals.fit(D_known, C=C_guess, c_fix=[0,1])
     assert_equal(mcrals.C_[:, 0], C_known[:, 0])
     assert_equal(mcrals.C_[:, 1], C_known[:, 1])
-    
+
 def test_mcr_semilearned_both_c_st():
-    """ 
+    """
     Test the special case when C & ST are provided, requiring C-fix ST-fix to
     be provided
     """
@@ -263,8 +263,8 @@ def test_mcr_semilearned_both_c_st():
     C_guess = 1 * C_known
     C_guess[:, 2] = np.abs(np.random.randn(int(M*N)))
 
-    mcrals = McrAls(max_iter=50, tol_increase=100, tol_n_increase=10, 
-                    st_constraints=[ConstraintNonneg()], 
+    mcrals = McrAls(max_iter=50, tol_increase=100, tol_n_increase=10,
+                    st_constraints=[ConstraintNonneg()],
                     c_constraints=[ConstraintNonneg(), ConstraintNorm()],
                     tol_err_change=1e-10)
 
@@ -279,9 +279,8 @@ def test_mcr_semilearned_both_c_st():
     assert_equal(mcrals.C_[:, 1], C_known[:, 1])
     assert_equal(mcrals.ST_[0, :], St_known[0, :])
 
-
 def test_mcr_errors():
-    
+
     # Providing both C and S^T estimates without C_fix and St_fix
     with pytest.raises(TypeError):
         mcrals = McrAls()
@@ -313,3 +312,14 @@ def test_mcr_errors():
     # regression object with no fit method
     with pytest.raises(ValueError):
         mcrals = McrAls(c_regr=print)
+
+def test_props_features_samples_targets(dataset):
+    """ Test mcrals properties for features, targets, samples """
+    C_known, D_known, St_known = dataset
+
+    mcrals = McrAls()
+    mcrals.fit(D_known, ST=St_known)
+
+    assert mcrals.n_targets == C_known.shape[-1]  # n_components
+    assert mcrals.n_samples == D_known.shape[0]
+    assert mcrals.n_features == D_known.shape[-1]

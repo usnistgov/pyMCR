@@ -174,6 +174,27 @@ class McrAls:
         """ D matrix with optimal C and S^T matrices """
         return _np.dot(self.C_opt_, self.ST_opt_)
 
+    @property
+    def n_features(self):
+        if self.ST_ is not None:
+            return self.ST_.shape[-1]
+        else:
+            return None
+
+    @property
+    def n_targets(self):
+        if self.C_ is not None:
+            return self.C_.shape[1]
+        else:
+            return None
+
+    @property
+    def n_samples(self):
+        if self.C_ is not None:
+            return self.C_.shape[0]
+        else:
+            return None
+
     def _ismin_err(self, val):
         """ Is the current error the minimum """
         if len(self.err) == 0:
