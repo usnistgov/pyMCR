@@ -18,7 +18,8 @@ and Dependency Specification <https://www.python.org/dev/peps/pep-0440/>`_.
     -   Zero end-points
     -   Zero cumulalative summation end-points (approximation)
     -   Compress or cut values above or below a threshold value
-    -   Replace sum-across-features samples with prescribed features
+    -   Replace sum-across-features samples (e.g., 0 concentration) with prescribed target
+    -   Enforce a plane ("planarize"). E.g., a concenctration image is a plane.
 
 0.2.1 (18-05-16)
 ----------------

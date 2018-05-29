@@ -59,12 +59,16 @@ Available methods:
     -   Zero end-points of cumulative summation
     -   Non-negativity of cumulative summation
     -   Compress or cut values above or below a threshold value
-    -   Replace sum-across-features samples with prescribed features
-    -   Fix known concentration or spectral components (and let others vary)
+    -   Replace sum-across-features samples (e.g., 0 concentration) with prescribed target
+    -   Enforce a plane ("planarize"). E.g., a concenctration image is a plane.
 
 -   Error metrics / Loss function
 
     -   Mean-squared error
+
+-   Other options
+
+    -   Fix known targets (C and/or ST, and let others vary)
 
 What it **does** do:
 

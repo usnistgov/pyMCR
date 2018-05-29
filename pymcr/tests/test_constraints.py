@@ -11,7 +11,7 @@ from pymcr.constraints import (ConstraintNonneg, ConstraintNorm,
                                ConstraintCumsumNonneg, ConstraintZeroEndPoints,
                                ConstraintZeroCumSumEndPoints, ConstraintCompressAbove,
                                ConstraintCompressBelow, ConstraintCutAbove, ConstraintCutBelow,
-                               ConstraintReplaceZeros)
+                               ConstraintReplaceZeros, ConstraintPlanarize)
 
 import pytest
 
@@ -564,3 +564,170 @@ def test_replace_zeros_non1fval_multifeature():
     out = constr.transform(A)
     assert_allclose(A, A_transform_ax1)
     
+def test_planarize_no_noise():
+    """ Test ConstraintPlanarize with no noise """
+    C_img = np.zeros((10, 20, 2))  # Y, X, Target
+    x = np.arange(C_img.shape[1])
+    y = np.arange(C_img.shape[0])
+    n_targets = C_img.shape[-1]
+
+    X, Y = np.meshgrid(x,y)
+
+    C_0_ideal = 0.1*X + 0.3*Y + 3
+    C_img[:,:,0] = C_0_ideal
+    C_img[:,:,1] = 0.2*X + 0.4*Y + 3
+
+    C_ravel = C_img.reshape((-1, n_targets))
+
+    # COPY
+    constr = ConstraintPlanarize(0, (10, 20), scaler=None, copy=True)
+    out = constr.transform(C_ravel)
+    out_img = out.reshape(C_img.shape)
+
+    assert_allclose(out_img[..., 1], C_img[..., 1])
+    # Data is a plane. Should return the same plane to within numerical error
+    assert_allclose(out_img[...,0], C_0_ideal)
+
+    # OVERWRITE
+    constr = ConstraintPlanarize(0, (10, 20), scaler=None, copy=False)
+    _ = constr.transform(C_ravel)
+    assert_allclose(C_ravel.reshape(C_img.shape)[..., 0], C_img[..., 0])
+    assert_allclose(C_ravel.reshape(C_img.shape)[..., 1], C_img[..., 1])
+
+    
+def test_planarize_noisy():
+    """ Test ConstraintPlanarize """
+    C_img = np.zeros((10, 20, 2))  # Y, X, Target
+    x = np.arange(C_img.shape[1])
+    y = np.arange(C_img.shape[0])
+    n_targets = C_img.shape[-1]
+
+    X, Y = np.meshgrid(x,y)
+
+    C_img[:,:,0] = 0.1*X + 0.3*Y + 3 + 0.1*np.random.randn(10,20)
+    C_img[:,:,1] = 0.1*X + 0.3*Y + 3
+
+    C_ravel = C_img.reshape((-1, n_targets))
+
+    constr = ConstraintPlanarize(0, (10, 20), scaler=None, copy=True)
+    out = constr.transform(C_ravel)
+    out_img = out.reshape(C_img.shape)
+
+    assert_allclose(out_img[..., 1], C_img[..., 1])
+
+    assert np.sum((out_img[..., 0] - C_img[..., 1])**2) < np.sum((C_img[...,0] - C_img[..., 1])**2)
+
+def test_planarize_noisy_list_target():
+    """ Test ConstraintPlanarize """
+    C_img = np.zeros((10, 20, 2))  # Y, X, Target
+    x = np.arange(C_img.shape[1])
+    y = np.arange(C_img.shape[0])
+    n_targets = C_img.shape[-1]
+
+    X, Y = np.meshgrid(x,y)
+
+    C_img[:,:,0] = 0.1*X + 0.3*Y + 3 + 0.1*np.random.randn(10,20)
+    C_img[:,:,1] = 0.1*X + 0.3*Y + 3 + 0.1*np.random.randn(10,20)
+    C_ideal_01 = 0.1*X + 0.3*Y + 3
+
+    C_ravel = C_img.reshape((-1, n_targets))
+
+    constr = ConstraintPlanarize([0, 1], (10, 20), scaler=None, copy=True)
+    out = constr.transform(C_ravel)
+    out_img = out.reshape(C_img.shape)
+
+    # Test that RSS is better after planarize than before
+    assert np.sum((C_img[...,0] - C_ideal_01)**2) > np.sum((out_img[...,0] - C_ideal_01)**2)
+    assert np.sum((C_img[...,1] - C_ideal_01)**2) > np.sum((out_img[...,1] - C_ideal_01)**2)
+
+    # Two output targets are not identical
+    assert np.sum((out_img[..., 0] - out_img[..., 1])**2) > 0
+    
+def test_planarize_err_type_input():
+    """ Inputting a target that is not a list, tuple, or ndarray results in Type Error """
+    with pytest.raises(TypeError):
+        constr = ConstraintPlanarize({'a' : 0}, (10, 20), scaler=None, copy=True)
+
+def test_planarize_set_scaler():
+    """ Test setting or not setting scaler """
+
+    C_img = np.zeros((10, 20, 2))  # Y, X, Target
+    x = np.arange(C_img.shape[1])
+    y = np.arange(C_img.shape[0])
+    n_targets = C_img.shape[-1]
+
+    X, Y = np.meshgrid(x,y)
+
+    C_img[:,:,0] = 0.1*X + 0.3*Y - 2.5
+    C_img[:,:,1] = 0.1*X + 0.3*Y - 2.5
+
+    C_ravel = C_img.reshape((-1, n_targets))
+
+    constr = ConstraintPlanarize(0, (10, 20), scaler=None, copy=True)
+    out = constr.transform(C_ravel)
+
+    assert constr.scaler is not None
+    assert constr.scaler > 100
+
+    constr = ConstraintPlanarize(0, (10, 20), scaler=1.0, copy=True)
+    out = constr.transform(C_ravel)
+
+    assert constr.scaler is not None
+    assert constr.scaler == 1.0
+
+
+    
+
+def test_planarize_use_above_and_below_on_plane():
+    """ Test ConstraintPlanarize """
+    C_img = np.zeros((10, 20, 2))  # Y, X, Target
+    x = np.arange(C_img.shape[1])
+    y = np.arange(C_img.shape[0])
+    n_targets = C_img.shape[-1]
+
+    X, Y = np.meshgrid(x,y)
+
+    C_img[:,:,0] = 0.1*X + 0.3*Y - 2.5
+    C_img[:,:,1] = 0.1*X + 0.3*Y - 2.5
+
+    C_ravel = C_img.reshape((-1, n_targets))
+
+    # COPY -- DO NOT Apply limits to plane
+    constr = ConstraintPlanarize(0, (10, 20), scaler=None, copy=True, use_vals_above=0, 
+                                 use_vals_below=1, lims_to_plane=False)
+    out = constr.transform(C_ravel)
+    
+    assert C_ravel.min() < 0
+    assert C_ravel.max() > 1
+    assert out[:,0].min() < 0
+    assert out[:,0].max() > 1
+    assert out[:,1].min() < 0
+    assert out[:,1].max() > 1
+
+    # COPY -- Apply limits to plane
+    constr = ConstraintPlanarize(0, (10, 20), scaler=None, copy=True, use_vals_above=0, 
+                                 use_vals_below=1, lims_to_plane=True)
+    out = constr.transform(C_ravel)
+    
+    assert C_ravel.min() < 0
+    assert C_ravel.max() > 1
+    assert out[:,0].min() >= 0
+    assert out[:,0].max() <= 1
+    assert out[:,1].min() < 0
+    assert out[:,1].max() > 1
+
+    # OVERWRITE
+    assert C_ravel[:,0].min() < 0
+    assert C_ravel[:,0].max() > 1
+    assert C_ravel[:,1].min() < 0
+    assert C_ravel[:,1].max() > 1
+
+    
+    constr = ConstraintPlanarize(0, (10, 20), scaler=None, copy=False, use_vals_above=0, 
+                                 use_vals_below=1, lims_to_plane=True)
+    out = constr.transform(C_ravel)
+    
+    assert C_ravel[:,0].min() >= 0
+    assert C_ravel[:,0].max() <= 1
+    assert C_ravel[:,1].min() < 0
+    assert C_ravel[:,1].max() > 1

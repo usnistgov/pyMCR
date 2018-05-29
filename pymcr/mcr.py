@@ -11,6 +11,7 @@ class McrAls:
 
     D = CS^T
 
+
     Parameters
     ----------
     c_regr : str, class
@@ -45,7 +46,7 @@ class McrAls:
         allowed. E.g., setting to 1.0 means the err can double per iteration.
 
     tol_n_increase : int
-        Number of iterations for which the err attribute can increase
+        Number of consecutive iterations for which the err attribute can increase
 
     tol_err_change : float
         If err changes less than tol_err_change, per iteration, break.
@@ -54,24 +55,24 @@ class McrAls:
         Number of half-iterations that can be performed without reaching a
         new error-minimum
 
-    Parameters
+    Attributes
     ----------
     err : list
         List of calculated errors (from err_fcn) after each least squares (ie
         twice per iteration)
 
-    C_ : ndarray
+    C_ : ndarray [n_samples, n_targets]
         Most recently calculated C matrix (that did not cause a tolerance
         failure)
 
-    ST_ : ndarray
+    ST_ : ndarray [n_targets, n_features]
         Most recently calculated S^T matrix (that did not cause a tolerance
         failure)
 
-    C_opt_ : ndarray
+    C_opt_ : ndarray [n_samples, n_targets]
         [Optimal] C matrix for lowest err attribute
 
-    ST_opt_ : ndarray
+    ST_opt_ : ndarray [n_targets, n_features]
         [Optimal] ST matrix for lowest err attribute
 
     n_iter : int
@@ -81,8 +82,22 @@ class McrAls:
         Iteration when optimal C and ST calculated
 
     exit_max_iter_reached : bool
-        Was the maximum number of iteration reached (max_iter parameter)
+        Exited iterations due to maximum number of iteration reached (max_iter parameter)
 
+    exit_tol_increase : bool
+        Exited iterations due to maximum fractional increase in error metric (via err_fcn)
+
+    exit_tol_n_increase : bool
+        Exited iterations due to maximum number of consecutive increases in error metric 
+        (via err fcn)
+
+    exit_tol_err_change : bool
+        Exited iterations due to error metric change that is smaller than tol_err_change
+
+    exit_tol_n_above_min : bool
+        Exited iterations due to maximum number of half-iterations for which the error
+        metric increased above the minimum error
+        
     Notes
     -----
 

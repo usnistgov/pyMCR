@@ -279,7 +279,7 @@ class ConstraintNorm(Constraint):
 class ConstraintReplaceZeros(Constraint):
     """
     Samples that sum-to-zero across axis are replaced with a vector of 0's except
-    for a 1 at feature if a single value. In a concentration context, e.g., samples with 
+    for a 1 at feature if a single value. In a concentration context, e.g., samples with
     no concentration are replaced with 100% concentration of a set feature. If multiple
     features given, equal amounts of each feature (summing to 1) are used.
 
@@ -474,3 +474,148 @@ class ConstraintCompressAbove(Constraint):
             A *= (A <= self.value)
             A += temp
             return A
+
+class ConstraintPlanarize(Constraint):
+    """
+    Set a particular target to a plane
+
+    Parameters
+    ----------
+
+    target : int, list, tuple
+        Target numbers to set to a fitted plane
+    shape : tuple, list
+        Shape of array (M,N) which is (Y,X)
+    use_vals_above : float
+        Only calculate based on values above (not including)
+    use_vals_below : float
+        Only calculate based on values below (not including)
+    lims_to_plane : bool
+        The returned plane will be limited to the range of the optionally supplied
+        use_vals_below, use_vals above.
+    scaler : float
+        A large value that is much bigger than any values in the input array.
+        Needed to ensure SVD properly creates plane. If None, auto-calculates.
+    recalc_scaler : bool
+        Auto-calculate for every new input (does not use previously provided or
+        calculated value)
+    copy : bool
+        Make copy of input data, A; otherwise, overwrite (if mutable)
+
+    Notes
+    -----
+
+    -   This uses an SVD to calculate the vector normal to the plane that fits the input data. It
+    assumes that the 3rd singular vector is the normal; thus, the x and y vectors for the data need
+    be larger than the variance of the input data. Scaler enables this by scaling the auto-generated
+    x and y vectors to be much larger than the max-min of the input data
+
+    """
+
+    def __init__(self, target, shape, use_vals_above=None, use_vals_below=None,
+                 lims_to_plane=True, scaler=None, recalc_scaler=False, copy=False):
+        if isinstance(target, int):
+            self.target = [target]
+        elif isinstance(target, (list, tuple, _np.ndarray)):
+            self.target = target
+        else:
+            raise TypeError('target must be an int, list, 2D ndarray, or tuple')
+
+        self.shape = shape
+        self.copy = copy
+        self.scaler = scaler
+        self.recalc = recalc_scaler
+        self.use_above = use_vals_above
+        self.use_below = use_vals_below
+        self.lims_to_plane = lims_to_plane
+
+        self._x = None
+        self._y = None
+        self._X = None
+        self._Y = None
+
+        if scaler is not None:
+            self._setup_xy(scaler)
+
+    def _setup_xy(self, scaler):
+
+        self.scaler = scaler
+        self._x = scaler*_np.arange(self.shape[1], dtype=_np.float)
+        self._y = scaler*_np.arange(self.shape[0], dtype=_np.float)
+
+        self._X, self._Y = _np.meshgrid(self._x, self._y)
+        self._X = self._X.ravel()
+        self._Y = self._Y.ravel()
+
+    def transform(self, A):
+        """ Set targets, t, to fit planes """
+        if (self.scaler is None) | (self.recalc):
+            self._setup_xy(1e3 * _np.abs(A.max() - A.min()))
+
+        if self.copy:
+            A2 = 1*A
+
+        for t in self.target:
+            X2 = 1*self._X
+            Y2 = 1*self._Y
+            Z2 = 1*A[:, t]
+
+            Stack = _np.vstack((X2, Y2, Z2))
+
+            if self.use_above is not None:
+                X2 = X2[Z2>self.use_above]
+                Y2 = Y2[Z2>self.use_above]
+                Z2 = Z2[Z2>self.use_above]
+                Stack = _np.vstack((X2, Y2, Z2))
+
+            if self.use_below is not None:
+                X2 = X2[Z2<self.use_below]
+                Y2 = Y2[Z2<self.use_below]
+                Z2 = Z2[Z2<self.use_below]
+                Stack = _np.vstack((X2, Y2, Z2))
+
+            Stack = Stack - Stack.mean(axis=-1)[:,None]
+
+            U,s,Vh = _np.linalg.svd(Stack, full_matrices=False)
+            norm_to_plane = 1*U[:,-1]
+
+            plane = (((-norm_to_plane[0] * (self._X - X2.mean())) - 
+                       (norm_to_plane[1] * (self._Y - Y2.mean()))) / norm_to_plane[2]) + Z2.mean()
+            
+            if self.lims_to_plane:
+                if self.use_above is not None:
+                    plane[plane < self.use_above] = self.use_above
+                if self.use_below is not None:
+                    plane[plane > self.use_below] = self.use_below
+            if not self.copy:
+                A[:, t] = plane
+            else:
+                A2[:, t] = plane
+        if self.copy:
+            return A2
+        else:
+            return A
+
+if __name__ == '__main__':  # pragma: no cover
+    C_img = _np.zeros((10, 20, 2))  # Y, X, Target
+    x = _np.arange(C_img.shape[1])
+    y = _np.arange(C_img.shape[0])
+    n_targets = C_img.shape[-1]
+
+    X, Y = _np.meshgrid(x,y)
+
+    C_img[:,:,0] = 0.1*X + 0.3*Y - 2.5
+    C_img[:,:,1] = 0.1*X + 0.3*Y - 2.5
+
+    C_ravel = C_img.reshape((-1, n_targets))
+
+    constr = ConstraintPlanarize(0, (10, 20), scaler=None, copy=True, use_vals_above=0, 
+                                 use_vals_below=1, lims_to_plane=True)
+    out = constr.transform(C_ravel)
+
+    assert C_ravel.min() < 0
+    assert C_ravel.max() > 1
+    assert out[:,0].min() >= 0
+    assert out[:,0].max() <= 1
+    assert out[:,1].min() < 0
+    assert out[:,1].max() > 1
