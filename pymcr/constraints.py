@@ -355,30 +355,51 @@ class ConstraintCutBelow(Constraint):
     axis_sumnz : int
         If not None, cut below value only applied where sum across specified
         axis does not go to 0, i.e. all values cut.
+    exclude : int, list , tuple, ndarray
+        Exclude targets
+    exclude_axis : int
+        Along which axis to enumerate targets
     copy : bool
         Make copy of input data, A; otherwise, overwrite (if mutable)
     """
-    def __init__(self, value=0, axis_sumnz=None, copy=False):
+    def __init__(self, value=0, axis_sumnz=None, exclude=None, exclude_axis=-1, copy=False):
         """ """
         self.copy = copy
         self.value = value
         self.axis = axis_sumnz
+        self.exclude = exclude
+        self.exclude_axis = exclude_axis
+
+        self._excl_mat = None
+
+    def _make_excl_mat(self, A_shape):
+        X,Y = _np.meshgrid(_np.arange(A_shape[1]), _np.arange(A_shape[0]))
+        if self.exclude is None:
+            self._excl_mat = _np.zeros(X.shape, dtype=_np.bool)
+        else:
+            if self.exclude_axis == 0:
+                self._excl_mat = _np.in1d(Y.ravel(), self.exclude).reshape(Y.shape)
+            else:
+                self._excl_mat = _np.in1d(X.ravel(), self.exclude).reshape(X.shape)
 
     def transform(self, A):
         """ Apply cut-below value constraint"""
+        if self._excl_mat is None:
+            self._make_excl_mat(A.shape)
+
         if self.axis is None:
             if self.copy:
-                return A*(A >= self.value)
+                return A*((A >= self.value) | self._excl_mat)
             else:
-                A *= (A >= self.value)
+                A *= ((A >= self.value) | self._excl_mat)
                 return A
         else:
             if self.copy:
                 return A*(_np.alltrue(A < self.value, axis=self.axis, keepdims=True) +
-                          (A >= self.value))
+                          (A >= self.value) + self._excl_mat)
             else:
                 A *= (_np.alltrue(A < self.value, axis=self.axis, keepdims=True) +
-                      (A >= self.value))
+                      (A >= self.value) + self._excl_mat)
                 return A
 
 class ConstraintCompressBelow(Constraint):
@@ -421,30 +442,50 @@ class ConstraintCutAbove(Constraint):
     axis_sumnz : int
         If not None, cut above value only applied where sum across specified
         axis does not go to 0, i.e. all values cut.
+    exclude : int, list , tuple, ndarray
+        Exclude targets
+    exclude_axis : int
+        Along which axis to enumerate targets
     copy : bool
         Make copy of input data, A; otherwise, overwrite (if mutable)
     """
-    def __init__(self, value=0, axis_sumnz=None, copy=False):
+    def __init__(self, value=0, axis_sumnz=None, exclude=None, exclude_axis=-1, copy=False):
         """ """
         self.copy = copy
         self.value = value
         self.axis = axis_sumnz
+        self.exclude = exclude
+        self.exclude_axis = exclude_axis
+
+        self._excl_mat = None
+
+    def _make_excl_mat(self, A_shape):
+        X,Y = _np.meshgrid(_np.arange(A_shape[1]), _np.arange(A_shape[0]))
+        if self.exclude is None:
+            self._excl_mat = _np.zeros(X.shape, dtype=_np.bool)
+        else:
+            if self.exclude_axis == 0:
+                self._excl_mat = _np.in1d(Y.ravel(), self.exclude).reshape(Y.shape)
+            else:
+                self._excl_mat = _np.in1d(X.ravel(), self.exclude).reshape(X.shape)
 
     def transform(self, A):
         """ Apply cut-above value constraint"""
+        if self._excl_mat is None:
+            self._make_excl_mat(A.shape)
         if self.axis is None:
             if self.copy:
-                return A*(A <= self.value)
+                return A*((A <= self.value) | self._excl_mat)
             else:
-                A *= (A <= self.value)
+                A *= ((A <= self.value) | self._excl_mat)
                 return A
         else:
             if self.copy:
                 return A*(_np.alltrue(A > self.value, axis=self.axis, keepdims=True) +
-                          (A <= self.value))
+                          (A <= self.value) + self._excl_mat)
             else:
                 A *= (_np.alltrue(A > self.value, axis=self.axis, keepdims=True) +
-                      (A <= self.value))
+                      (A <= self.value) + self._excl_mat)
                 return A
 
 class ConstraintCompressAbove(Constraint):

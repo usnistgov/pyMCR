@@ -284,6 +284,32 @@ def test_cut_below():
     out = constr.transform(A)
     assert_allclose(A, A_transform)
 
+def test_cut_below_exclude():
+    """ Test cutting below (and not equal to) a value """
+    A = np.array([[1, 2, 3, 4], [4, 5, 6, 7], [7, 8, 9, 10]]).astype(np.float)
+    A_transform_excl_0_ax1 = np.array([[1, 0, 0, 4], [4, 5, 6, 7], [7, 8, 9, 10]]).astype(np.float)
+    A_transform_excl_0_ax0 = np.array([[1, 2, 3, 4], [4, 5, 6, 7], [7, 8, 9, 10]]).astype(np.float)
+
+    # COPY
+    constr = ConstraintCutBelow(copy=True, value=4, exclude=0, exclude_axis=1)
+    out = constr.transform(A)
+    assert_allclose(out, A_transform_excl_0_ax1)
+
+    constr = ConstraintCutBelow(copy=True, value=4, exclude=0, exclude_axis=0)
+    out = constr.transform(A)
+    assert_allclose(out, A_transform_excl_0_ax0)
+
+    # OVERWRITE
+    A = np.array([[1, 2, 3, 4], [4, 5, 6, 7], [7, 8, 9, 10]]).astype(np.float)
+    constr = ConstraintCutBelow(copy=False, value=4, exclude=0, exclude_axis=1)
+    out = constr.transform(A)
+    assert_allclose(A, A_transform_excl_0_ax1)
+
+    A = np.array([[1, 2, 3, 4], [4, 5, 6, 7], [7, 8, 9, 10]]).astype(np.float)
+    constr = ConstraintCutBelow(copy=False, value=4, exclude=0, exclude_axis=0)
+    out = constr.transform(A)
+    assert_allclose(A, A_transform_excl_0_ax0)
+
 def test_cut_below_nonzerosum():
     """
     Test cutting below (and not equal to) a value with the constrain that
@@ -300,6 +326,31 @@ def test_cut_below_nonzerosum():
     constr = ConstraintCutBelow(copy=False, value=cutoff, axis_sumnz=-1)
     constr.transform(A)
     assert_allclose(A, A_correct)
+
+def test_cut_below_nonzerosum_exclude():
+    """
+    Test cutting below (and not equal to) a value with the constrain that
+        no columns (axis=-1) will all become 0
+    """
+    A = np.array([[0.3, 0.7], [0.3, 0.7], [0.7, 0.3]])
+    cutoff = 0.7
+    A_correct = np.array([[0.3, 0.7], [0.3, 0.7], [0.7, 0.0]])
+
+    # COPY
+    constr = ConstraintCutBelow(copy=True, value=cutoff, axis_sumnz=-1, 
+                                exclude=0, exclude_axis=-1)
+    out = constr.transform(A)
+    assert_allclose(out, A_correct)
+
+    # OVERWRITE
+    constr = ConstraintCutBelow(copy=False, value=cutoff, axis_sumnz=-1, 
+                                exclude=0, exclude_axis=-1)
+    _ = constr.transform(A)
+    assert_allclose(A, A_correct)
+
+    # constr = ConstraintCutBelow(copy=False, value=cutoff, axis_sumnz=-1)
+    # constr.transform(A)
+    # assert_allclose(A, A_correct)
 
 def test_cut_above_nonzerosum():
     """
@@ -351,6 +402,30 @@ def test_cut_above():
     out = constr.transform(A)
     assert_allclose(A, A_transform)
 
+def test_cut_above_exclude():
+    """ Test cutting above (and not equal to) a value """
+    A = np.array([[1, 2, 3, 4], [4, 5, 6, 7], [7, 8, 9, 10]]).astype(np.float)
+    A_transform_excl_0_ax1 = np.array([[1, 2, 3, 4], [4, 0, 0, 0], [7, 0, 0, 0]]).astype(np.float)
+    A_transform_excl_2_ax0 = np.array([[1, 2, 3, 4], [4, 0, 0, 0], [7, 8, 9, 10]]).astype(np.float)
+
+    constr = ConstraintCutAbove(copy=True, value=4, exclude=0, exclude_axis=-1)
+    out = constr.transform(A)
+    assert_allclose(out, A_transform_excl_0_ax1)
+
+    constr = ConstraintCutAbove(copy=True, value=4, exclude=2, exclude_axis=0)
+    out = constr.transform(A)
+    assert_allclose(out, A_transform_excl_2_ax0)
+
+    # No Copy
+    A = np.array([[1, 2, 3, 4], [4, 5, 6, 7], [7, 8, 9, 10]]).astype(np.float)
+    constr = ConstraintCutAbove(copy=False, value=4, exclude=0, exclude_axis=-1)
+    _ = constr.transform(A)
+    assert_allclose(A, A_transform_excl_0_ax1)
+
+    A = np.array([[1, 2, 3, 4], [4, 5, 6, 7], [7, 8, 9, 10]]).astype(np.float)
+    constr = ConstraintCutAbove(copy=False, value=4, exclude=2, exclude_axis=0)
+    _ = constr.transform(A)
+    assert_allclose(A, A_transform_excl_2_ax0)
 def test_compress_above():
     """ Test compressing above (and not equal to) a value """
     A = np.array([[1, 2, 3, 4], [4, 5, 6, 7], [7, 8, 9, 10]]).astype(np.float)
