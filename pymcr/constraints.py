@@ -343,9 +343,9 @@ class ConstraintReplaceZeros(Constraint):
         else:
             return A
 
-class ConstraintCutBelow(Constraint):
+class _CutExclude(Constraint):
     """
-    Cut values below (and not-equal to) a certain threshold.
+    Parent class for methods that cut and can exclude
 
     Parameters
     ----------
@@ -381,6 +381,30 @@ class ConstraintCutBelow(Constraint):
                 self._excl_mat = _np.in1d(Y.ravel(), self.exclude).reshape(Y.shape)
             else:
                 self._excl_mat = _np.in1d(X.ravel(), self.exclude).reshape(X.shape)
+
+class ConstraintCutBelow(_CutExclude):
+    """
+    Cut values below (and not-equal to) a certain threshold.
+
+    Parameters
+    ----------
+
+    value : float
+        Cutoff value
+    axis_sumnz : int
+        If not None, cut below value only applied where sum across specified
+        axis does not go to 0, i.e. all values cut.
+    exclude : int, list , tuple, ndarray
+        Exclude targets
+    exclude_axis : int
+        Along which axis to enumerate targets
+    copy : bool
+        Make copy of input data, A; otherwise, overwrite (if mutable)
+    """
+    def __init__(self, value=0, axis_sumnz=None, exclude=None, exclude_axis=-1, copy=False):
+        """ Initialize """
+        super().__init__(value=value, axis_sumnz=axis_sumnz, exclude=exclude,
+                         exclude_axis=exclude_axis, copy=copy)
 
     def transform(self, A):
         """ Apply cut-below value constraint"""
@@ -430,7 +454,7 @@ class ConstraintCompressBelow(Constraint):
             A += temp
             return A
 
-class ConstraintCutAbove(Constraint):
+class ConstraintCutAbove(_CutExclude):
     """
     Cut values above (and not-equal to) a certain threshold
 
@@ -451,23 +475,8 @@ class ConstraintCutAbove(Constraint):
     """
     def __init__(self, value=0, axis_sumnz=None, exclude=None, exclude_axis=-1, copy=False):
         """ """
-        self.copy = copy
-        self.value = value
-        self.axis = axis_sumnz
-        self.exclude = exclude
-        self.exclude_axis = exclude_axis
-
-        self._excl_mat = None
-
-    def _make_excl_mat(self, A_shape):
-        X,Y = _np.meshgrid(_np.arange(A_shape[1]), _np.arange(A_shape[0]))
-        if self.exclude is None:
-            self._excl_mat = _np.zeros(X.shape, dtype=_np.bool)
-        else:
-            if self.exclude_axis == 0:
-                self._excl_mat = _np.in1d(Y.ravel(), self.exclude).reshape(Y.shape)
-            else:
-                self._excl_mat = _np.in1d(X.ravel(), self.exclude).reshape(X.shape)
+        super().__init__(value=value, axis_sumnz=axis_sumnz, exclude=exclude,
+                         exclude_axis=exclude_axis, copy=copy)
 
     def transform(self, A):
         """ Apply cut-above value constraint"""
@@ -620,9 +629,9 @@ class ConstraintPlanarize(Constraint):
             U,s,Vh = _np.linalg.svd(Stack, full_matrices=False)
             norm_to_plane = 1*U[:,-1]
 
-            plane = (((-norm_to_plane[0] * (self._X - X2.mean())) - 
+            plane = (((-norm_to_plane[0] * (self._X - X2.mean())) -
                        (norm_to_plane[1] * (self._Y - Y2.mean()))) / norm_to_plane[2]) + Z2.mean()
-            
+
             if self.lims_to_plane:
                 if self.use_above is not None:
                     plane[plane < self.use_above] = self.use_above
@@ -638,25 +647,16 @@ class ConstraintPlanarize(Constraint):
             return A
 
 if __name__ == '__main__':  # pragma: no cover
-    C_img = _np.zeros((10, 20, 2))  # Y, X, Target
-    x = _np.arange(C_img.shape[1])
-    y = _np.arange(C_img.shape[0])
-    n_targets = C_img.shape[-1]
+    A = _np.array([[1, 2, 3, 4], [4, 5, 6, 7], [7, 8, 9, 10]]).astype(_np.float)
+    A_transform = _np.array([[1, 2, 3, 4], [4, 0, 0, 0], [0, 0, 0, 0]]).astype(_np.float)
 
-    X, Y = _np.meshgrid(x,y)
+    constr = ConstraintCutAbove(copy=True, value=4)
+    out = constr.transform(A)
 
-    C_img[:,:,0] = 0.1*X + 0.3*Y - 2.5
-    C_img[:,:,1] = 0.1*X + 0.3*Y - 2.5
+    from numpy.testing import assert_allclose as _assert_allclose
+    _assert_allclose(out, A_transform)
 
-    C_ravel = C_img.reshape((-1, n_targets))
-
-    constr = ConstraintPlanarize(0, (10, 20), scaler=None, copy=True, use_vals_above=0, 
-                                 use_vals_below=1, lims_to_plane=True)
-    out = constr.transform(C_ravel)
-
-    assert C_ravel.min() < 0
-    assert C_ravel.max() > 1
-    assert out[:,0].min() >= 0
-    assert out[:,0].max() <= 1
-    assert out[:,1].min() < 0
-    assert out[:,1].max() > 1
+    # No Copy
+    # constr = ConstraintCutAbove(copy=False, value=4)
+    # out = constr.transform(A)
+    # assert_allclose(A, A_transform)
