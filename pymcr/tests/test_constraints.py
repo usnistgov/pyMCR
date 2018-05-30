@@ -337,13 +337,13 @@ def test_cut_below_nonzerosum_exclude():
     A_correct = np.array([[0.3, 0.7], [0.3, 0.7], [0.7, 0.0]])
 
     # COPY
-    constr = ConstraintCutBelow(copy=True, value=cutoff, axis_sumnz=-1, 
+    constr = ConstraintCutBelow(copy=True, value=cutoff, axis_sumnz=-1,
                                 exclude=0, exclude_axis=-1)
     out = constr.transform(A)
     assert_allclose(out, A_correct)
 
     # OVERWRITE
-    constr = ConstraintCutBelow(copy=False, value=cutoff, axis_sumnz=-1, 
+    constr = ConstraintCutBelow(copy=False, value=cutoff, axis_sumnz=-1,
                                 exclude=0, exclude_axis=-1)
     _ = constr.transform(A)
     assert_allclose(A, A_correct)
@@ -638,7 +638,7 @@ def test_replace_zeros_non1fval_multifeature():
     constr = ConstraintReplaceZeros(copy=False, axis=1, feature=[0,1], fval=4)
     out = constr.transform(A)
     assert_allclose(A, A_transform_ax1)
-    
+
 def test_planarize_no_noise():
     """ Test ConstraintPlanarize with no noise """
     C_img = np.zeros((10, 20, 2))  # Y, X, Target
@@ -669,7 +669,7 @@ def test_planarize_no_noise():
     assert_allclose(C_ravel.reshape(C_img.shape)[..., 0], C_img[..., 0])
     assert_allclose(C_ravel.reshape(C_img.shape)[..., 1], C_img[..., 1])
 
-    
+
 def test_planarize_noisy():
     """ Test ConstraintPlanarize """
     C_img = np.zeros((10, 20, 2))  # Y, X, Target
@@ -717,7 +717,7 @@ def test_planarize_noisy_list_target():
 
     # Two output targets are not identical
     assert np.sum((out_img[..., 0] - out_img[..., 1])**2) > 0
-    
+
 def test_planarize_err_type_input():
     """ Inputting a target that is not a list, tuple, or ndarray results in Type Error """
     with pytest.raises(TypeError):
@@ -751,7 +751,7 @@ def test_planarize_set_scaler():
     assert constr.scaler == 1.0
 
 
-    
+
 
 def test_planarize_use_above_and_below_on_plane():
     """ Test ConstraintPlanarize """
@@ -768,10 +768,10 @@ def test_planarize_use_above_and_below_on_plane():
     C_ravel = C_img.reshape((-1, n_targets))
 
     # COPY -- DO NOT Apply limits to plane
-    constr = ConstraintPlanarize(0, (10, 20), scaler=None, copy=True, use_vals_above=0, 
+    constr = ConstraintPlanarize(0, (10, 20), scaler=None, copy=True, use_vals_above=0,
                                  use_vals_below=1, lims_to_plane=False)
     out = constr.transform(C_ravel)
-    
+
     assert C_ravel.min() < 0
     assert C_ravel.max() > 1
     assert out[:,0].min() < 0
@@ -780,10 +780,10 @@ def test_planarize_use_above_and_below_on_plane():
     assert out[:,1].max() > 1
 
     # COPY -- Apply limits to plane
-    constr = ConstraintPlanarize(0, (10, 20), scaler=None, copy=True, use_vals_above=0, 
+    constr = ConstraintPlanarize(0, (10, 20), scaler=None, copy=True, use_vals_above=0,
                                  use_vals_below=1, lims_to_plane=True)
     out = constr.transform(C_ravel)
-    
+
     assert C_ravel.min() < 0
     assert C_ravel.max() > 1
     assert out[:,0].min() >= 0
@@ -797,11 +797,11 @@ def test_planarize_use_above_and_below_on_plane():
     assert C_ravel[:,1].min() < 0
     assert C_ravel[:,1].max() > 1
 
-    
-    constr = ConstraintPlanarize(0, (10, 20), scaler=None, copy=False, use_vals_above=0, 
+
+    constr = ConstraintPlanarize(0, (10, 20), scaler=None, copy=False, use_vals_above=0,
                                  use_vals_below=1, lims_to_plane=True)
     out = constr.transform(C_ravel)
-    
+
     assert C_ravel[:,0].min() >= 0
     assert C_ravel[:,0].max() <= 1
     assert C_ravel[:,1].min() < 0
