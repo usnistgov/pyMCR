@@ -1,14 +1,14 @@
 .. -*- mode: rst -*-
 
-.. image:: https://img.shields.io/travis/CCampJr/pyMCR/master.svg
+.. image:: https://travis-ci.org/CCampJr/pyMCR.svg?branch=0.3.X
     :alt: Travis branch
     :target: https://travis-ci.org/CCampJr/pyMCR
 
-.. image:: https://ci.appveyor.com/api/projects/status/ajld1bj7jo4oweio/branch/master?svg=true
+.. image:: https://ci.appveyor.com/api/projects/status/ajld1bj7jo4oweio/branch/0.3.X?svg=true
     :alt: AppVeyor branch
     :target: https://ci.appveyor.com/project/CCampJr/pyMCR
 
-.. image:: https://img.shields.io/codecov/c/github/CCampJr/pyMCR/master.svg
+.. image:: https://img.shields.io/codecov/c/github/CCampJr/pyMCR/0.3.X.svg
     :alt: Codecov branch
     :target: https://codecov.io/gh/CCampJr/pyMCR
 
@@ -26,9 +26,6 @@
 
 pyMCR: Multivariate Curve Resolution in Python
 ===============================================================
-
-**Note: Version 0.2.* is a total re-write from Version 0.1.* and is not
-compatible.**
 
 pyMCR is a small package for performing multivariate curve resolution.
 Currently, it implements a simple alternating least squares method
@@ -58,17 +55,26 @@ Available methods:
 
     -   Non-negativity
     -   Normalization
+    -   Zero end-points
+    -   Zero end-points of cumulative summation
+    -   Non-negativity of cumulative summation
+    -   Compress or cut values above or below a threshold value
+    -   Replace sum-across-features samples (e.g., 0 concentration) with prescribed target
+    -   Enforce a plane ("planarize"). E.g., a concenctration image is a plane.
 
 -   Error metrics / Loss function
 
     -   Mean-squared error
 
+-   Other options
+
+    -   Fix known targets (C and/or ST, and let others vary)
+
 What it **does** do:
 
 -   Approximate the concentration and spectral matrices via minimization routines. 
     This is the core the MCR-ALS methods.
--   Enable the application of certain constraints (currently): sum-to-one, 
-    non-negativity, normalization, maximum limits (closure)
+-   Enable the application of certain constraints in a user-defined order.
 
 What it **does not** do:
 
