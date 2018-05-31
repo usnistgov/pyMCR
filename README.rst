@@ -56,7 +56,7 @@ Available methods:
     -   Non-negativity
     -   Normalization
     -   Zero end-points
-    -   Zero end-points of cumulative summation
+    -   Zero (approx) end-points of cumulative summation (can specify nodes as well)
     -   Non-negativity of cumulative summation
     -   Compress or cut values above or below a threshold value
     -   Replace sum-across-features samples (e.g., 0 concentration) with prescribed target
