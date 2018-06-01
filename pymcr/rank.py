@@ -1,6 +1,8 @@
-
+""" Functions to estimate number of factors / rank """
 import numpy as _np
 from numpy.linalg import svd as _svd
+
+from pymcr.condition import standardize as _standardize
 
 __all__ = ['ind', 'rod']
 
@@ -13,7 +15,7 @@ def ind(D_actual, ul_rank=100):
 
     # PCA forces data matrices to be normalized.
     # Therefore, D_actual also needs to be normalized.
-    D_scale = _scale(D_actual)
+    D_scale = _standardize(D_actual)
     U, S, _ = _svd(D_actual)
     T = U * S
     for n_rank in range(1, n_max_rank+1):
@@ -30,38 +32,3 @@ def rod(D_actual, ul_rank=100):
           / ( IND[1:(len(IND)-1)] - IND[2:len(IND)] )
     return ROD
 
-
-def _scale(X, mean_ctr=True, with_std=True, axis=-1, copy=True):
-    """
-    Standardization of data
-    
-    Parameters
-    ----------
-
-    X : ndarray
-        Data array
-
-    mean_ctr : bool
-        Mean-center data
-
-    with_std : bool
-        Normalize by the standard deviation of the data
-    
-    axis : int
-        Axis from which to calculate mean and standard deviation
-
-    copy : bool
-        Copy data (X) if True, overwite if False
-
-    """
-
-    if copy:
-        Xsc = 1*X
-    else:
-        Xsc = X
-
-    if mean_ctr:
-        Xsc -= X.mean(axis=axis, keepdims=True)
-    if with_std:
-        Xsc /= X.std(axis=axis, keepdims=True)
-    return Xsc
