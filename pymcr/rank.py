@@ -1,6 +1,6 @@
 
-import numpy as np
-from numpy.linalg import svd
+import numpy as _np
+from numpy.linalg import _svd
 
 __all__ = ['ind', 'rod']
 
@@ -8,18 +8,18 @@ __all__ = ['ind', 'rod']
 def ind(D_actual, ul_rank=100):
     """ Malinowski's indicator function """
     n_samples = D_actual.shape[0]
-    n_max_rank = np.min([ul_rank, np.min(D_actual.shape)-1])
-    error_squared = np.zeros(n_max_rank)
+    n_max_rank = _np.min([ul_rank, _np.min(D_actual.shape)-1])
+    error_squared = _np.zeros(n_max_rank)
 
     # PCA forces data matrices to be normalized.
     # Therefore, D_actual also needs to be normalized.
     D_scale = _scale(D_actual)
-    U, S, _ = svd(D_actual)
+    U, S, _ = _svd(D_actual)
     T = U * S
     for n_rank in range(1, n_max_rank+1):
-        error_squared[n_rank - 1] = np.sum(np.square(D_scale)) - np.sum(np.square(T[:, :n_rank]))
-    indicator = np.sqrt(error_squared) /\
-                np.square([n_samples - L for L in np.arange(1, n_max_rank+1)])
+        error_squared[n_rank - 1] = _np.sum(_np.square(D_scale)) - _np.sum(_np.square(T[:, :n_rank]))
+    indicator = _np.sqrt(error_squared) /\
+                _np.square([n_samples - L for L in _np.arange(1, n_max_rank+1)])
     return indicator
 
 

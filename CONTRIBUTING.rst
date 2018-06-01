@@ -41,6 +41,15 @@ pyMCR: Contributing
 -    After contributing, please add your name to the bottom of the README file. No matter how small, all contributors will be recognized.
 -    `Gist of the release process <https://gist.github.com/CCampJr/dca856a4322c9640f857956ba08161e6>`_
 
+Style Notes
+~~~~~~~~~~~
+
+-   External imports (e.g., import numpy as _np) should have a prepended underscore to prevent
+code completeion from identifying numpy as belonging to the pymcr module.
+-   Avoid all-capitalized variables unless constants.
+-   For mathematical functions invpolving matrix math, capitalized and lower-case variables names
+are permissable to distinguish between vectors and matrices.
+
 
 Branches
 --------
