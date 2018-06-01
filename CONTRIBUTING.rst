@@ -57,12 +57,12 @@ are permissable to distinguish between vectors and matrices.
 Branches
 --------
 
--    **0.2.X**: Updates to current **master**
+-   **0.2.X**: Updates to current **master**
 
     - Non-new functionality
     - Typos and **master** branch documentation
 
--    **0.3.X**: Next version of pyMCR
+-   **0.3.X**: Next version of pyMCR
 
     - New functionality
     - New regressors

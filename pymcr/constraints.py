@@ -133,15 +133,17 @@ class ConstraintZeroCumSumEndPoints(Constraint):
     ----------
     copy : bool
         Make copy of input data, A; otherwise, overwrite (if mutable)
-
+    nodes : list of int
+        In addition to end-points, other points to ensure are approximately 0
     axis : int
         Axis to operate on
 
     span : int
         Number of pixels along the ends to average.
     """
-    def __init__(self, axis=-1, copy=False):
+    def __init__(self, nodes=None, axis=-1, copy=False):
         """ A must be non-negative"""
+        self.nodes = nodes
         self.copy = copy
         if [0,1,-1].count(axis) != 1:
             raise TypeError('Axis must be 0, 1, or -1')
@@ -152,18 +154,53 @@ class ConstraintZeroCumSumEndPoints(Constraint):
         """ Apply cumsum nonnegative constraint"""
         meaner = A.mean(self.axis)
 
-        if (self.axis == 0):
-            if self.copy:
-                return A - meaner[None,:]
+        if self.nodes:
+            self.nodes = set(self.nodes)
+            self.nodes.update({0, A.shape[self.axis]})
+            self.nodes.discard(-1)
+            self.nodes = list(self.nodes)
+
+            if (self.axis == 0):
+                if self.copy:
+                    temp = 1.0*A
+                    for num in range(len(self.nodes) - 1):
+                        n0 = self.nodes[num]
+                        n1 = self.nodes[num+1]
+                        temp[n0:n1,:] -= temp[n0:n1,:].mean(self.axis)[None,:]
+                    return temp
+                else:
+                    for num in range(len(self.nodes) - 1):
+                        n0 = self.nodes[num]
+                        n1 = self.nodes[num+1]
+                        A[n0:n1,:] -= A[n0:n1,:].mean(self.axis)[None,:]
+                    return A
             else:
-                A -= meaner[None,:]
-                return A
+                if self.copy:
+                    temp = 1.0*A
+                    for num in range(len(self.nodes) - 1):
+                        n0 = self.nodes[num]
+                        n1 = self.nodes[num+1]
+                        temp[:, n0:n1] -= temp[:, n0:n1].mean(self.axis)[:, None]
+                    return temp
+                else:
+                    for num in range(len(self.nodes) - 1):
+                        n0 = self.nodes[num]
+                        n1 = self.nodes[num+1]
+                        A[:, n0:n1] -= A[:, n0:n1].mean(self.axis)[:, None]
+                    return A
         else:
-            if self.copy:
-                return A - meaner[:, None]
+            if (self.axis == 0):
+                if self.copy:
+                    return A - meaner[None,:]
+                else:
+                    A -= meaner[None,:]
+                    return A
             else:
-                A -= meaner[:, None]
-                return A
+                if self.copy:
+                    return A - meaner[:, None]
+                else:
+                    A -= meaner[:, None]
+                    return A
 
 class ConstraintNorm(Constraint):
     """

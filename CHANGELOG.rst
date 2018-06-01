@@ -16,7 +16,7 @@ and Dependency Specification <https://www.python.org/dev/peps/pep-0440/>`_.
 
     -   Non-negative cumulative summation
     -   Zero end-points
-    -   Zero cumulalative summation end-points (approximation)
+    -   Zero (approx) cumulalative summation end-points (can specify nodes as well)
     -   Compress or cut values above or below a threshold value
     -   Replace sum-across-features samples (e.g., 0 concentration) with prescribed target
     -   Enforce a plane ("planarize"). E.g., a concenctration image is a plane.

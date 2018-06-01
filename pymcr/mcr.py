@@ -97,7 +97,7 @@ class McrAls:
     exit_tol_n_above_min : bool
         Exited iterations due to maximum number of half-iterations for which the error
         metric increased above the minimum error
-        
+
     Notes
     -----
 
@@ -286,6 +286,7 @@ class McrAls:
                 if self._saveall_st:
                     self._saved_st.append(self.ST_)
 
+                # * Target is the feature of the regression
                 self.c_regressor.fit(self.ST_.T, D.T, **self.c_fit_kwargs)
                 C_temp = self.c_regressor.coef_
 
@@ -365,6 +366,7 @@ class McrAls:
                 if self._saveall_c:
                     self._saved_c.append(self.C_)
 
+                # * Target is the feature of the regression
                 self.st_regressor.fit(self.C_, D, **self.st_fit_kwargs)
                 ST_temp = self.st_regressor.coef_.T
 

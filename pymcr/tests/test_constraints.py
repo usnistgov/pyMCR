@@ -120,6 +120,61 @@ def test_zerocumsumendpoints():
     assert_allclose(A_diff1, 0)
     assert_allclose(np.cumsum(A_diff1, axis=1), 0)
 
+def test_zerocumsumendpoints_nodes():
+    """ Cum-Sum 0-Endpoints Constraint with defined nodes"""
+    
+    A = np.array([[1, 2, 1, 12], [1, 2, 2, 3], [1, 2, 3, 6]]).astype(np.float)
+    A_transform_ax0 = np.array([[0, 0, -1, 5], [0, 0, 0, -4], [0, 0, 1, -1]])
+    A_transform_ax1 = np.array([[-3, -2, -3, 8], [-1, 0, 0, 1], [-2, -1, 0, 3]])
+
+    # COPY Axis 0, node=0 (same as endpoints)
+    constr_ax0 = ConstraintZeroCumSumEndPoints(copy=True, nodes=[0], axis=0)
+    out = constr_ax0.transform(A)
+    assert_allclose(out, A_transform_ax0)
+    # assert_allclose(np.cumsum(out, axis=0), 0)
+
+    # COPY Axis -1, node=0 (same as endpoints)
+    constr_ax1 = ConstraintZeroCumSumEndPoints(copy=True, nodes=[0], axis=-1)
+    out = constr_ax1.transform(A)
+    assert_allclose(out, A_transform_ax1)
+    # assert_allclose(np.cumsum(out, axis=1), 0)
+
+    # OVERWRITE, Axis = 0, node=0 (same as endpoints)
+    A = np.array([[1, 2, 1, 12], [1, 2, 2, 3], [1, 2, 3, 6]]).astype(np.float)
+    constr_ax0 = ConstraintZeroCumSumEndPoints(copy=False, nodes=[0], axis=0)
+    out = constr_ax0.transform(A)
+    assert_allclose(A, A_transform_ax0)
+
+     # OVERWRITE, Axis = 1, node=0 (same as endpoints)
+    A = np.array([[1, 2, 1, 12], [1, 2, 2, 3], [1, 2, 3, 6]]).astype(np.float)
+    constr_ax1 = ConstraintZeroCumSumEndPoints(copy=False, nodes=[0], axis=-1)
+    out = constr_ax1.transform(A)
+    assert_allclose(A, A_transform_ax1)
+
+    # COPY, Axis = 0, Nodes = all
+    A = np.array([[1, 2, 1, 12], [1, 2, 2, 3], [1, 2, 3, 6]]).astype(np.float)
+    constr_ax0 = ConstraintZeroCumSumEndPoints(copy=True, nodes=[0,1,2], axis=0)
+    out = constr_ax0.transform(A)
+    assert_allclose(out, 0)
+
+    # COPY, Axis = 1, Nodes = all
+    A = np.array([[1, 2, 1, 12], [1, 2, 2, 3], [1, 2, 3, 6]]).astype(np.float)
+    constr_ax1 = ConstraintZeroCumSumEndPoints(copy=True, nodes=[0,1,2,3], axis=1)
+    out = constr_ax1.transform(A)
+    assert_allclose(out, 0)
+
+    # OVERWRITE, Axis = 0, Nodes = all
+    A = np.array([[1, 2, 1, 12], [1, 2, 2, 3], [1, 2, 3, 6]]).astype(np.float)
+    constr_ax0 = ConstraintZeroCumSumEndPoints(copy=False, nodes=[0,1,2], axis=0)
+    out = constr_ax0.transform(A)
+    assert_allclose(A, 0)
+
+    # OVERWRITE, Axis = 1, Nodes = all
+    A = np.array([[1, 2, 1, 12], [1, 2, 2, 3], [1, 2, 3, 6]]).astype(np.float)
+    constr_ax1 = ConstraintZeroCumSumEndPoints(copy=False, nodes=[0,1,2,3], axis=1)
+    out = constr_ax1.transform(A)
+    assert_allclose(A, 0)
+
 def test_norm():
     """ Test normalization """
     # A must be dtype.float for in-place math (copy=False)
