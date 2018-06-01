@@ -45,7 +45,8 @@ Style Notes
 ~~~~~~~~~~~
 
 -   External imports (e.g., import numpy as _np) should have a prepended underscore to prevent
-code completeion from identifying numpy as belonging to the pymcr module.
+code completeion from identifying numpy as belonging to the pymcr module. (Demos and test files
+exempt).
 -   Avoid all-capitalized variables unless constants.
 -   For mathematical functions invpolving matrix math, capitalized and lower-case variables names
 are permissable to distinguish between vectors and matrices.
