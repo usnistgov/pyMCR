@@ -5,7 +5,7 @@ from scipy.sparse.linalg import svds as _svds
 
 from pymcr.condition import standardize as _standardize
 
-__all__ = ['ind', 'rod']
+__all__ = ['ind', 'rod', 'pca']
 
 
 def pca(D, n_components=None):
