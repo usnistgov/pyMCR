@@ -238,3 +238,4 @@ Contributors
 
 -   Charles H Camp Jr
 -   Charles Le Losq (charles.lelosq@anu.edu.au)
+-   [Shojiro Shibayama](https://github.com/sshojiro)
