@@ -10,7 +10,7 @@ __all__ = ['ind', 'rod']
 
 def pca(D, n_components=None):
     """
-    Principle component analysis
+    Principal component analysis
 
     Parameters
     ----------
@@ -25,13 +25,16 @@ def pca(D, n_components=None):
     Tuple with 3 items: Scores (T), Loadings (W), eigenvalues (singular values-squared)
 
     """
+    Dcenter = D - D.mean(axis=0, keepdims=True)
     if n_components is None:
-        W, s2, Wt = _svd(_np.dot((D - D.mean(axis=0, keepdims=True)).T,
-                                D - D.mean(axis=0, keepdims=True)),
+        W, s2, Wt = _svd(_np.dot(Dcenter.T, Dcenter),
                          full_matrices=False)
+        # Note: s2 contains trivial values.
+        # Ex) Let D n x d matrix (n >= d),
+        # s2 is n-length vector,
+        # though the mathematical rank of the metrics is at most d
     else:
-        W, s2, Wt = _svds(_np.dot((D - D.mean(axis=0, keepdims=True)).T,
-                                D - D.mean(axis=0, keepdims=True)), k=n_components)
+        W, s2, Wt = _svds(_np.dot(Dcenter.T, Dcenter), k=n_components)
 
         # svds does not sort by variance; thus, manually sorting from biggest to
         # smallest variance
@@ -40,42 +43,76 @@ def pca(D, n_components=None):
         Wt = Wt[sort_vec, :]
         s2 = s2[sort_vec]
 
-    assert _np.allclose(W, Wt.T)
+    # SVD decomposes A into U * S * V^T
+    # It is thought that U == Wt is false.
     T = _np.dot(D, W)
-
+    # Note: T.mean(axis=0) is almost zeros
     return T, W, s2
 
 
 def ind(D_actual, ul_rank=100):
-    """ TODO: update docstring
-    Malinowski's indicator function """
+    """
+    Malinowski's indicator function
+
+    Parameters
+    ----------
+    D_actual : ndarray [n_sample, n_features]
+        Data
+    ul_rank : int
+        The upper limit of the rank. Too large chemical rank
+        doesn't have reasonable meaning.
+
+    Returns
+    -------
+    IND, ul_rank-length vector
+
+    """
     n_samples = D_actual.shape[0]
     n_max_rank = _np.min([ul_rank, _np.min(D_actual.shape)-1])
 
     T, W, s2 = pca(D_actual)
     D_centered = _standardize(D_actual, with_std=False)
 
+    # FIXME:
+    # Correct the definition of IND function, based on the following work:
+    # "An automated procedure to predict the number of components in spectroscopic data"
+
     # error_squared is equal to projection errors of PCA.
-    error_squared = _np.sum(D_centered**2) - \
-                    _np.sum(_np.cumsum(T[:,:-1]**2, axis=-1), axis=0)
+    square_errors = _np.sum(_np.square(D_centered)) - \
+                    _np.cumsum(s2[0:n_max_rank], axis=-1)
+
     # indicator is a standardized statistic
-    indicator = _np.sqrt(error_squared) / \
-                (n_samples - _np.arange(1, n_max_rank+1))**2
-
-    # TODO: replace the code above with the following one
-    # n_samples = D_actual.shape[0]
-    # n_features = D_actual.shape[1]
-    # assert s2.size == n_features, 'Number of samples must be larger than number of features'
-    # k_vec = _np.arange(n_features) + 1
-    # eigen_values = _np.sqrt(s2)
-    # indicator = _np.sqrt(_np.cumsum(eigen_values) / (n_samples * (n_features - k_vec))) / (n_samples - k_vec)**2
-
-    return indicator
+    l_vector = _np.arange(n_max_rank) + 1
+    print(l_vector)
+    indicator = _np.sqrt(square_errors) / \
+                _np.square(n_samples - l_vector)
+    return indicator, square_errors
 
 
 def rod(D_actual, ul_rank=100):
-    """ TODO: update docstring
-    Ratio of derivatives """
+    """
+
+    Ratio of Derivatives (ROD)
+
+    argmax(ROD) is thought to correspond to the chemical rank of the data.
+    For example, a mixture spectrum consists of three pure components,
+    the chemical rank is three. The chemical rank of the mixture spectra
+    is expected to be three.
+
+    Parameters
+    ----------
+    D_actual : ndarray [n_sample, n_features]
+        Data
+    ul_rank : int
+        The upper limit of the rank. Too large chemical rank
+        doesn't have reasonable meaning.
+
+    Returns
+    -------
+    ROD, ul_rank-length vector
+
+    """
+
     IND = ind(D_actual, ul_rank)
     ROD = ( IND[0:(len(IND)-2)] - IND[1:(len(IND)-1)] ) \
           / ( IND[1:(len(IND)-1)] - IND[2:len(IND)] )
