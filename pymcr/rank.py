@@ -51,17 +51,33 @@ def pca(D, n_components=None):
     return T, W, s2
 
 
-def rsd(X):
-    n_rank = _np.min(X.shape)
-    n_samples = X.shape[0]
-    pca_scores, _, _ = pca(X, n_rank)
+def rsd(D_actual):
+    """
+    The residual standard deviation (RSD)
+
+    Parameters
+    ----------
+    D_actual: ndarray [n_sample, n_features]
+        Spectral data matrix
+
+    Returns
+    -------
+    RSD, a measure of the lack of fit of a PCA model to a data set.
+    RSD is computed over l from 1 to q - 1,
+    where l is the number of principal components,
+    q is the value of the rank of X
+
+    """
+    n_rank = _np.min(D_actual.shape)
+    n_samples = D_actual.shape[0]
+    pca_scores, _, _ = pca(D_actual, n_rank)
     variances = pca_scores.var(axis=0)
     csum = _np.cumsum(variances[::-1])[::-1]
-    rsd_values = _np.sqrt( csum / ( n_samples * (n_rank-1) ) )
-    return rsd_values
+    RSD = _np.sqrt( csum / ( n_samples * (n_rank-1) ) )
+    return RSD[1:]
 
 
-def ind(D_actual, ul_rank=100):
+def ind(D_actual):
     """
     Malinowski's indicator function
 
@@ -69,38 +85,20 @@ def ind(D_actual, ul_rank=100):
     ----------
     D_actual : ndarray [n_sample, n_features]
         Data
-    ul_rank : int
-        The upper limit of the rank. Too large chemical rank
-        doesn't have reasonable meaning.
 
     Returns
     -------
     IND, ul_rank-length vector
 
     """
-    n_samples = D_actual.shape[0]
-    n_max_rank = _np.min([ul_rank, _np.min(D_actual.shape)-1])
-
-    T, W, s2 = pca(D_actual)
-    D_centered = _standardize(D_actual, with_std=False)
-
-    # FIXME:
-    # Correct the definition of IND function, based on the following work:
-    # "An automated procedure to predict the number of components in spectroscopic data"
-
-    # error_squared is equal to projection errors of PCA.
-    square_errors = _np.sum(_np.square(D_centered)) - \
-                    _np.cumsum(s2[0:n_max_rank], axis=-1)
-
-    # indicator is a standardized statistic
-    l_vector = _np.arange(n_max_rank) + 1
-    print(l_vector)
-    indicator = _np.sqrt(square_errors) / \
-                _np.square(n_samples - l_vector)
-    return indicator, square_errors
+    n_rank = _np.min(D_actual.shape)# q
+    RSD = rsd(D_actual)
+    denominator = _np.square(_np.arange(n_rank-1, 0, -1))# (q-1)^2, (q-2)^2, ..., 2^2, 1^2
+    IND = _np.divide(RSD, denominator)
+    return IND
 
 
-def rod(D_actual, ul_rank=100):
+def rod(D_actual):
     """
 
     Ratio of Derivatives (ROD)
@@ -114,9 +112,6 @@ def rod(D_actual, ul_rank=100):
     ----------
     D_actual : ndarray [n_sample, n_features]
         Data
-    ul_rank : int
-        The upper limit of the rank. Too large chemical rank
-        doesn't have reasonable meaning.
 
     Returns
     -------
@@ -124,9 +119,10 @@ def rod(D_actual, ul_rank=100):
 
     """
 
-    IND = ind(D_actual, ul_rank)
-    ROD = ( IND[0:(len(IND)-2)] - IND[1:(len(IND)-1)] ) \
-          / ( IND[1:(len(IND)-1)] - IND[2:len(IND)] )
+    IND = ind(D_actual)
+    n_ind = len(IND)
+    ROD = ( IND[0:(n_ind-2)] - IND[1:(n_ind-1)] ) \
+          / ( IND[1:(n_ind-1)] - IND[2:n_ind] )
     return ROD
 
 

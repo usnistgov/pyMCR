@@ -1,7 +1,7 @@
 """ Test rank metrics """
 import numpy as np
 
-from pymcr.rank import pca, rsd
+from pymcr.rank import pca, rsd, ind, rod
 
 def test_pca_full():
     """ Test PCA (full rank)"""
@@ -42,15 +42,19 @@ def test_pca_n_components():
 def test_rsd_length():
     """ Test if RSD's length is correct """
     X = np.random.randn(10, 100)
-    n_rank = np.min(X)
-    len(rsd(X)) == n_rank
+    n_rank = np.min(X.shape)
+    assert len(rsd(X)) == n_rank - 1
 
 
 def test_ind_length():
     """ Test if IND's length is correct """
-    pass
+    X = np.random.randn(10, 100)
+    n_rank = np.min(X.shape)
+    assert len(ind(X)) == n_rank - 1
 
 
 def test_rod_length():
     """ Test if ROD's length is correct """
-    pass
+    X = np.random.randn(10, 100)
+    n_rank = np.min(X.shape)
+    assert len(rod(X)) == n_rank - 1 - 2
