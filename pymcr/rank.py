@@ -53,24 +53,12 @@ def pca(D, n_components=None):
 
 def rsd(X):
     n_rank = _np.min(X.shape)
-
-
-
-
-
     n_samples = X.shape[0]
-    # pca = PCA(n_components=n_rank)# FIXME: sklearn PCA is not available
-    # pca.fit(X)
-
-
-
-
-    T, _, _ = pca(X, n_rank)
-    variances = T.var(axis=0)
-    # csum = _np.cumsum(pca.explained_variance_[::-1])[::-1]
+    pca_scores, _, _ = pca(X, n_rank)
+    variances = pca_scores.var(axis=0)
     csum = _np.cumsum(variances[::-1])[::-1]
-    rsd_ = _np.sqrt( csum / ( n_samples * (n_rank-1) ) )
-    return rsd_
+    rsd_values = _np.sqrt( csum / ( n_samples * (n_rank-1) ) )
+    return rsd_values
 
 
 def ind(D_actual, ul_rank=100):
