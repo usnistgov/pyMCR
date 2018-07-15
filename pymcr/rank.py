@@ -5,7 +5,7 @@ from scipy.sparse.linalg import svds as _svds
 
 from pymcr.condition import standardize as _standardize
 
-__all__ = ['ind', 'rod', 'pca']
+__all__ = ['rsd', 'ind', 'rod', 'pca']
 
 
 def pca(D, n_components=None):
@@ -42,12 +42,35 @@ def pca(D, n_components=None):
         W = W[:, sort_vec]
         Wt = Wt[sort_vec, :]
         s2 = s2[sort_vec]
+        # FIXME: T.var(axis=0) is not equal to s2 values.
 
     # SVD decomposes A into U * S * V^T
     # It is thought that U == Wt is false.
     T = _np.dot(D, W)
     # Note: T.mean(axis=0) is almost zeros
     return T, W, s2
+
+
+def rsd(X):
+    n_rank = _np.min(X.shape)
+
+
+
+
+
+    n_samples = X.shape[0]
+    # pca = PCA(n_components=n_rank)# FIXME: sklearn PCA is not available
+    # pca.fit(X)
+
+
+
+
+    T, _, _ = pca(X, n_rank)
+    variances = T.var(axis=0)
+    # csum = _np.cumsum(pca.explained_variance_[::-1])[::-1]
+    csum = _np.cumsum(variances[::-1])[::-1]
+    rsd_ = _np.sqrt( csum / ( n_samples * (n_rank-1) ) )
+    return rsd_
 
 
 def ind(D_actual, ul_rank=100):
