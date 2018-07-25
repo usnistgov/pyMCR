@@ -34,6 +34,8 @@ def pca(D, n_components=None):
         # s2 is n-length vector,
         # though the mathematical rank of the metrics is at most d
     else:
+        if n_components == Dcenter.shape[0]:
+            n_components -= 1
         W, s2, Wt = _svds(_np.dot(Dcenter.T, Dcenter), k=n_components)
 
         # svds does not sort by variance; thus, manually sorting from biggest to
@@ -63,17 +65,21 @@ def rsd(D_actual):
     Returns
     -------
     RSD, a measure of the lack of fit of a PCA model to a data set.
-    RSD is computed over l from 1 to q - 1,
+    The number of PCA components is q - 1, when the rank of input data is q.
+    Centering preceding PCA reduces the rank by one.
+
+    RSD is computed over l from 1 to q - 2 by definition,
     where l is the number of principal components,
     q is the value of the rank of X
 
     """
     n_rank = _np.min(D_actual.shape)
     n_samples = D_actual.shape[0]
-    pca_scores, _, _ = pca(D_actual, n_rank)
+    pca_scores, _, _ = pca(D_actual, n_rank-1)
+    q = pca_scores.shape[1]
     variances = pca_scores.var(axis=0)
     csum = _np.cumsum(variances[::-1])[::-1]
-    RSD = _np.sqrt( csum / ( n_samples * (n_rank-1) ) )
+    RSD = _np.sqrt( csum / ( n_samples * (q-1) ) )
     return RSD[1:]
 
 
@@ -92,8 +98,8 @@ def ind(D_actual):
 
     """
     n_rank = _np.min(D_actual.shape)# q
-    RSD = rsd(D_actual)
-    denominator = _np.square(_np.arange(n_rank-1, 0, -1))# (q-1)^2, (q-2)^2, ..., 2^2, 1^2
+    RSD = rsd(D_actual)# the length is q-2
+    denominator = _np.square(_np.arange(n_rank-2, 0, -1))# (q-1)^2, (q-2)^2, ..., 2^2, 1^2
     IND = _np.divide(RSD, denominator)
     return IND
 
@@ -123,7 +129,7 @@ def rod(D_actual):
     n_ind = len(IND)
     ROD = ( IND[0:(n_ind-2)] - IND[1:(n_ind-1)] ) \
           / ( IND[1:(n_ind-1)] - IND[2:n_ind] )
-    return ROD
+    return _np.array([0, 0]+list(ROD))
 
 
 if __name__ == '__main__':
