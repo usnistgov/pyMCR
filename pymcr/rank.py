@@ -79,7 +79,7 @@ def rsd(D_actual):
     q = pca_scores.shape[1]
     variances = pca_scores.var(axis=0)
     csum = _np.cumsum(variances[::-1])[::-1]
-    RSD = _np.sqrt( csum / ( n_samples * (q-1) ) )
+    RSD = _np.sqrt( csum / ( n_samples * (q-2) ) )
     return RSD[1:]
 
 
