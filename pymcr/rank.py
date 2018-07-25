@@ -64,13 +64,14 @@ def rsd(D_actual):
 
     Returns
     -------
-    RSD, a measure of the lack of fit of a PCA model to a data set.
-    The number of PCA components is q - 1, when the rank of input data is q.
-    Centering preceding PCA reduces the rank by one.
+    RSD : ndarray [n_rank-2, ]
+        a measure of the lack of fit of a PCA model to a data set.
+        The number of PCA components is q - 1, when the rank of input data is q.
+        Centering preceding PCA reduces the rank by one.
 
-    RSD is computed over l from 1 to q - 2 by definition,
-    where l is the number of principal components,
-    q is the value of the rank of X
+        RSD is computed over l from 1 to q - 2 by definition,
+        where l is the number of principal components,
+        q is the value of the rank of X
 
     """
     n_rank = _np.min(D_actual.shape)
@@ -94,7 +95,10 @@ def ind(D_actual):
 
     Returns
     -------
-    IND, ul_rank-length vector
+    IND : ndarray [n_rank-2, ]
+        n_rank-2 length vector
+        Centering before PCA operation and RSD computation reduce the rank of the matrix
+        by one respectively.
 
     """
     n_rank = _np.min(D_actual.shape)# q
@@ -121,7 +125,10 @@ def rod(D_actual):
 
     Returns
     -------
-    ROD, ul_rank-length vector
+    ROD : ndarray [n_rank-2, ]
+        n_rank-2 length vector
+        Centering before PCA operation and RSD computation reduce the rank of the matrix
+        by one respectively.
 
     """
 
