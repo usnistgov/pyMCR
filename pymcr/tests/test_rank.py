@@ -1,7 +1,8 @@
 """ Test rank metrics """
 import numpy as np
 
-from pymcr.rank import pca
+from pymcr.rank import pca, rsd, ind, rod
+
 
 def test_pca_full():
     """ Test PCA (full rank)"""
@@ -17,8 +18,9 @@ def test_pca_full():
     assert np.allclose(np.eye(3), np.abs(W))
     assert np.allclose(np.abs(D), np.abs(T))
 
+
 def test_pca_n_components():
-    """ Test PCA (2 components)"""
+    """ Test PCA (2 components) """
     D = np.vstack((np.eye(3), -np.eye(3)))
     # Axis 0 is most variability
     # Axis 1 is next
@@ -36,4 +38,33 @@ def test_pca_n_components():
     # Sorting now built into pca
     # assert np.allclose(np.eye(3, 2), np.abs(W[:,np.flipud(np.argsort(s2))]))
     # assert np.allclose(np.abs(D)[:,:2], np.abs(T[:, np.flipud(np.argsort(s2))]))
-    
+
+
+def test_rsd_length():
+    """
+    Test if RSD's length is correct
+    Note that centering before PCA and RSD computation reduce the rank by one respectively.
+    """
+    X = np.random.randn(10, 100)
+    n_rank = np.min(X.shape)
+    assert len(rsd(X)) == n_rank - 2
+
+
+def test_ind_length():
+    """
+    Test if IND's length is correct
+    Note that centering before PCA and RSD computation reduce the rank by one respectively.
+    """
+    X = np.random.randn(10, 100)
+    n_rank = np.min(X.shape)
+    assert len(ind(X)) == n_rank - 2
+
+
+def test_rod_length():
+    """
+    Test if ROD's length is correct
+    Note that centering before PCA and RSD computation reduce the rank by one respectively.
+    """
+    X = np.random.randn(10, 100)
+    n_rank = np.min(X.shape)
+    assert len(rod(X)) == n_rank - 2

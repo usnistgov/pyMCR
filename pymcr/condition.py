@@ -1,5 +1,7 @@
 """ Functions to condition / preprocess data """
 import numpy as _np
+from copy import deepcopy as _deepcopy
+
 
 def standardize(X, mean_ctr=True, with_std=True, axis=-1, copy=True):
     """
@@ -21,12 +23,12 @@ def standardize(X, mean_ctr=True, with_std=True, axis=-1, copy=True):
         Axis from which to calculate mean and standard deviation
 
     copy : bool
-        Copy data (X) if True, overwite if False
+        Copy data (X) if True, overwrite if False
 
     """
 
     if copy:
-        Xsc = 1*X
+        Xsc = _deepcopy(X)
     else:
         Xsc = X
 
