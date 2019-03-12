@@ -232,3 +232,4 @@ Contributors
 
 -   Charles H Camp Jr
 -   Charles Le Losq (charles.lelosq@anu.edu.au)
+-   Robert Kern (rkern@enthought.com)
