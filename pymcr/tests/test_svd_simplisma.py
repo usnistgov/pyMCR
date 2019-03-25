@@ -54,6 +54,7 @@ for i in range(nspec):
 	
 #run SVD
 eigens, explained_variance_ratio = svd.svd(D, nSVD)
+nPure = np.int(input('Number of Principle Components for SIMPLISMA :'))
 
 #Run Simplisma
 S, C_u, C_c = simplisma.pure(D, nPure, noise, False)
