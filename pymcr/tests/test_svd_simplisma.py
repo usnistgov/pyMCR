@@ -1,7 +1,7 @@
 import numpy as np
 import random
 import matplotlib.pyplot as plt
-from simplisma import svd, simplisma
+from pymcr.simplisma import svd, simplisma
 
 #generate some sample data D
 #create random normalised gaussian functions
