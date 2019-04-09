@@ -69,14 +69,7 @@ What it **does** do:
     This is the core the MCR-ALS methods.
 -   Enable the application of certain constraints (currently): sum-to-one, 
     non-negativity, normalization, maximum limits (closure)
-
-What it **does not** do:
-
--   Estimate the number of components in the sample. This is a bonus feature in 
-    some more-advanced MCR-ALS packages.
-
-    - In MATLAB: https://mcrals.wordpress.com/
-    - In R: https://cran.r-project.org/web/packages/ALS/index.html
+-   Estimate the number of components in the data using SVD and the SIMPLISMA Algorithm
 
 Dependencies
 ------------
@@ -232,3 +225,4 @@ Contributors
 
 -   Charles H Camp Jr
 -   Charles Le Losq (charles.lelosq@anu.edu.au)
+-   Adam H Clark (adam.clark@psi.ch)
