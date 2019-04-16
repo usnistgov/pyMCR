@@ -1,4 +1,4 @@
-""" MCR-ALS Main Class for Computation"""
+""" MCR Main Class for Computation"""
 import numpy as _np
 
 from pymcr.regressors import OLS, NNLS

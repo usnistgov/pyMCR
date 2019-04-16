@@ -1,8 +1,8 @@
-
-
+pyMCR
+=====
 
 .. toctree::
    :maxdepth: 4
 
-   
-   tests
+   pymcr
+   setup

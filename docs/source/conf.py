@@ -14,14 +14,14 @@
 #
 import os
 import sys
-import pymcr
-sys.path.insert(0, os.path.abspath('../../pymcr'))
+# import pymcr
+sys.path.insert(0, os.path.abspath('../..'))
 
 
 # -- Project information -----------------------------------------------------
 
 project = 'pyMCR'
-copyright = '2019, Charles H. Camp Jr.'
+# copyright = '2019, Charles H. Camp Jr.'
 author = 'Charles H. Camp Jr.'
 
 # The short X.Y version
@@ -39,15 +39,33 @@ release = '0.3'
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
+# extensions = [
+#     'sphinx.ext.autodoc',
+#     'sphinx.ext.autosummary',
+#     'sphinx.ext.intersphinx',
+#     'sphinx.ext.todo',
+#     'sphinx.ext.coverage',
+#     'sphinx.ext.mathjax',
+#     'sphinx.ext.napoleon',
+#     'sphinx.ext.viewcode',
+#     'sphinx.ext.githubpages',
+# ]
 extensions = [
     'sphinx.ext.autodoc',
-    'sphinx.ext.intersphinx',
-    'sphinx.ext.todo',
-    'sphinx.ext.coverage',
+    'sphinx.ext.autosummary',
+    'sphinx.ext.doctest',
     'sphinx.ext.mathjax',
     'sphinx.ext.viewcode',
-    'sphinx.ext.githubpages',
+    'sphinx.ext.napoleon',
+    'sphinx.ext.intersphinx',
+    'sphinx.ext.githubpages'
 ]
+
+numpydoc_show_class_members = False
+autodoc_default_flags = ['private-members']
+html_show_copyright = False
+html_show_sphinx = False
+show_authors = True 
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -82,7 +100,7 @@ pygments_style = None
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'alabaster'
+html_theme = 'nature'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the

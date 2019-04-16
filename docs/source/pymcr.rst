@@ -1,60 +1,60 @@
- package
-========
+pymcr package
+=============
 
 Subpackages
 -----------
 
 .. toctree::
 
-    .tests
+    pymcr.tests
 
 Submodules
 ----------
 
-condition module
+pymcr.condition module
+----------------------
+
+.. automodule:: pymcr.condition
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pymcr.constraints module
+------------------------
+
+.. automodule:: pymcr.constraints
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pymcr.mcr module
 ----------------
 
-.. automodule:: condition
+.. automodule:: pymcr.mcr
     :members:
     :undoc-members:
     :show-inheritance:
 
-constraints module
-------------------
+pymcr.metrics module
+--------------------
 
-.. automodule:: constraints
+.. automodule:: pymcr.metrics
     :members:
     :undoc-members:
     :show-inheritance:
 
-mcr module
-----------
-
-.. automodule:: mcr
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-metrics module
---------------
-
-.. automodule:: metrics
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-rank module
------------
-
-.. automodule:: rank
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-regressors module
+pymcr.rank module
 -----------------
 
-.. automodule:: regressors
+.. automodule:: pymcr.rank
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pymcr.regressors module
+-----------------------
+
+.. automodule:: pymcr.regressors
     :members:
     :undoc-members:
     :show-inheritance:
@@ -63,7 +63,7 @@ regressors module
 Module contents
 ---------------
 
-.. automodule:: 
+.. automodule:: pymcr
     :members:
     :undoc-members:
     :show-inheritance:
