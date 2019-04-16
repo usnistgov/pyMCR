@@ -33,24 +33,36 @@ pyMCR: Contributing
 
 **Thank you for your interest in contributing!** This document is in pre-pre-alpha stage, so feel free to make edits and suggestions through Pull Requests.
 
--    Until pyMCR gets to v1.0.X; the versioning will increment by 0.1 for every new release that adds new functionality. 
--    Pull-requests that do not add new functionality, will be merged into the **0.2.X** branch prior to being merged into **master**. Functional changes will be merged into the **0.3.X** branch.
--    All functional contributions should have associated tests added to the */pymcr/tests* directory.
--    Testing is performed via pytest
--    Test coverage should be > 90%, with some exceptions
--    After contributing, please add your name to the bottom of the README file. No matter how small, all contributors will be recognized.
--    `Gist of the release process <https://gist.github.com/CCampJr/dca856a4322c9640f857956ba08161e6>`_
+-   Until pyMCR gets to v1.0.X; the versioning will increment by 0.1 for every new release that adds new functionality. 
+-   Pull-requests that do not add new functionality, will be merged into the **0.2.X** branch prior to being merged into **master**. 
+-   Functional changes will be merged into the **0.3.X** branch.
+-   **Avoid adding external dependencies** unless absolutely necessary -- try to stick to the SciPy stack.
+-   All functional contributions should have associated tests added to the */pymcr/tests* directory.
+-   Testing is performed via pytest
+-   Test coverage should be > 90%, with some exceptions
+-   After contributing, please add your name to the bottom of the README file. No matter how small, all contributors will be recognized.
+-   `Gist of the release process <https://gist.github.com/CCampJr/dca856a4322c9640f857956ba08161e6>`_
+
+Style Notes
+~~~~~~~~~~~
+
+-   External imports (e.g., import numpy as _np) should have a prepended underscore to prevent
+code completeion from identifying numpy as belonging to the pymcr module. (Demos and test files
+exempt).
+-   Avoid all-capitalized variables unless constants.
+-   For mathematical functions invpolving matrix math, capitalized and lower-case variables names
+are permissable to distinguish between vectors and matrices.
 
 
 Branches
 --------
 
--    **0.2.X**: Updates to current **master**
+-   **0.2.X**: Updates to current **master**
 
     - Non-new functionality
     - Typos and **master** branch documentation
 
--    **0.3.X**: Next version of pyMCR
+-   **0.3.X**: Next version of pyMCR
 
     - New functionality
     - New regressors
