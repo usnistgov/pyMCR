@@ -1,0 +1,69 @@
+ package
+========
+
+Subpackages
+-----------
+
+.. toctree::
+
+    .tests
+
+Submodules
+----------
+
+condition module
+----------------
+
+.. automodule:: condition
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+constraints module
+------------------
+
+.. automodule:: constraints
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+mcr module
+----------
+
+.. automodule:: mcr
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+metrics module
+--------------
+
+.. automodule:: metrics
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+rank module
+-----------
+
+.. automodule:: rank
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+regressors module
+-----------------
+
+.. automodule:: regressors
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: 
+    :members:
+    :undoc-members:
+    :show-inheritance:
