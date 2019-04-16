@@ -1,0 +1,191 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>rank &#8212; pyMCR 0.3 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for rank</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; Functions to estimate number of factors / rank &quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">_np</span>
+<span class="kn">from</span> <span class="nn">numpy.linalg</span> <span class="k">import</span> <span class="n">svd</span> <span class="k">as</span> <span class="n">_svd</span>
+<span class="kn">from</span> <span class="nn">scipy.sparse.linalg</span> <span class="k">import</span> <span class="n">svds</span> <span class="k">as</span> <span class="n">_svds</span>
+
+<span class="kn">from</span> <span class="nn">pymcr.condition</span> <span class="k">import</span> <span class="n">standardize</span> <span class="k">as</span> <span class="n">_standardize</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ind&#39;</span><span class="p">,</span> <span class="s1">&#39;rod&#39;</span><span class="p">,</span> <span class="s1">&#39;pca&#39;</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="pca"><a class="viewcode-back" href="../.html#rank.pca">[docs]</a><span class="k">def</span> <span class="nf">pca</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">n_components</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Principle component analysis</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    D : ndarray [n_sample, n_features]</span>
+<span class="sd">        Data</span>
+<span class="sd">    n_components : int</span>
+<span class="sd">        Number of components to calculate (using scipy.sparse.linalg.svds). If</span>
+<span class="sd">        None use numpy.linalg.svd</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Tuple with 3 items: Scores (T), Loadings (W), eigenvalues (singular values-squared)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">n_components</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">W</span><span class="p">,</span> <span class="n">s2</span><span class="p">,</span> <span class="n">Wt</span> <span class="o">=</span> <span class="n">_svd</span><span class="p">(</span><span class="n">_np</span><span class="o">.</span><span class="n">dot</span><span class="p">((</span><span class="n">D</span> <span class="o">-</span> <span class="n">D</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span><span class="o">.</span><span class="n">T</span><span class="p">,</span>
+                                <span class="n">D</span> <span class="o">-</span> <span class="n">D</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)),</span>
+                         <span class="n">full_matrices</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">W</span><span class="p">,</span> <span class="n">s2</span><span class="p">,</span> <span class="n">Wt</span> <span class="o">=</span> <span class="n">_svds</span><span class="p">(</span><span class="n">_np</span><span class="o">.</span><span class="n">dot</span><span class="p">((</span><span class="n">D</span> <span class="o">-</span> <span class="n">D</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span><span class="o">.</span><span class="n">T</span><span class="p">,</span>
+                                <span class="n">D</span> <span class="o">-</span> <span class="n">D</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)),</span> <span class="n">k</span><span class="o">=</span><span class="n">n_components</span><span class="p">)</span>
+
+        <span class="c1"># svds does not sort by variance; thus, manually sorting from biggest to</span>
+        <span class="c1"># smallest variance</span>
+        <span class="n">sort_vec</span> <span class="o">=</span> <span class="n">_np</span><span class="o">.</span><span class="n">flipud</span><span class="p">(</span><span class="n">_np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">s2</span><span class="p">))</span>
+        <span class="n">W</span> <span class="o">=</span> <span class="n">W</span><span class="p">[:,</span> <span class="n">sort_vec</span><span class="p">]</span>
+        <span class="n">Wt</span> <span class="o">=</span> <span class="n">Wt</span><span class="p">[</span><span class="n">sort_vec</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">s2</span> <span class="o">=</span> <span class="n">s2</span><span class="p">[</span><span class="n">sort_vec</span><span class="p">]</span>
+
+    <span class="k">assert</span> <span class="n">_np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">W</span><span class="p">,</span> <span class="n">Wt</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+    <span class="n">T</span> <span class="o">=</span> <span class="n">_np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">W</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">W</span><span class="p">,</span> <span class="n">s2</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ind"><a class="viewcode-back" href="../.html#rank.ind">[docs]</a><span class="k">def</span> <span class="nf">ind</span><span class="p">(</span><span class="n">D_actual</span><span class="p">,</span> <span class="n">ul_rank</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Malinowski&#39;s indicator function &quot;&quot;&quot;</span>
+    <span class="n">n_samples</span> <span class="o">=</span> <span class="n">D_actual</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">n_max_rank</span> <span class="o">=</span> <span class="n">_np</span><span class="o">.</span><span class="n">min</span><span class="p">([</span><span class="n">ul_rank</span><span class="p">,</span> <span class="n">_np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">D_actual</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">error_squared</span> <span class="o">=</span> <span class="n">_np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_max_rank</span><span class="p">)</span>
+
+    <span class="n">T</span><span class="p">,</span> <span class="n">W</span><span class="p">,</span> <span class="n">s2</span> <span class="o">=</span> <span class="n">pca</span><span class="p">(</span><span class="n">D_actual</span><span class="p">)</span>
+
+    <span class="c1"># ! PCA only centers the mean, it does not divide by the standard deviation</span>
+    <span class="c1"># PCA forces data matrices to be normalized.</span>
+    <span class="c1"># Therefore, D_actual also needs to be normalized.</span>
+    <span class="c1"># D_scale = _standardize(D_actual)</span>
+    <span class="n">D_scale</span> <span class="o">=</span> <span class="n">D_actual</span> <span class="o">-</span> <span class="n">D_actual</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="c1"># U, S, _ = _svd(D_actual)</span>
+    <span class="c1"># T = U * S</span>
+
+    <span class="n">error_squared</span> <span class="o">=</span> <span class="n">_np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">D_scale</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="n">_np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">_np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">T</span><span class="p">[:,:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="n">indicator</span> <span class="o">=</span> <span class="n">_np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">error_squared</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">n_samples</span> <span class="o">-</span> <span class="n">_np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_max_rank</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span>
+
+    <span class="c1"># n_samples = D_actual.shape[0]</span>
+    <span class="c1"># n_features = D_actual.shape[1]</span>
+
+    <span class="c1"># assert s2.size == n_features, &#39;Number of samples must be larger than number of features&#39;</span>
+    <span class="c1"># k_vec = _np.arange(n_features) + 1</span>
+
+    <span class="c1"># eigen_values = _np.sqrt(s2)</span>
+
+    <span class="c1"># indicator = _np.sqrt(_np.cumsum(eigen_values) / (n_samples * (n_features - k_vec))) / (n_samples - k_vec)**2</span>
+
+    <span class="k">return</span> <span class="n">indicator</span></div>
+
+
+<div class="viewcode-block" id="rod"><a class="viewcode-back" href="../.html#rank.rod">[docs]</a><span class="k">def</span> <span class="nf">rod</span><span class="p">(</span><span class="n">D_actual</span><span class="p">,</span> <span class="n">ul_rank</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Ratio of derivatives &quot;&quot;&quot;</span>
+    <span class="n">IND</span> <span class="o">=</span> <span class="n">ind</span><span class="p">(</span><span class="n">D_actual</span><span class="p">,</span> <span class="n">ul_rank</span><span class="p">)</span>
+    <span class="n">ROD</span> <span class="o">=</span> <span class="p">(</span> <span class="n">IND</span><span class="p">[</span><span class="mi">0</span><span class="p">:(</span><span class="nb">len</span><span class="p">(</span><span class="n">IND</span><span class="p">)</span><span class="o">-</span><span class="mi">2</span><span class="p">)]</span> <span class="o">-</span> <span class="n">IND</span><span class="p">[</span><span class="mi">1</span><span class="p">:(</span><span class="nb">len</span><span class="p">(</span><span class="n">IND</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)]</span> <span class="p">)</span> \
+          <span class="o">/</span> <span class="p">(</span> <span class="n">IND</span><span class="p">[</span><span class="mi">1</span><span class="p">:(</span><span class="nb">len</span><span class="p">(</span><span class="n">IND</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)]</span> <span class="o">-</span> <span class="n">IND</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="nb">len</span><span class="p">(</span><span class="n">IND</span><span class="p">)]</span> <span class="p">)</span>
+    <span class="k">return</span> <span class="n">ROD</span></div>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">D</span> <span class="o">=</span> <span class="n">_np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">_np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="o">-</span><span class="n">_np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">)))</span>
+    <span class="n">ind</span><span class="p">(</span><span class="n">D</span><span class="p">)</span>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">pyMCR</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Charles H. Camp Jr..
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

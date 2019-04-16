@@ -1,0 +1,426 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>tests.test_mcr &#8212; pyMCR 0.3 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for tests.test_mcr</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+
+<span class="kn">from</span> <span class="nn">numpy.testing</span> <span class="k">import</span> <span class="n">assert_allclose</span><span class="p">,</span> <span class="n">assert_equal</span><span class="p">,</span> <span class="n">assert_array_less</span>
+
+<span class="kn">import</span> <span class="nn">pytest</span>
+
+<span class="kn">import</span> <span class="nn">pymcr</span>
+<span class="kn">from</span> <span class="nn">pymcr.mcr</span> <span class="k">import</span> <span class="n">McrAls</span>
+<span class="kn">from</span> <span class="nn">pymcr.metrics</span> <span class="k">import</span> <span class="n">mse</span>
+<span class="kn">from</span> <span class="nn">pymcr.constraints</span> <span class="k">import</span> <span class="n">ConstraintNonneg</span><span class="p">,</span> <span class="n">ConstraintNorm</span>
+
+<div class="viewcode-block" id="dataset"><a class="viewcode-back" href="../../tests.html#tests.test_mcr.dataset">[docs]</a><span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="s2">&quot;function&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">dataset</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot; Setups dataset &quot;&quot;&quot;</span>
+
+    <span class="n">M</span> <span class="o">=</span> <span class="mi">21</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="mi">21</span>
+    <span class="n">P</span> <span class="o">=</span> <span class="mi">101</span>
+    <span class="n">n_components</span> <span class="o">=</span> <span class="mi">2</span>
+
+    <span class="n">C_img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">M</span><span class="p">,</span><span class="n">N</span><span class="p">,</span><span class="n">n_components</span><span class="p">))</span>
+    <span class="n">C_img</span><span class="p">[</span><span class="o">...</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">M</span><span class="p">,</span><span class="mi">1</span><span class="p">)),</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">N</span><span class="p">)[</span><span class="kc">None</span><span class="p">,:])</span>
+    <span class="n">C_img</span><span class="p">[</span><span class="o">...</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">C_img</span><span class="p">[</span><span class="o">...</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">St_known</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_components</span><span class="p">,</span> <span class="n">P</span><span class="p">))</span>
+    <span class="n">St_known</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">40</span><span class="p">:</span><span class="mi">60</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">St_known</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">60</span><span class="p">:</span><span class="mi">80</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+
+    <span class="n">C_known</span> <span class="o">=</span> <span class="n">C_img</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_components</span><span class="p">))</span>
+
+    <span class="n">D_known</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">C_known</span><span class="p">,</span> <span class="n">St_known</span><span class="p">)</span>
+
+    <span class="k">yield</span> <span class="n">C_known</span><span class="p">,</span> <span class="n">D_known</span><span class="p">,</span> <span class="n">St_known</span></div>
+
+<div class="viewcode-block" id="test_mcr_ideal_default"><a class="viewcode-back" href="../../tests.html#tests.test_mcr.test_mcr_ideal_default">[docs]</a><span class="k">def</span> <span class="nf">test_mcr_ideal_default</span><span class="p">(</span><span class="n">dataset</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Provides C/St_known so optimal should be 1 iteration &quot;&quot;&quot;</span>
+
+    <span class="n">C_known</span><span class="p">,</span> <span class="n">D_known</span><span class="p">,</span> <span class="n">St_known</span> <span class="o">=</span> <span class="n">dataset</span>
+
+    <span class="n">mcrals</span> <span class="o">=</span> <span class="n">McrAls</span><span class="p">()</span>
+    <span class="n">mcrals</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">D_known</span><span class="p">,</span> <span class="n">ST</span><span class="o">=</span><span class="n">St_known</span><span class="p">)</span>
+    <span class="n">assert_equal</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">mcrals</span><span class="o">.</span><span class="n">n_iter_opt</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="p">((</span><span class="n">mcrals</span><span class="o">.</span><span class="n">D_</span> <span class="o">-</span> <span class="n">D_known</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">1e-10</span>
+    <span class="k">assert</span> <span class="p">((</span><span class="n">mcrals</span><span class="o">.</span><span class="n">D_opt_</span> <span class="o">-</span> <span class="n">D_known</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">1e-10</span>
+
+    <span class="n">mcrals</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">D_known</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="n">C_known</span><span class="p">)</span>
+    <span class="n">assert_equal</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">mcrals</span><span class="o">.</span><span class="n">n_iter_opt</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="p">((</span><span class="n">mcrals</span><span class="o">.</span><span class="n">D_</span> <span class="o">-</span> <span class="n">D_known</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">1e-10</span>
+    <span class="k">assert</span> <span class="p">((</span><span class="n">mcrals</span><span class="o">.</span><span class="n">D_opt_</span> <span class="o">-</span> <span class="n">D_known</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">1e-10</span></div>
+
+<div class="viewcode-block" id="test_mcr_ideal_str_regressors"><a class="viewcode-back" href="../../tests.html#tests.test_mcr.test_mcr_ideal_str_regressors">[docs]</a><span class="k">def</span> <span class="nf">test_mcr_ideal_str_regressors</span><span class="p">(</span><span class="n">dataset</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Test MCR with string-provded regressors&quot;&quot;&quot;</span>
+
+    <span class="n">C_known</span><span class="p">,</span> <span class="n">D_known</span><span class="p">,</span> <span class="n">St_known</span> <span class="o">=</span> <span class="n">dataset</span>
+
+    <span class="n">mcrals</span> <span class="o">=</span> <span class="n">McrAls</span><span class="p">(</span><span class="n">c_regr</span><span class="o">=</span><span class="s1">&#39;OLS&#39;</span><span class="p">,</span> <span class="n">st_regr</span><span class="o">=</span><span class="s1">&#39;OLS&#39;</span><span class="p">)</span>
+    <span class="n">mcrals</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">D_known</span><span class="p">,</span> <span class="n">ST</span><span class="o">=</span><span class="n">St_known</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">assert_equal</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">mcrals</span><span class="o">.</span><span class="n">n_iter_opt</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mcrals</span><span class="o">.</span><span class="n">c_regressor</span><span class="p">,</span> <span class="n">pymcr</span><span class="o">.</span><span class="n">regressors</span><span class="o">.</span><span class="n">OLS</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mcrals</span><span class="o">.</span><span class="n">st_regressor</span><span class="p">,</span> <span class="n">pymcr</span><span class="o">.</span><span class="n">regressors</span><span class="o">.</span><span class="n">OLS</span><span class="p">)</span>
+
+    <span class="n">mcrals</span> <span class="o">=</span> <span class="n">McrAls</span><span class="p">(</span><span class="n">c_regr</span><span class="o">=</span><span class="s1">&#39;NNLS&#39;</span><span class="p">,</span> <span class="n">st_regr</span><span class="o">=</span><span class="s1">&#39;NNLS&#39;</span><span class="p">)</span>
+    <span class="n">mcrals</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">D_known</span><span class="p">,</span> <span class="n">ST</span><span class="o">=</span><span class="n">St_known</span><span class="p">)</span>
+    <span class="n">assert_equal</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">mcrals</span><span class="o">.</span><span class="n">n_iter_opt</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mcrals</span><span class="o">.</span><span class="n">c_regressor</span><span class="p">,</span> <span class="n">pymcr</span><span class="o">.</span><span class="n">regressors</span><span class="o">.</span><span class="n">NNLS</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mcrals</span><span class="o">.</span><span class="n">st_regressor</span><span class="p">,</span> <span class="n">pymcr</span><span class="o">.</span><span class="n">regressors</span><span class="o">.</span><span class="n">NNLS</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="p">((</span><span class="n">mcrals</span><span class="o">.</span><span class="n">D_</span> <span class="o">-</span> <span class="n">D_known</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">1e-10</span>
+    <span class="k">assert</span> <span class="p">((</span><span class="n">mcrals</span><span class="o">.</span><span class="n">D_opt_</span> <span class="o">-</span> <span class="n">D_known</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">1e-10</span>
+
+    <span class="c1"># Provided C_known this time</span>
+    <span class="n">mcrals</span> <span class="o">=</span> <span class="n">McrAls</span><span class="p">(</span><span class="n">c_regr</span><span class="o">=</span><span class="s1">&#39;OLS&#39;</span><span class="p">,</span> <span class="n">st_regr</span><span class="o">=</span><span class="s1">&#39;OLS&#39;</span><span class="p">)</span>
+    <span class="n">mcrals</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">D_known</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="n">C_known</span><span class="p">)</span>
+
+    <span class="c1"># Turns out some systems get it in 1 iteration, some in 2</span>
+    <span class="c1"># assert_equal(1, mcrals.n_iter_opt)</span>
+    <span class="n">assert_equal</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">mcrals</span><span class="o">.</span><span class="n">n_iter_opt</span><span class="o">&lt;=</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="p">((</span><span class="n">mcrals</span><span class="o">.</span><span class="n">D_</span> <span class="o">-</span> <span class="n">D_known</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">1e-10</span>
+    <span class="k">assert</span> <span class="p">((</span><span class="n">mcrals</span><span class="o">.</span><span class="n">D_opt_</span> <span class="o">-</span> <span class="n">D_known</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">1e-10</span></div>
+
+<div class="viewcode-block" id="test_mcr_max_iterations"><a class="viewcode-back" href="../../tests.html#tests.test_mcr.test_mcr_max_iterations">[docs]</a><span class="k">def</span> <span class="nf">test_mcr_max_iterations</span><span class="p">(</span><span class="n">dataset</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Test MCR exits at max_iter&quot;&quot;&quot;</span>
+
+    <span class="n">C_known</span><span class="p">,</span> <span class="n">D_known</span><span class="p">,</span> <span class="n">St_known</span> <span class="o">=</span> <span class="n">dataset</span>
+
+    <span class="c1"># Seeding with a constant of 0.1 for C, actually leads to a bad local</span>
+    <span class="c1"># minimum; thus, the err_change gets really small with a relatively bad</span>
+    <span class="c1"># error. The tol_err_change is set to None, so it makes it to max_iter.</span>
+    <span class="n">mcrals</span> <span class="o">=</span> <span class="n">McrAls</span><span class="p">(</span><span class="n">max_iter</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">c_regr</span><span class="o">=</span><span class="s1">&#39;OLS&#39;</span><span class="p">,</span> <span class="n">st_regr</span><span class="o">=</span><span class="s1">&#39;OLS&#39;</span><span class="p">,</span>
+                    <span class="n">st_constraints</span><span class="o">=</span><span class="p">[</span><span class="n">ConstraintNonneg</span><span class="p">()],</span>
+                    <span class="n">c_constraints</span><span class="o">=</span><span class="p">[</span><span class="n">ConstraintNonneg</span><span class="p">(),</span> <span class="n">ConstraintNorm</span><span class="p">()],</span>
+                    <span class="n">tol_increase</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tol_n_increase</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="n">tol_err_change</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tol_n_above_min</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">mcrals</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">D_known</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="n">C_known</span><span class="o">*</span><span class="mi">0</span> <span class="o">+</span> <span class="mf">0.1</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">mcrals</span><span class="o">.</span><span class="n">exit_max_iter_reached</span></div>
+
+<div class="viewcode-block" id="test_mcr_tol_increase"><a class="viewcode-back" href="../../tests.html#tests.test_mcr.test_mcr_tol_increase">[docs]</a><span class="k">def</span> <span class="nf">test_mcr_tol_increase</span><span class="p">(</span><span class="n">dataset</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Test MCR exits due error increasing above a tolerance fraction&quot;&quot;&quot;</span>
+
+    <span class="n">C_known</span><span class="p">,</span> <span class="n">D_known</span><span class="p">,</span> <span class="n">St_known</span> <span class="o">=</span> <span class="n">dataset</span>
+
+    <span class="c1"># Seeding with a constant of 0.1 for C, actually leads to a bad local</span>
+    <span class="c1"># minimum; thus, the err_change gets really small with a relatively bad</span>
+    <span class="c1"># error.</span>
+    <span class="n">mcrals</span> <span class="o">=</span> <span class="n">McrAls</span><span class="p">(</span><span class="n">max_iter</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">c_regr</span><span class="o">=</span><span class="s1">&#39;OLS&#39;</span><span class="p">,</span> <span class="n">st_regr</span><span class="o">=</span><span class="s1">&#39;OLS&#39;</span><span class="p">,</span>
+                    <span class="n">st_constraints</span><span class="o">=</span><span class="p">[</span><span class="n">ConstraintNonneg</span><span class="p">()],</span>
+                    <span class="n">c_constraints</span><span class="o">=</span><span class="p">[</span><span class="n">ConstraintNonneg</span><span class="p">(),</span> <span class="n">ConstraintNorm</span><span class="p">()],</span>
+                    <span class="n">tol_increase</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">tol_n_increase</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="n">tol_err_change</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tol_n_above_min</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">mcrals</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">D_known</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="n">C_known</span><span class="o">*</span><span class="mi">0</span> <span class="o">+</span> <span class="mf">0.1</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">mcrals</span><span class="o">.</span><span class="n">exit_tol_increase</span></div>
+
+<div class="viewcode-block" id="test_mcr_tol_n_increase"><a class="viewcode-back" href="../../tests.html#tests.test_mcr.test_mcr_tol_n_increase">[docs]</a><span class="k">def</span> <span class="nf">test_mcr_tol_n_increase</span><span class="p">(</span><span class="n">dataset</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Test MCR exits due iterating n times with an increase in error</span>
+
+<span class="sd">    Note: On some CI systems, the minimum err bottoms out; thus, tol_n_above_min</span>
+<span class="sd">    needed to be set to 0 to trigger a break.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">C_known</span><span class="p">,</span> <span class="n">D_known</span><span class="p">,</span> <span class="n">St_known</span> <span class="o">=</span> <span class="n">dataset</span>
+
+    <span class="n">mcrals</span> <span class="o">=</span> <span class="n">McrAls</span><span class="p">(</span><span class="n">max_iter</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">c_regr</span><span class="o">=</span><span class="s1">&#39;OLS&#39;</span><span class="p">,</span> <span class="n">st_regr</span><span class="o">=</span><span class="s1">&#39;OLS&#39;</span><span class="p">,</span>
+                    <span class="n">st_constraints</span><span class="o">=</span><span class="p">[</span><span class="n">ConstraintNonneg</span><span class="p">()],</span>
+                    <span class="n">c_constraints</span><span class="o">=</span><span class="p">[</span><span class="n">ConstraintNonneg</span><span class="p">(),</span> <span class="n">ConstraintNorm</span><span class="p">()],</span>
+                    <span class="n">tol_increase</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tol_n_increase</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                    <span class="n">tol_err_change</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tol_n_above_min</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">mcrals</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">D_known</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="n">C_known</span><span class="o">*</span><span class="mi">0</span> <span class="o">+</span> <span class="mf">0.01</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">mcrals</span><span class="o">.</span><span class="n">exit_tol_n_increase</span></div>
+
+<div class="viewcode-block" id="test_mcr_tol_err_change"><a class="viewcode-back" href="../../tests.html#tests.test_mcr.test_mcr_tol_err_change">[docs]</a><span class="k">def</span> <span class="nf">test_mcr_tol_err_change</span><span class="p">(</span><span class="n">dataset</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Test MCR exits due error increasing by a value &quot;&quot;&quot;</span>
+
+    <span class="n">C_known</span><span class="p">,</span> <span class="n">D_known</span><span class="p">,</span> <span class="n">St_known</span> <span class="o">=</span> <span class="n">dataset</span>
+
+    <span class="n">mcrals</span> <span class="o">=</span> <span class="n">McrAls</span><span class="p">(</span><span class="n">max_iter</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">c_regr</span><span class="o">=</span><span class="s1">&#39;OLS&#39;</span><span class="p">,</span> <span class="n">st_regr</span><span class="o">=</span><span class="s1">&#39;OLS&#39;</span><span class="p">,</span>
+                    <span class="n">st_constraints</span><span class="o">=</span><span class="p">[</span><span class="n">ConstraintNonneg</span><span class="p">()],</span>
+                    <span class="n">c_constraints</span><span class="o">=</span><span class="p">[</span><span class="n">ConstraintNonneg</span><span class="p">(),</span> <span class="n">ConstraintNorm</span><span class="p">()],</span>
+                    <span class="n">tol_increase</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tol_n_increase</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="n">tol_err_change</span><span class="o">=</span><span class="mf">1e-20</span><span class="p">,</span> <span class="n">tol_n_above_min</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">mcrals</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">D_known</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="n">C_known</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">mcrals</span><span class="o">.</span><span class="n">exit_tol_err_change</span></div>
+
+<div class="viewcode-block" id="test_mcr_tol_n_above_min"><a class="viewcode-back" href="../../tests.html#tests.test_mcr.test_mcr_tol_n_above_min">[docs]</a><span class="k">def</span> <span class="nf">test_mcr_tol_n_above_min</span><span class="p">(</span><span class="n">dataset</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Test MCR exits due to half-terating n times with error above the minimum error.</span>
+
+<span class="sd">    Note: On some CI systems, the minimum err bottoms out; thus, tol_n_above_min</span>
+<span class="sd">    needed to be set to 0 to trigger a break.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">C_known</span><span class="p">,</span> <span class="n">D_known</span><span class="p">,</span> <span class="n">St_known</span> <span class="o">=</span> <span class="n">dataset</span>
+
+    <span class="n">mcrals</span> <span class="o">=</span> <span class="n">McrAls</span><span class="p">(</span><span class="n">max_iter</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">c_regr</span><span class="o">=</span><span class="s1">&#39;OLS&#39;</span><span class="p">,</span> <span class="n">st_regr</span><span class="o">=</span><span class="s1">&#39;OLS&#39;</span><span class="p">,</span>
+                    <span class="n">st_constraints</span><span class="o">=</span><span class="p">[</span><span class="n">ConstraintNonneg</span><span class="p">()],</span>
+                    <span class="n">c_constraints</span><span class="o">=</span><span class="p">[</span><span class="n">ConstraintNonneg</span><span class="p">(),</span> <span class="n">ConstraintNorm</span><span class="p">()],</span>
+                    <span class="n">tol_increase</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tol_n_increase</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="n">tol_err_change</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tol_n_above_min</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">mcrals</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">D_known</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="n">C_known</span><span class="o">*</span><span class="mi">0</span> <span class="o">+</span> <span class="mf">0.1</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">mcrals</span><span class="o">.</span><span class="n">exit_tol_n_above_min</span></div>
+
+
+<div class="viewcode-block" id="test_mcr_st_semilearned"><a class="viewcode-back" href="../../tests.html#tests.test_mcr.test_mcr_st_semilearned">[docs]</a><span class="k">def</span> <span class="nf">test_mcr_st_semilearned</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot; Test when St items are fixed, i.e., enforced to be the same as the input, always &quot;&quot;&quot;</span>
+
+    <span class="n">M</span> <span class="o">=</span> <span class="mi">21</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="mi">21</span>
+    <span class="n">P</span> <span class="o">=</span> <span class="mi">101</span>
+    <span class="n">n_components</span> <span class="o">=</span> <span class="mi">3</span>
+
+    <span class="n">C_img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">M</span><span class="p">,</span><span class="n">N</span><span class="p">,</span><span class="n">n_components</span><span class="p">))</span>
+    <span class="n">C_img</span><span class="p">[</span><span class="o">...</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">M</span><span class="p">,</span><span class="mi">1</span><span class="p">)),</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">N</span><span class="p">)[</span><span class="kc">None</span><span class="p">,:])</span>
+    <span class="n">C_img</span><span class="p">[</span><span class="o">...</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">M</span><span class="p">)[:,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="n">N</span><span class="p">)))</span>
+    <span class="n">C_img</span><span class="p">[</span><span class="o">...</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">C_img</span><span class="p">[</span><span class="o">...</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">C_img</span><span class="p">[</span><span class="o">...</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">C_img</span> <span class="o">=</span> <span class="n">C_img</span> <span class="o">/</span> <span class="n">C_img</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)[:,:,</span><span class="kc">None</span><span class="p">]</span>
+
+    <span class="n">St_known</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_components</span><span class="p">,</span> <span class="n">P</span><span class="p">))</span>
+    <span class="n">St_known</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">30</span><span class="p">:</span><span class="mi">50</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">St_known</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">50</span><span class="p">:</span><span class="mi">70</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">St_known</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">70</span><span class="p">:</span><span class="mi">90</span><span class="p">]</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">St_known</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="n">C_known</span> <span class="o">=</span> <span class="n">C_img</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_components</span><span class="p">))</span>
+
+    <span class="n">D_known</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">C_known</span><span class="p">,</span> <span class="n">St_known</span><span class="p">)</span>
+
+    <span class="n">ST_guess</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">*</span> <span class="n">St_known</span>
+    <span class="n">ST_guess</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">P</span><span class="p">)</span>
+
+    <span class="n">mcrals</span> <span class="o">=</span> <span class="n">McrAls</span><span class="p">(</span><span class="n">max_iter</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">tol_increase</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">tol_n_increase</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+                    <span class="n">st_constraints</span><span class="o">=</span><span class="p">[</span><span class="n">ConstraintNonneg</span><span class="p">()],</span>
+                    <span class="n">c_constraints</span><span class="o">=</span><span class="p">[</span><span class="n">ConstraintNonneg</span><span class="p">(),</span> <span class="n">ConstraintNorm</span><span class="p">()],</span>
+                    <span class="n">tol_err_change</span><span class="o">=</span><span class="mf">1e-10</span><span class="p">)</span>
+
+    <span class="n">mcrals</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">D_known</span><span class="p">,</span> <span class="n">ST</span><span class="o">=</span><span class="n">ST_guess</span><span class="p">,</span> <span class="n">st_fix</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">assert_equal</span><span class="p">(</span><span class="n">mcrals</span><span class="o">.</span><span class="n">ST_</span><span class="p">[</span><span class="mi">0</span><span class="p">,:],</span> <span class="n">St_known</span><span class="p">[</span><span class="mi">0</span><span class="p">,:])</span>
+    <span class="n">assert_equal</span><span class="p">(</span><span class="n">mcrals</span><span class="o">.</span><span class="n">ST_</span><span class="p">[</span><span class="mi">1</span><span class="p">,:],</span> <span class="n">St_known</span><span class="p">[</span><span class="mi">1</span><span class="p">,:])</span></div>
+
+<div class="viewcode-block" id="test_mcr_c_semilearned"><a class="viewcode-back" href="../../tests.html#tests.test_mcr.test_mcr_c_semilearned">[docs]</a><span class="k">def</span> <span class="nf">test_mcr_c_semilearned</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot; Test when C items are fixed, i.e., enforced to be the same as the input, always &quot;&quot;&quot;</span>
+
+    <span class="n">M</span> <span class="o">=</span> <span class="mi">21</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="mi">21</span>
+    <span class="n">P</span> <span class="o">=</span> <span class="mi">101</span>
+    <span class="n">n_components</span> <span class="o">=</span> <span class="mi">3</span>
+
+    <span class="n">C_img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">M</span><span class="p">,</span><span class="n">N</span><span class="p">,</span><span class="n">n_components</span><span class="p">))</span>
+    <span class="n">C_img</span><span class="p">[</span><span class="o">...</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">M</span><span class="p">,</span><span class="mi">1</span><span class="p">)),</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">N</span><span class="p">)[</span><span class="kc">None</span><span class="p">,:])</span>
+    <span class="n">C_img</span><span class="p">[</span><span class="o">...</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">M</span><span class="p">)[:,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="n">N</span><span class="p">)))</span>
+    <span class="n">C_img</span><span class="p">[</span><span class="o">...</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">C_img</span><span class="p">[</span><span class="o">...</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">C_img</span><span class="p">[</span><span class="o">...</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">C_img</span> <span class="o">=</span> <span class="n">C_img</span> <span class="o">/</span> <span class="n">C_img</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)[:,:,</span><span class="kc">None</span><span class="p">]</span>
+
+    <span class="n">St_known</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_components</span><span class="p">,</span> <span class="n">P</span><span class="p">))</span>
+    <span class="n">St_known</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">30</span><span class="p">:</span><span class="mi">50</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">St_known</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">50</span><span class="p">:</span><span class="mi">70</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">St_known</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">70</span><span class="p">:</span><span class="mi">90</span><span class="p">]</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">St_known</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="n">C_known</span> <span class="o">=</span> <span class="n">C_img</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_components</span><span class="p">))</span>
+
+    <span class="n">D_known</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">C_known</span><span class="p">,</span> <span class="n">St_known</span><span class="p">)</span>
+
+    <span class="n">C_guess</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">*</span> <span class="n">C_known</span>
+    <span class="n">C_guess</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">M</span><span class="o">*</span><span class="n">N</span><span class="p">))</span>
+
+    <span class="n">mcrals</span> <span class="o">=</span> <span class="n">McrAls</span><span class="p">(</span><span class="n">max_iter</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">tol_increase</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">tol_n_increase</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+                    <span class="n">st_constraints</span><span class="o">=</span><span class="p">[</span><span class="n">ConstraintNonneg</span><span class="p">()],</span>
+                    <span class="n">c_constraints</span><span class="o">=</span><span class="p">[</span><span class="n">ConstraintNonneg</span><span class="p">(),</span> <span class="n">ConstraintNorm</span><span class="p">()],</span>
+                    <span class="n">tol_err_change</span><span class="o">=</span><span class="mf">1e-10</span><span class="p">)</span>
+
+    <span class="n">mcrals</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">D_known</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="n">C_guess</span><span class="p">,</span> <span class="n">c_fix</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">assert_equal</span><span class="p">(</span><span class="n">mcrals</span><span class="o">.</span><span class="n">C_</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">C_known</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
+    <span class="n">assert_equal</span><span class="p">(</span><span class="n">mcrals</span><span class="o">.</span><span class="n">C_</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">C_known</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="test_mcr_semilearned_both_c_st"><a class="viewcode-back" href="../../tests.html#tests.test_mcr.test_mcr_semilearned_both_c_st">[docs]</a><span class="k">def</span> <span class="nf">test_mcr_semilearned_both_c_st</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Test the special case when C &amp; ST are provided, requiring C-fix ST-fix to</span>
+<span class="sd">    be provided</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">M</span> <span class="o">=</span> <span class="mi">21</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="mi">21</span>
+    <span class="n">P</span> <span class="o">=</span> <span class="mi">101</span>
+    <span class="n">n_components</span> <span class="o">=</span> <span class="mi">3</span>
+
+    <span class="n">C_img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">M</span><span class="p">,</span><span class="n">N</span><span class="p">,</span><span class="n">n_components</span><span class="p">))</span>
+    <span class="n">C_img</span><span class="p">[</span><span class="o">...</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">M</span><span class="p">,</span><span class="mi">1</span><span class="p">)),</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">N</span><span class="p">)[</span><span class="kc">None</span><span class="p">,:])</span>
+    <span class="n">C_img</span><span class="p">[</span><span class="o">...</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">M</span><span class="p">)[:,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="n">N</span><span class="p">)))</span>
+    <span class="n">C_img</span><span class="p">[</span><span class="o">...</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">C_img</span><span class="p">[</span><span class="o">...</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">C_img</span><span class="p">[</span><span class="o">...</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">C_img</span> <span class="o">=</span> <span class="n">C_img</span> <span class="o">/</span> <span class="n">C_img</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)[:,:,</span><span class="kc">None</span><span class="p">]</span>
+
+    <span class="n">St_known</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_components</span><span class="p">,</span> <span class="n">P</span><span class="p">))</span>
+    <span class="n">St_known</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">30</span><span class="p">:</span><span class="mi">50</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">St_known</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">50</span><span class="p">:</span><span class="mi">70</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">St_known</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">70</span><span class="p">:</span><span class="mi">90</span><span class="p">]</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">St_known</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="n">C_known</span> <span class="o">=</span> <span class="n">C_img</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_components</span><span class="p">))</span>
+
+    <span class="n">D_known</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">C_known</span><span class="p">,</span> <span class="n">St_known</span><span class="p">)</span>
+
+    <span class="n">C_guess</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">*</span> <span class="n">C_known</span>
+    <span class="n">C_guess</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">M</span><span class="o">*</span><span class="n">N</span><span class="p">)))</span>
+
+    <span class="n">mcrals</span> <span class="o">=</span> <span class="n">McrAls</span><span class="p">(</span><span class="n">max_iter</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">tol_increase</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">tol_n_increase</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+                    <span class="n">st_constraints</span><span class="o">=</span><span class="p">[</span><span class="n">ConstraintNonneg</span><span class="p">()],</span>
+                    <span class="n">c_constraints</span><span class="o">=</span><span class="p">[</span><span class="n">ConstraintNonneg</span><span class="p">(),</span> <span class="n">ConstraintNorm</span><span class="p">()],</span>
+                    <span class="n">tol_err_change</span><span class="o">=</span><span class="mf">1e-10</span><span class="p">)</span>
+
+    <span class="n">mcrals</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">D_known</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="n">C_guess</span><span class="p">,</span> <span class="n">ST</span><span class="o">=</span><span class="n">St_known</span><span class="p">,</span> <span class="n">c_fix</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">st_fix</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">c_first</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">assert_equal</span><span class="p">(</span><span class="n">mcrals</span><span class="o">.</span><span class="n">C_</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">C_known</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
+    <span class="n">assert_equal</span><span class="p">(</span><span class="n">mcrals</span><span class="o">.</span><span class="n">C_</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">C_known</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="n">assert_equal</span><span class="p">(</span><span class="n">mcrals</span><span class="o">.</span><span class="n">ST_</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:],</span> <span class="n">St_known</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:])</span>
+
+    <span class="c1"># ST-solve first</span>
+    <span class="n">mcrals</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">D_known</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="n">C_guess</span><span class="p">,</span> <span class="n">ST</span><span class="o">=</span><span class="n">St_known</span><span class="p">,</span> <span class="n">c_fix</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">st_fix</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">c_first</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">assert_equal</span><span class="p">(</span><span class="n">mcrals</span><span class="o">.</span><span class="n">C_</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">C_known</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
+    <span class="n">assert_equal</span><span class="p">(</span><span class="n">mcrals</span><span class="o">.</span><span class="n">C_</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">C_known</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="n">assert_equal</span><span class="p">(</span><span class="n">mcrals</span><span class="o">.</span><span class="n">ST_</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:],</span> <span class="n">St_known</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:])</span></div>
+
+<div class="viewcode-block" id="test_mcr_errors"><a class="viewcode-back" href="../../tests.html#tests.test_mcr.test_mcr_errors">[docs]</a><span class="k">def</span> <span class="nf">test_mcr_errors</span><span class="p">():</span>
+
+    <span class="c1"># Providing both C and S^T estimates without C_fix and St_fix</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">TypeError</span><span class="p">):</span>
+        <span class="n">mcrals</span> <span class="o">=</span> <span class="n">McrAls</span><span class="p">()</span>
+        <span class="n">mcrals</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span> <span class="n">C</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span>
+                   <span class="n">ST</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+
+    <span class="c1"># Providing both C and S^T estimates without both C_fix and St_fix</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">TypeError</span><span class="p">):</span>
+        <span class="n">mcrals</span> <span class="o">=</span> <span class="n">McrAls</span><span class="p">()</span>
+        <span class="c1"># Only c_fix</span>
+        <span class="n">mcrals</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span> <span class="n">C</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span>
+                   <span class="n">ST</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span> <span class="n">c_fix</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">TypeError</span><span class="p">):</span>
+        <span class="n">mcrals</span> <span class="o">=</span> <span class="n">McrAls</span><span class="p">()</span>
+        <span class="c1"># Only st_fix</span>
+        <span class="n">mcrals</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span> <span class="n">C</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span>
+                   <span class="n">ST</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span> <span class="n">st_fix</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="c1"># Providing no estimates</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">TypeError</span><span class="p">):</span>
+        <span class="n">mcrals</span> <span class="o">=</span> <span class="n">McrAls</span><span class="p">()</span>
+        <span class="n">mcrals</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+
+    <span class="c1"># Unknown regression method</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+        <span class="n">mcrals</span> <span class="o">=</span> <span class="n">McrAls</span><span class="p">(</span><span class="n">c_regr</span><span class="o">=</span><span class="s1">&#39;NOTREAL&#39;</span><span class="p">)</span>
+
+    <span class="c1"># regression object with no fit method</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+        <span class="n">mcrals</span> <span class="o">=</span> <span class="n">McrAls</span><span class="p">(</span><span class="n">c_regr</span><span class="o">=</span><span class="nb">print</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="test_props_features_samples_targets"><a class="viewcode-back" href="../../tests.html#tests.test_mcr.test_props_features_samples_targets">[docs]</a><span class="k">def</span> <span class="nf">test_props_features_samples_targets</span><span class="p">(</span><span class="n">dataset</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Test mcrals properties for features, targets, samples &quot;&quot;&quot;</span>
+    <span class="n">C_known</span><span class="p">,</span> <span class="n">D_known</span><span class="p">,</span> <span class="n">St_known</span> <span class="o">=</span> <span class="n">dataset</span>
+
+    <span class="n">mcrals</span> <span class="o">=</span> <span class="n">McrAls</span><span class="p">()</span>
+    <span class="n">mcrals</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">D_known</span><span class="p">,</span> <span class="n">ST</span><span class="o">=</span><span class="n">St_known</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">mcrals</span><span class="o">.</span><span class="n">n_targets</span> <span class="o">==</span> <span class="n">C_known</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># n_components</span>
+    <span class="k">assert</span> <span class="n">mcrals</span><span class="o">.</span><span class="n">n_samples</span> <span class="o">==</span> <span class="n">D_known</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">mcrals</span><span class="o">.</span><span class="n">n_features</span> <span class="o">==</span> <span class="n">D_known</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">pyMCR</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Charles H. Camp Jr..
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

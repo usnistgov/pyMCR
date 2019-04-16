@@ -1,0 +1,622 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Subpackages &#8212; pyMCR 0.3 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <blockquote>
+<div>package</div></blockquote>
+<hr class="docutils" />
+<div class="section" id="subpackages">
+<h1>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+</div>
+<div class="section" id="submodules">
+<h1>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="module-condition">
+<span id="condition-module"></span><h1>condition module<a class="headerlink" href="#module-condition" title="Permalink to this headline">¶</a></h1>
+<p>Functions to condition / preprocess data</p>
+<dl class="function">
+<dt id="condition.standardize">
+<code class="descclassname">condition.</code><code class="descname">standardize</code><span class="sig-paren">(</span><em>X</em>, <em>mean_ctr=True</em>, <em>with_std=True</em>, <em>axis=-1</em>, <em>copy=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/condition.html#standardize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#condition.standardize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Standardization of data</p>
+<dl class="docutils">
+<dt>X <span class="classifier-delimiter">:</span> <span class="classifier">ndarray</span></dt>
+<dd>Data array</dd>
+<dt>mean_ctr <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
+<dd>Mean-center data</dd>
+<dt>with_std <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
+<dd>Normalize by the standard deviation of the data</dd>
+<dt>axis <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd>Axis from which to calculate mean and standard deviation</dd>
+<dt>copy <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
+<dd>Copy data (X) if True, overwite if False</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-constraints">
+<span id="constraints-module"></span><h1>constraints module<a class="headerlink" href="#module-constraints" title="Permalink to this headline">¶</a></h1>
+<p>Built-in constraints</p>
+<p>All classes need a transform class. Note, unlike sklearn, transform can copy
+or overwrite input depending on copy attribute.</p>
+<dl class="class">
+<dt id="constraints.ConstraintNonneg">
+<em class="property">class </em><code class="descclassname">constraints.</code><code class="descname">ConstraintNonneg</code><span class="sig-paren">(</span><em>copy=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/constraints.html#ConstraintNonneg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#constraints.ConstraintNonneg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">constraints.Constraint</span></code></p>
+<p>Non-negativity constraint. All negative entries made 0.</p>
+<dl class="docutils">
+<dt>copy <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
+<dd>Make copy of input data, A; otherwise, overwrite (if mutable)</dd>
+</dl>
+<dl class="method">
+<dt id="constraints.ConstraintNonneg.transform">
+<code class="descname">transform</code><span class="sig-paren">(</span><em>A</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/constraints.html#ConstraintNonneg.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#constraints.ConstraintNonneg.transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply nonnegative constraint</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="constraints.ConstraintCumsumNonneg">
+<em class="property">class </em><code class="descclassname">constraints.</code><code class="descname">ConstraintCumsumNonneg</code><span class="sig-paren">(</span><em>axis=-1</em>, <em>copy=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/constraints.html#ConstraintCumsumNonneg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#constraints.ConstraintCumsumNonneg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">constraints.Constraint</span></code></p>
+<p>Cumulative-Summation non-negativity constraint. All negative entries made 0.</p>
+<dl class="docutils">
+<dt>copy <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
+<dd>Make copy of input data, A; otherwise, overwrite (if mutable)</dd>
+</dl>
+<dl class="method">
+<dt id="constraints.ConstraintCumsumNonneg.transform">
+<code class="descname">transform</code><span class="sig-paren">(</span><em>A</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/constraints.html#ConstraintCumsumNonneg.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#constraints.ConstraintCumsumNonneg.transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply cumsum nonnegative constraint</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="constraints.ConstraintZeroEndPoints">
+<em class="property">class </em><code class="descclassname">constraints.</code><code class="descname">ConstraintZeroEndPoints</code><span class="sig-paren">(</span><em>axis=-1</em>, <em>span=1</em>, <em>copy=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/constraints.html#ConstraintZeroEndPoints"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#constraints.ConstraintZeroEndPoints" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">constraints.Constraint</span></code></p>
+<p>Enforce the endpoints (or the mean over a range) is zero</p>
+<dl class="docutils">
+<dt>copy <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
+<dd>Make copy of input data, A; otherwise, overwrite (if mutable)</dd>
+<dt>axis <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd>Axis to operate on</dd>
+<dt>span <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd>Number of pixels along the ends to average.</dd>
+</dl>
+<dl class="method">
+<dt id="constraints.ConstraintZeroEndPoints.transform">
+<code class="descname">transform</code><span class="sig-paren">(</span><em>A</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/constraints.html#ConstraintZeroEndPoints.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#constraints.ConstraintZeroEndPoints.transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply cumsum nonnegative constraint</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="constraints.ConstraintZeroCumSumEndPoints">
+<em class="property">class </em><code class="descclassname">constraints.</code><code class="descname">ConstraintZeroCumSumEndPoints</code><span class="sig-paren">(</span><em>nodes=None</em>, <em>axis=-1</em>, <em>copy=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/constraints.html#ConstraintZeroCumSumEndPoints"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#constraints.ConstraintZeroCumSumEndPoints" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">constraints.Constraint</span></code></p>
+<p>Enforce the endpoints of the cumsum (or the mean over a range) is near-zero.
+Note: this is an approximation.</p>
+<dl class="docutils">
+<dt>copy <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
+<dd>Make copy of input data, A; otherwise, overwrite (if mutable)</dd>
+<dt>nodes <span class="classifier-delimiter">:</span> <span class="classifier">list of int</span></dt>
+<dd>In addition to end-points, other points to ensure are approximately 0</dd>
+<dt>axis <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd>Axis to operate on</dd>
+<dt>span <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd>Number of pixels along the ends to average.</dd>
+</dl>
+<dl class="method">
+<dt id="constraints.ConstraintZeroCumSumEndPoints.transform">
+<code class="descname">transform</code><span class="sig-paren">(</span><em>A</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/constraints.html#ConstraintZeroCumSumEndPoints.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#constraints.ConstraintZeroCumSumEndPoints.transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply cumsum nonnegative constraint</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="constraints.ConstraintNorm">
+<em class="property">class </em><code class="descclassname">constraints.</code><code class="descname">ConstraintNorm</code><span class="sig-paren">(</span><em>axis=-1</em>, <em>fix=None</em>, <em>copy=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/constraints.html#ConstraintNorm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#constraints.ConstraintNorm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">constraints.Constraint</span></code></p>
+<p>Normalization constraint.</p>
+<dl class="docutils">
+<dt>axis <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd>Which axis of input matrix A to apply normalization acorss.</dd>
+<dt>fix <span class="classifier-delimiter">:</span> <span class="classifier">list</span></dt>
+<dd>Keep fix-axes as-is and normalize the remaining axes based on the
+residual of the fixed axes.</dd>
+<dt>set_zeros_to_feature <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd>Set all samples which sum-to-zero across axis to 1 for a particular feature
+(See Notes)</dd>
+<dt>copy <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
+<dd>Make copy of input data, A; otherwise, overwrite (if mutable)</dd>
+</dl>
+<ul class="simple">
+<li>For set_zeros_to_feature, assuming the data represents concentration with</li>
+</ul>
+<blockquote>
+<div>a matrix [n_samples, n_features] and the axis is across the features, for every
+sample that sums to 0 across axis, would be replaced with a vector [n_features]
+of zeros except at set_zeros_to_feature, which would equal 1. I.e., this pixel is
+now pure substance of index value set_zeros_to_feature.</div></blockquote>
+<dl class="method">
+<dt id="constraints.ConstraintNorm.transform">
+<code class="descname">transform</code><span class="sig-paren">(</span><em>A</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/constraints.html#ConstraintNorm.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#constraints.ConstraintNorm.transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply normalization constraint</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="constraints.ConstraintCutBelow">
+<em class="property">class </em><code class="descclassname">constraints.</code><code class="descname">ConstraintCutBelow</code><span class="sig-paren">(</span><em>value=0</em>, <em>axis_sumnz=None</em>, <em>exclude=None</em>, <em>exclude_axis=-1</em>, <em>copy=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/constraints.html#ConstraintCutBelow"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#constraints.ConstraintCutBelow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">constraints._CutExclude</span></code></p>
+<p>Cut values below (and not-equal to) a certain threshold.</p>
+<dl class="docutils">
+<dt>value <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd>Cutoff value</dd>
+<dt>axis_sumnz <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd>If not None, cut below value only applied where sum across specified
+axis does not go to 0, i.e. all values cut.</dd>
+<dt>exclude <span class="classifier-delimiter">:</span> <span class="classifier">int, list , tuple, ndarray</span></dt>
+<dd>Exclude targets</dd>
+<dt>exclude_axis <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd>Along which axis to enumerate targets</dd>
+<dt>copy <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
+<dd>Make copy of input data, A; otherwise, overwrite (if mutable)</dd>
+</dl>
+<dl class="method">
+<dt id="constraints.ConstraintCutBelow.transform">
+<code class="descname">transform</code><span class="sig-paren">(</span><em>A</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/constraints.html#ConstraintCutBelow.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#constraints.ConstraintCutBelow.transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply cut-below value constraint</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt>
+<em class="property">class </em><code class="descclassname">constraints.</code><code class="descname">ConstraintCutBelow</code><span class="sig-paren">(</span><em>value=0</em>, <em>axis_sumnz=None</em>, <em>exclude=None</em>, <em>exclude_axis=-1</em>, <em>copy=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/constraints.html#ConstraintCutBelow"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">constraints._CutExclude</span></code></p>
+<p>Cut values below (and not-equal to) a certain threshold.</p>
+<dl class="docutils">
+<dt>value <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd>Cutoff value</dd>
+<dt>axis_sumnz <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd>If not None, cut below value only applied where sum across specified
+axis does not go to 0, i.e. all values cut.</dd>
+<dt>exclude <span class="classifier-delimiter">:</span> <span class="classifier">int, list , tuple, ndarray</span></dt>
+<dd>Exclude targets</dd>
+<dt>exclude_axis <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd>Along which axis to enumerate targets</dd>
+<dt>copy <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
+<dd>Make copy of input data, A; otherwise, overwrite (if mutable)</dd>
+</dl>
+<dl class="method">
+<dt>
+<code class="descname">transform</code><span class="sig-paren">(</span><em>A</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/constraints.html#ConstraintCutBelow.transform"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Apply cut-below value constraint</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="constraints.ConstraintCompressBelow">
+<em class="property">class </em><code class="descclassname">constraints.</code><code class="descname">ConstraintCompressBelow</code><span class="sig-paren">(</span><em>value=0</em>, <em>copy=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/constraints.html#ConstraintCompressBelow"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#constraints.ConstraintCompressBelow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">constraints.Constraint</span></code></p>
+<p>Compress values below (and not-equal to) a certain threshold (set to value)</p>
+<dl class="docutils">
+<dt>value <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd>Cutoff value</dd>
+<dt>copy <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
+<dd>Make copy of input data, A; otherwise, overwrite (if mutable)</dd>
+</dl>
+<dl class="method">
+<dt id="constraints.ConstraintCompressBelow.transform">
+<code class="descname">transform</code><span class="sig-paren">(</span><em>A</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/constraints.html#ConstraintCompressBelow.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#constraints.ConstraintCompressBelow.transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply compress-below value constraint</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="constraints.ConstraintCutAbove">
+<em class="property">class </em><code class="descclassname">constraints.</code><code class="descname">ConstraintCutAbove</code><span class="sig-paren">(</span><em>value=0</em>, <em>axis_sumnz=None</em>, <em>exclude=None</em>, <em>exclude_axis=-1</em>, <em>copy=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/constraints.html#ConstraintCutAbove"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#constraints.ConstraintCutAbove" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">constraints._CutExclude</span></code></p>
+<p>Cut values above (and not-equal to) a certain threshold</p>
+<dl class="docutils">
+<dt>value <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd>Cutoff value</dd>
+<dt>axis_sumnz <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd>If not None, cut above value only applied where sum across specified
+axis does not go to 0, i.e. all values cut.</dd>
+<dt>exclude <span class="classifier-delimiter">:</span> <span class="classifier">int, list , tuple, ndarray</span></dt>
+<dd>Exclude targets</dd>
+<dt>exclude_axis <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd>Along which axis to enumerate targets</dd>
+<dt>copy <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
+<dd>Make copy of input data, A; otherwise, overwrite (if mutable)</dd>
+</dl>
+<dl class="method">
+<dt id="constraints.ConstraintCutAbove.transform">
+<code class="descname">transform</code><span class="sig-paren">(</span><em>A</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/constraints.html#ConstraintCutAbove.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#constraints.ConstraintCutAbove.transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply cut-above value constraint</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="constraints.ConstraintCompressAbove">
+<em class="property">class </em><code class="descclassname">constraints.</code><code class="descname">ConstraintCompressAbove</code><span class="sig-paren">(</span><em>value=0</em>, <em>copy=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/constraints.html#ConstraintCompressAbove"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#constraints.ConstraintCompressAbove" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">constraints.Constraint</span></code></p>
+<p>Compress values above (and not-equal to) a certain threshold (set to value)</p>
+<dl class="docutils">
+<dt>value <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd>Cutoff value</dd>
+<dt>copy <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
+<dd>Make copy of input data, A; otherwise, overwrite (if mutable)</dd>
+</dl>
+<dl class="method">
+<dt id="constraints.ConstraintCompressAbove.transform">
+<code class="descname">transform</code><span class="sig-paren">(</span><em>A</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/constraints.html#ConstraintCompressAbove.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#constraints.ConstraintCompressAbove.transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply compress-above value constraint</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-mcr">
+<span id="mcr-module"></span><h1>mcr module<a class="headerlink" href="#module-mcr" title="Permalink to this headline">¶</a></h1>
+<p>MCR-ALS Main Class for Computation</p>
+<dl class="class">
+<dt id="mcr.McrAls">
+<em class="property">class </em><code class="descclassname">mcr.</code><code class="descname">McrAls</code><span class="sig-paren">(</span><em>c_regr=&lt;pymcr.regressors.OLS object&gt;, st_regr=&lt;pymcr.regressors.OLS object&gt;, c_fit_kwargs={}, st_fit_kwargs={}, c_constraints=[&lt;pymcr.constraints.ConstraintNonneg object&gt;], st_constraints=[&lt;pymcr.constraints.ConstraintNonneg object&gt;], max_iter=50, err_fcn=&lt;function mse&gt;, tol_increase=0.0, tol_n_increase=10, tol_err_change=None, tol_n_above_min=10</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mcr.html#McrAls"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mcr.McrAls" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Multivariate Curve Resolution - Alternating Least Squares</p>
+<p>D = CS^T</p>
+<dl class="docutils">
+<dt>c_regr <span class="classifier-delimiter">:</span> <span class="classifier">str, class</span></dt>
+<dd>Instantiated regression class (or string, see Notes) for calculating the
+C matrix</dd>
+<dt>st_regr <span class="classifier-delimiter">:</span> <span class="classifier">str, class</span></dt>
+<dd>Instantiated regression class (or string, see Notes) for calculating the
+S^T matrix</dd>
+<dt>c_fit_kwargs <span class="classifier-delimiter">:</span> <span class="classifier">dict</span></dt>
+<dd>kwargs sent to c_regr.fit method</dd>
+<dt>st_fit_kwargs <span class="classifier-delimiter">:</span> <span class="classifier">dict</span></dt>
+<dd>kwargs sent to st_regr.fit method</dd>
+<dt>c_constraints <span class="classifier-delimiter">:</span> <span class="classifier">list</span></dt>
+<dd>List of constraints applied to calculation of C matrix</dd>
+<dt>st_constraints <span class="classifier-delimiter">:</span> <span class="classifier">list</span></dt>
+<dd>List of constraints applied to calculation of S^T matrix</dd>
+<dt>max_iter <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd>Maximum number of iterations. One iteration calculates both C and S^T</dd>
+<dt>err_fcn <span class="classifier-delimiter">:</span> <span class="classifier">function</span></dt>
+<dd>Function to calculate error/differences after each least squares
+calculaton (ie twice per iteration). Outputs to err attribute.</dd>
+<dt>tol_increase <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd>Factor increase to allow in err attribute. Set to 0 for no increase
+allowed. E.g., setting to 1.0 means the err can double per iteration.</dd>
+<dt>tol_n_increase <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd>Number of consecutive iterations for which the err attribute can increase</dd>
+<dt>tol_err_change <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd>If err changes less than tol_err_change, per iteration, break.</dd>
+<dt>tol_n_above_min <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd>Number of half-iterations that can be performed without reaching a
+new error-minimum</dd>
+</dl>
+<dl class="docutils">
+<dt>err <span class="classifier-delimiter">:</span> <span class="classifier">list</span></dt>
+<dd>List of calculated errors (from err_fcn) after each least squares (ie
+twice per iteration)</dd>
+<dt><a href="#id1"><span class="problematic" id="id2">C_</span></a> <span class="classifier-delimiter">:</span> <span class="classifier">ndarray [n_samples, n_targets]</span></dt>
+<dd>Most recently calculated C matrix (that did not cause a tolerance
+failure)</dd>
+<dt><a href="#id3"><span class="problematic" id="id4">ST_</span></a> <span class="classifier-delimiter">:</span> <span class="classifier">ndarray [n_targets, n_features]</span></dt>
+<dd>Most recently calculated S^T matrix (that did not cause a tolerance
+failure)</dd>
+<dt><a href="#id5"><span class="problematic" id="id6">C_opt_</span></a> <span class="classifier-delimiter">:</span> <span class="classifier">ndarray [n_samples, n_targets]</span></dt>
+<dd>[Optimal] C matrix for lowest err attribute</dd>
+<dt><a href="#id7"><span class="problematic" id="id8">ST_opt_</span></a> <span class="classifier-delimiter">:</span> <span class="classifier">ndarray [n_targets, n_features]</span></dt>
+<dd>[Optimal] ST matrix for lowest err attribute</dd>
+<dt>n_iter <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd>Total number of iterations performed</dd>
+<dt>n_iter_opt <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd>Iteration when optimal C and ST calculated</dd>
+<dt>exit_max_iter_reached <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
+<dd>Exited iterations due to maximum number of iteration reached (max_iter parameter)</dd>
+<dt>exit_tol_increase <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
+<dd>Exited iterations due to maximum fractional increase in error metric (via err_fcn)</dd>
+<dt>exit_tol_n_increase <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
+<dd>Exited iterations due to maximum number of consecutive increases in error metric 
+(via err fcn)</dd>
+<dt>exit_tol_err_change <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
+<dd>Exited iterations due to error metric change that is smaller than tol_err_change</dd>
+<dt>exit_tol_n_above_min <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
+<dd>Exited iterations due to maximum number of half-iterations for which the error
+metric increased above the minimum error</dd>
+</dl>
+<ul class="simple">
+<li>Built-in regressor classes (str can be used): OLS (ordinary least squares),</li>
+</ul>
+<p>NNLS (non-negatively constrained least squares). See mcr.regressors.
+-   Built-in regressor methods can be given as a string to c_regr, st_regr;
+though instantiating an imported class gives more flexibility.
+-   Setting any tolerance to None turns that check off</p>
+<dl class="attribute">
+<dt id="mcr.McrAls.D_">
+<code class="descname">D_</code><a class="headerlink" href="#mcr.McrAls.D_" title="Permalink to this definition">¶</a></dt>
+<dd><p>D matrix with current C and S^T matrices</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="mcr.McrAls.D_opt_">
+<code class="descname">D_opt_</code><a class="headerlink" href="#mcr.McrAls.D_opt_" title="Permalink to this definition">¶</a></dt>
+<dd><p>D matrix with optimal C and S^T matrices</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mcr.McrAls.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>D</em>, <em>C=None</em>, <em>ST=None</em>, <em>st_fix=None</em>, <em>c_fix=None</em>, <em>c_first=True</em>, <em>verbose=False</em>, <em>post_iter_fcn=None</em>, <em>post_half_fcn=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mcr.html#McrAls.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mcr.McrAls.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform MCR-ALS. D = CS^T. Solve for C and S^T iteratively.</p>
+<dl class="docutils">
+<dt>D <span class="classifier-delimiter">:</span> <span class="classifier">ndarray</span></dt>
+<dd>D matrix</dd>
+<dt>C <span class="classifier-delimiter">:</span> <span class="classifier">ndarray</span></dt>
+<dd>Initial C matrix estimate. Only provide initial C OR S^T.</dd>
+<dt>ST <span class="classifier-delimiter">:</span> <span class="classifier">ndarray</span></dt>
+<dd>Initial S^T matrix estimate. Only provide initial C OR S^T.</dd>
+<dt>st_fix <span class="classifier-delimiter">:</span> <span class="classifier">list</span></dt>
+<dd>The spectral component numbers to keep fixed.</dd>
+<dt>c_fix <span class="classifier-delimiter">:</span> <span class="classifier">list</span></dt>
+<dd>The concentration component numbers to keep fixed.</dd>
+<dt>c_first <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
+<dd>Calculate C first when both C and ST are provided. c_fix and st_fix must
+also be provided in this circumstance.</dd>
+<dt>verbose <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
+<dd>Display iteration and per-least squares err results.</dd>
+<dt>post_iter_fcn <span class="classifier-delimiter">:</span> <span class="classifier">function</span></dt>
+<dd>Function to perform after each iteration</dd>
+<dt>post_half_fcn <span class="classifier-delimiter">:</span> <span class="classifier">function</span></dt>
+<dd>Function to perform after half-iteration</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="mcr.McrAls.n_features">
+<code class="descname">n_features</code><a class="headerlink" href="#mcr.McrAls.n_features" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="mcr.McrAls.n_samples">
+<code class="descname">n_samples</code><a class="headerlink" href="#mcr.McrAls.n_samples" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="mcr.McrAls.n_targets">
+<code class="descname">n_targets</code><a class="headerlink" href="#mcr.McrAls.n_targets" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-metrics">
+<span id="metrics-module"></span><h1>metrics module<a class="headerlink" href="#module-metrics" title="Permalink to this headline">¶</a></h1>
+<p>Metrics used in pyMCR</p>
+<p>All functions must take C, ST, D_actual, D_calculated</p>
+<dl class="function">
+<dt id="metrics.mse">
+<code class="descclassname">metrics.</code><code class="descname">mse</code><span class="sig-paren">(</span><em>C</em>, <em>ST</em>, <em>D_actual</em>, <em>D_calculated</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/metrics.html#mse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#metrics.mse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mean square error</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-rank">
+<span id="rank-module"></span><h1>rank module<a class="headerlink" href="#module-rank" title="Permalink to this headline">¶</a></h1>
+<p>Functions to estimate number of factors / rank</p>
+<dl class="function">
+<dt id="rank.ind">
+<code class="descclassname">rank.</code><code class="descname">ind</code><span class="sig-paren">(</span><em>D_actual</em>, <em>ul_rank=100</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rank.html#ind"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rank.ind" title="Permalink to this definition">¶</a></dt>
+<dd><p>Malinowski’s indicator function</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="rank.rod">
+<code class="descclassname">rank.</code><code class="descname">rod</code><span class="sig-paren">(</span><em>D_actual</em>, <em>ul_rank=100</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rank.html#rod"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rank.rod" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ratio of derivatives</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="rank.pca">
+<code class="descclassname">rank.</code><code class="descname">pca</code><span class="sig-paren">(</span><em>D</em>, <em>n_components=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rank.html#pca"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rank.pca" title="Permalink to this definition">¶</a></dt>
+<dd><p>Principle component analysis</p>
+<dl class="docutils">
+<dt>D <span class="classifier-delimiter">:</span> <span class="classifier">ndarray [n_sample, n_features]</span></dt>
+<dd>Data</dd>
+<dt>n_components <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd>Number of components to calculate (using scipy.sparse.linalg.svds). If
+None use numpy.linalg.svd</dd>
+</dl>
+<p>Tuple with 3 items: Scores (T), Loadings (W), eigenvalues (singular values-squared)</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-regressors">
+<span id="regressors-module"></span><h1>regressors module<a class="headerlink" href="#module-regressors" title="Permalink to this headline">¶</a></h1>
+<p>Built-in least squares / regression methods.</p>
+<p>All models will follow the formalism, AX = B, solve for X.</p>
+<p>NOTE: <a href="#id9"><span class="problematic" id="id10">coef_</span></a> will be X.T, which is the formalism that scikit-learn follows</p>
+<dl class="class">
+<dt id="regressors.LinearRegression">
+<em class="property">class </em><code class="descclassname">regressors.</code><code class="descname">LinearRegression</code><a class="reference internal" href="_modules/regressors.html#LinearRegression"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#regressors.LinearRegression" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/abc.html#abc.ABC" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code></a></p>
+<p>Abstract class for linear regression methods</p>
+<dl class="attribute">
+<dt id="regressors.LinearRegression.coef_">
+<code class="descname">coef_</code><a class="headerlink" href="#regressors.LinearRegression.coef_" title="Permalink to this definition">¶</a></dt>
+<dd><p>The transposed form of X. This is the formalism of scikit-learn</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="regressors.LinearRegression.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>A</em>, <em>B</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/regressors.html#LinearRegression.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#regressors.LinearRegression.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>AX = B, solve for X</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="regressors.NNLS">
+<em class="property">class </em><code class="descclassname">regressors.</code><code class="descname">NNLS</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/regressors.html#NNLS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#regressors.NNLS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#regressors.LinearRegression" title="regressors.LinearRegression"><code class="xref py py-class docutils literal notranslate"><span class="pre">regressors.LinearRegression</span></code></a></p>
+<p>Non-negative constrained least squares regression</p>
+<p>AX = B, solve for X (coeffients.T)</p>
+<dl class="docutils">
+<dt><a href="#id11"><span class="problematic" id="id12">coef_</span></a> <span class="classifier-delimiter">:</span> <span class="classifier">ndarray</span></dt>
+<dd>Regression coefficients</dd>
+<dt><a href="#id13"><span class="problematic" id="id14">residual_</span></a> <span class="classifier-delimiter">:</span> <span class="classifier">ndarray</span></dt>
+<dd>Residual (sum-of-squares)</dd>
+</dl>
+<p>This is simply a wrapped version of NNLS
+(scipy.optimize.nnls).</p>
+<p><a href="#id15"><span class="problematic" id="id16">coef_</span></a> is X.T, which is the formalism of scikit-learn</p>
+<dl class="method">
+<dt id="regressors.NNLS.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>A</em>, <em>B</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/regressors.html#NNLS.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#regressors.NNLS.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Solve for X: AX = B</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="regressors.OLS">
+<em class="property">class </em><code class="descclassname">regressors.</code><code class="descname">OLS</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/regressors.html#OLS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#regressors.OLS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#regressors.LinearRegression" title="regressors.LinearRegression"><code class="xref py py-class docutils literal notranslate"><span class="pre">regressors.LinearRegression</span></code></a></p>
+<p>Ordinary least squares regression</p>
+<p>AX = B, solve for X (coefficients.T)</p>
+<dl class="docutils">
+<dt><a href="#id17"><span class="problematic" id="id18">coef_</span></a> <span class="classifier-delimiter">:</span> <span class="classifier">ndarray</span></dt>
+<dd>Regression coefficients (X.T)</dd>
+<dt><a href="#id19"><span class="problematic" id="id20">residual_</span></a> <span class="classifier-delimiter">:</span> <span class="classifier">ndarray</span></dt>
+<dd>Residual (sum-of-squares)</dd>
+<dt><a href="#id21"><span class="problematic" id="id22">rank_</span></a> <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd>Effective rank of matrix A</dd>
+<dt><a href="#id23"><span class="problematic" id="id24">svs_</span></a> <span class="classifier-delimiter">:</span> <span class="classifier">ndarray</span></dt>
+<dd>Singular values of matrix A</dd>
+</dl>
+<p>This is simply a wrapped version of Ordinary Least Squares
+(scipy.linalg.lstsq).</p>
+<p><a href="#id25"><span class="problematic" id="id26">coef_</span></a> is X.T, which is the formalism of scikit-learn</p>
+<dl class="method">
+<dt id="regressors.OLS.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>A</em>, <em>B</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/regressors.html#OLS.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#regressors.OLS.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Solve for X: AX = B</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-contents">
+<h1>Module contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h1>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">pyMCR</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Charles H. Camp Jr..
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
