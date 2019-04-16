@@ -6,8 +6,8 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Welcome to pyMCR’s documentation! &#8212; pyMCR 0.3 documentation</title>
-    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <title>pyMCR: Multivariate Curve Resolution in Python &#8212; pyMCR 0.3 documentation</title>
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
@@ -16,6 +16,7 @@
     <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Installation" href="installing.html" />
 <link rel="stylesheet" href="https://pages.nist.gov/nist-header-footer/css/nist-combined.css">
   <script src="https://code.jquery.com/jquery-1.12.4.min.js" type="text/javascript"></script>
   <script src="https://pages.nist.gov/nist-header-footer/js/nist-header-footer.js" type="text/javascript" defer="defer"></script>
@@ -46,18 +47,113 @@ $(document).ready(function(){
 
 
   </head><body>
-  
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="installing.html" title="Installation"
+             accesskey="N">next</a> |</li>
+        <li class="nav-item nav-item-0"><a href="#">pyMCR 0.3 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          
-
           <div class="body" role="main">
             
-  <div class="section" id="welcome-to-pymcr-s-documentation">
-<h1>Welcome to pyMCR’s documentation!<a class="headerlink" href="#welcome-to-pymcr-s-documentation" title="Permalink to this headline">¶</a></h1>
+  <div class="line-block">
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+</div>
+<a class="reference external image-reference" href="https://travis-ci.org/CCampJr/pyMCR"><img alt="Travis branch" src="https://travis-ci.org/CCampJr/pyMCR.svg?branch=0.3.X" /></a>
+<a class="reference external image-reference" href="https://ci.appveyor.com/project/CCampJr/pyMCR"><img alt="AppVeyor branch" src="https://ci.appveyor.com/api/projects/status/ajld1bj7jo4oweio/branch/0.3.X?svg=true" /></a>
+<a class="reference external image-reference" href="https://codecov.io/gh/CCampJr/pyMCR"><img alt="Codecov branch" src="https://img.shields.io/codecov/c/github/CCampJr/pyMCR/0.3.X.svg" /></a>
+<a class="reference external image-reference" href="https://pypi.org/project/pyMCR/"><img alt="PyPI - Python Version" src="https://img.shields.io/pypi/pyversions/pyMCR.svg" /></a>
+<a class="reference external image-reference" href="https://pypi.org/project/pyMCR/"><img alt="PyPI" src="https://img.shields.io/pypi/v/pyMCR.svg" /></a>
+<a class="reference external image-reference" href="https://github.com/CCampJr/pyMCR/blob/master/LICENSE.md"><img alt="NIST Public Domain" src="https://img.shields.io/badge/License-NIST%20Public%20Domain-green.svg" /></a>
+<div class="section" id="pymcr-multivariate-curve-resolution-in-python">
+<h1>pyMCR: Multivariate Curve Resolution in Python<a class="headerlink" href="#pymcr-multivariate-curve-resolution-in-python" title="Permalink to this headline">¶</a></h1>
+<p>pyMCR is a small package for performing multivariate curve resolution.
+Currently, it implements a simple alternating least squares method
+(i.e., MCR-ALS).</p>
+<p>MCR-ALS, in general, is a constrained implementation of alternating
+least squares (ALS) nonnegative matrix factorization (NMF). Historically,
+other names were used for MCR as well:</p>
+<ul class="simple">
+<li>Self modeling mixture analysis (SMMA)</li>
+<li>Self modeling curve resolution (SMCR)</li>
+</ul>
+<p>Available methods:</p>
+<ul class="simple">
+<li>Regressors:<ul>
+<li><a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.linalg.lstsq.html">Ordinary least squares</a> (default)</li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.nnls.html">Non-negatively constrained least squares</a></li>
+<li>Native support for <a class="reference external" href="http://scikit-learn.org/stable/modules/linear_model.html">scikit-learn linear model regressors</a>
+(e.g., <a class="reference external" href="http://scikit-learn.org/stable/modules/linear_model.html#ordinary-least-squares">LinearRegression</a>,
+<a class="reference external" href="http://scikit-learn.org/stable/modules/linear_model.html#ridge-regression">RidgeRegression</a>,
+<a class="reference external" href="http://scikit-learn.org/stable/modules/linear_model.html#lasso">Lasso</a>)</li>
+</ul>
+</li>
+<li>Constraints<ul>
+<li>Non-negativity</li>
+<li>Normalization</li>
+<li>Zero end-points</li>
+<li>Zero (approx) end-points of cumulative summation (can specify nodes as well)</li>
+<li>Non-negativity of cumulative summation</li>
+<li>Compress or cut values above or below a threshold value</li>
+<li>Replace sum-across-features samples (e.g., 0 concentration) with prescribed target</li>
+<li>Enforce a plane (“planarize”). E.g., a concenctration image is a plane.</li>
+</ul>
+</li>
+<li>Error metrics / Loss function<ul>
+<li>Mean-squared error</li>
+</ul>
+</li>
+<li>Other options<ul>
+<li>Fix known targets (C and/or ST, and let others vary)</li>
+</ul>
+</li>
+</ul>
+<p>What it <strong>does</strong> do:</p>
+<ul class="simple">
+<li>Approximate the concentration and spectral matrices via minimization routines.
+This is the core the MCR-ALS methods.</li>
+<li>Enable the application of certain constraints in a user-defined order.</li>
+</ul>
+<p>What it <strong>does not</strong> do:</p>
+<ul class="simple">
+<li>Estimate the number of components in the sample. This is a bonus feature in
+some more-advanced MCR-ALS packages.<ul>
+<li>In MATLAB: <a class="reference external" href="https://mcrals.wordpress.com/">https://mcrals.wordpress.com/</a></li>
+<li>In R: <a class="reference external" href="https://cran.r-project.org/web/packages/ALS/index.html">https://cran.r-project.org/web/packages/ALS/index.html</a></li>
+</ul>
+</li>
+</ul>
 <div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installing.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installing.html#dependencies">Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installing.html#notes-and-known-issues">Notes and Known Issues</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installing.html#instructions">Instructions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api.html#module-pymcr.condition"><code class="docutils literal notranslate"><span class="pre">pymcr.condition</span></code>: Functions to condition / preprocess data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#module-pymcr.constraints"><code class="docutils literal notranslate"><span class="pre">pymcr.constraints</span></code>: Built-in constraints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#module-pymcr.mcr"><code class="docutils literal notranslate"><span class="pre">pymcr.mcr</span></code>: MCR Main Class for Computation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#module-pymcr.metrics"><code class="docutils literal notranslate"><span class="pre">pymcr.metrics</span></code>: Metrics used in pyMCR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#module-pymcr.regressors"><code class="docutils literal notranslate"><span class="pre">pymcr.regressors</span></code>: Built-in regression methods</a></li>
+</ul>
+</li>
+</ul>
 </div>
 </div>
 <div class="section" id="indices-and-tables">
@@ -71,29 +167,26 @@ $(document).ready(function(){
 
 
           </div>
-          
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="#">pyMCR</a></h1>
-
-
-
-
-
-
-
-
-<h3>Navigation</h3>
-
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="#">Documentation overview</a><ul>
-  </ul></li>
+  <h3><a href="#">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">pyMCR: Multivariate Curve Resolution in Python</a></li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
 </ul>
-</div>
+
+  <h4>Next topic</h4>
+  <p class="topless"><a href="installing.html"
+                        title="next chapter">Installation</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/index.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <div class="searchformwrapper">
@@ -106,32 +199,26 @@ $(document).ready(function(){
     </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
-
-
-
-
-
-
-
-
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="footer">
-      &copy;2019, Charles H. Camp Jr..
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.1</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
-      
-      |
-      <a href="_sources/index.rst.txt"
-          rel="nofollow">Page source</a>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="installing.html" title="Installation"
+             >next</a> |</li>
+        <li class="nav-item nav-item-0"><a href="#">pyMCR 0.3 documentation</a> &#187;</li> 
+      </ul>
     </div>
-
-    
-
-    
+    <div class="footer" role="contentinfo">
+    </div>
   </body>
 </html>
