@@ -178,10 +178,11 @@ Usage
     # Otherwise, if you have an initial estimate of the concentrations
     mcrar.fit(D, C=initial_conc)
 
-Examples
---------
+Example Results
+---------------
 
-Command line and Jupyter notebook examples are provided in the ``Examples/`` folder.
+Command line and Jupyter notebook examples are provided in the ``Examples/`` folder. Examples of instantiating
+the McrAR class with different regressors available in the `documentation <https://pages.nist.gov/pyMCR>`_ .
 
 From ``Examples/Demo.ipynb``:
 
