@@ -83,7 +83,7 @@ Available methods
     -   Non-negativity of cumulative summation
     -   Compress or cut values above or below a threshold value
     -   Replace sum-across-features samples (e.g., 0 concentration) with prescribed target
-    -   Enforce a plane ("planarize"). E.g., a concenctration image is a plane.
+    -   Enforce a plane ("planarize"). E.g., a concentration image is a plane.
 
 -   Error metrics / Loss function
 

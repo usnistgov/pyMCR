@@ -16,10 +16,10 @@ and Dependency Specification <https://www.python.org/dev/peps/pep-0440/>`_.
 
     -   Non-negative cumulative summation
     -   Zero end-points
-    -   Zero (approx) cumulalative summation end-points (can specify nodes as well)
+    -   Zero (approx) cumulative summation end-points (can specify nodes as well)
     -   Compress or cut values above or below a threshold value
     -   Replace sum-across-features samples (e.g., 0 concentration) with prescribed target
-    -   Enforce a plane ("planarize"). E.g., a concenctration image is a plane.
+    -   Enforce a plane ("planarize"). E.g., a concentration image is a plane.
 
 0.2.1 (18-05-16)
 ----------------
@@ -30,7 +30,7 @@ and Dependency Specification <https://www.python.org/dev/peps/pep-0440/>`_.
 ----------------
 
 -   **Total re-write** that is incompatible with earlier version
--   Built-in solvers: nonnegative least squares (scipy.optimize.nnls), ordinary 
+-   Built-in solvers: non-negative least squares (scipy.optimize.nnls), ordinary 
     least squares (scipy.linalg.lstsq)
 -   Native support for scikit-learn estimators as least squares solvers / regressor
 -   Can now explicitly list and order constraints.

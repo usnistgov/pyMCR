@@ -33,7 +33,7 @@ pyMCR is a small package for performing multivariate curve resolution.
 Currently, it implements a simple alternating regression scheme (MCR-AR). The most common
 implementation is with ordinary least-squares regression, MCR-ALS.
 
-MCR with non0negativity constraints on both matrices is the same as nonnegative matrix factorization (NMF). Historically,
+MCR with non0negativity constraints on both matrices is the same as non-negative matrix factorization (NMF). Historically,
 other names were used for MCR as well:
 
 -   Self modeling mixture analysis (SMMA)
@@ -61,7 +61,7 @@ Available methods:
     -   Non-negativity of cumulative summation
     -   Compress or cut values above or below a threshold value
     -   Replace sum-across-features samples (e.g., 0 concentration) with prescribed target
-    -   Enforce a plane ("planarize"). E.g., a concenctration image is a plane.
+    -   Enforce a plane ("planarize"). E.g., a concentration image is a plane.
 
 -   Error metrics / Loss function
 
