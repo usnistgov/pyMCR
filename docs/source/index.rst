@@ -1,5 +1,6 @@
 |
 |
+
 .. image:: https://travis-ci.org/CCampJr/pyMCR.svg?branch=0.3.X
     :alt: Travis branch
     :target: https://travis-ci.org/CCampJr/pyMCR
@@ -39,7 +40,29 @@ other names were used for MCR as well:
 -   Self modeling mixture analysis (SMMA)
 -   Self modeling curve resolution (SMCR)
 
-Available methods:
+Documentation
+-------------
+
+.. toctree::
+   :maxdepth: 2
+   :caption: User Docs
+
+   installing
+   usage
+   license_link
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Developer Docs
+
+   contribute_link
+   license_link
+   api
+   modules
+
+
+Available methods
+-----------------
 
 -   Regressors:
 
@@ -71,6 +94,9 @@ Available methods:
 
     -   Fix known targets (C and/or ST, and let others vary)
 
+Software Design Philosophy
+--------------------------
+
 What it **does** do:
 
 -   Approximate the concentration and spectral matrices via minimization routines. 
@@ -79,19 +105,69 @@ What it **does** do:
 
 What it **does not** do:
 
--   Estimate the number of components in the sample. This is a bonus feature in 
+-   Estimate the number of components in the sample (though some tools tools may be provided in the future). This is a bonus feature in 
     some more-advanced MCR-ALS packages.
 
     - In MATLAB: https://mcrals.wordpress.com/
     - In R: https://cran.r-project.org/web/packages/ALS/index.html
 
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+Basic Usage
+-----------
 
-   installing
-   api
+.. code:: python
+
+    from pymcr.mcr import McrAls
+    mcrals = McrAls()
+    
+    # MCR assumes a system of the form: D = CS^T
+    #
+    # Data that you will provide (hyperspectral context):
+    # D [n_pixels, n_frequencies]  # Hyperspectral image unraveled in space (2D)
+    #
+    # initial_spectra [n_components, n_frequencies]  ## S^T in the literature
+    # OR
+    # initial_conc [n_pixels, n_components]   ## C in the literature
+
+    # If you have an initial estimate of the spectra
+    mcrals.fit(D, ST=initial_spectra)
+
+    # Otherwise, if you have an initial estimate of the concentrations
+    mcrals.fit(D, C=initial_conc)
+
+
+Examples
+--------
+
+Command line and Jupyter notebook examples are provided in the ``Examples/`` folder.
+
+From ``Examples/Demo.ipynb``:
+
+.. image:: ./_static/mcr_spectra_retr.png
+
+.. image:: ./_static/mcr_conc_retr.png
+
+
+Citing this Software
+--------------------
+
+Coming soon...
+
+References
+----------
+
+-   `W. H. Lawton and E. A. Sylvestre, "Self Modeling Curve Resolution", 
+    Technometrics 13, 617–633 (1971). <https://www.jstor.org/stable/1267173>`_
+-   https://mcrals.wordpress.com/theory/
+-   `J. Jaumot, R. Gargallo, A. de Juan, and R. Tauler, "A graphical user-friendly 
+    interface for MCR-ALS: a new tool for multivariate curve resolution in
+    MATLAB", Chemometrics and Intelligent Laboratory Systems 76, 101-110 
+    (2005). <http://www.sciencedirect.com/science/article/pii/S0169743904002874>`_
+-   `J. Felten, H. Hall, J. Jaumot, R. Tauler, A. de Juan, and A. Gorzsás, 
+    "Vibrational spectroscopic image analysis of biological material using 
+    multivariate curve resolution–alternating least squares (MCR-ALS)", Nature Protocols 
+    10, 217-240 (2015). <https://www.nature.com/articles/nprot.2015.008>`_
+    
 
 Indices and tables
 ==================
