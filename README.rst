@@ -93,15 +93,17 @@ packages may work.
 
 -   python >= 3.4
     
-    - Tested with 3.4.6, 3.5.4, 3.6.3, 3.6.5
+    - Tested with 3.4.6, 3.5.4, 3.6.3, 3.6.5, 3.7.1
 
 -   numpy (1.9.3)
     
-    - Tested with 1.12.1, 1.13.1, 1.13.3, 1.14.3
+    - Tested with 1.12.1, 1.13.1, 1.13.3, 1.14.3, 1.14.6
 
 -   scipy (1.0.0)
 
-    - Tested with 1.0.0 and 1.0.1
+    - Tested with 1.0.0, 1.0.1, 1.1.0
+
+-   scikit-learn (0.2.0)
 
 Known Issues
 ------------
