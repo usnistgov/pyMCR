@@ -27,6 +27,8 @@
 pyMCR: Multivariate Curve Resolution in Python
 ===============================================================
 
+Documentation available online at https://pages.nist.gov/pyMCR
+
 pyMCR is a small package for performing multivariate curve resolution.
 Currently, it implements a simple alternating regression scheme (MCR-AR). The most common
 implementation is with ordinary least-squares regression, MCR-ALS.
