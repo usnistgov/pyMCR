@@ -1,0 +1,252 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Usage and Examples &#8212; pyMCR 0.3 documentation</title>
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="License" href="license_link.html" />
+    <link rel="prev" title="Installation" href="installing.html" />
+<link rel="stylesheet" href="https://pages.nist.gov/nist-header-footer/css/nist-combined.css">
+  <script src="https://code.jquery.com/jquery-1.12.4.min.js" type="text/javascript"></script>
+  <script src="https://pages.nist.gov/nist-header-footer/js/nist-header-footer.js" type="text/javascript" defer="defer"></script>
+
+
+<script type="text/javascript" src="https://pages.nist.gov/leaveNotice/js/jquery.leaveNotice-nist.min.js"></script>
+<script>
+$(document).ready(function(){
+  // Mark external (non-nist.gov) A tags with class "external"
+  //If the adress start with https and ends with nist.gov
+  var re_nist = new RegExp('^https?:\/\/((^\/)*\.)*nist\\.gov(\/|$)');
+  //Regex to find address that start with https
+  var re_absolute_address = new RegExp('^((https?:)?\/\/)');
+  $("a").each(function(){
+    var url=$(this).attr('href');
+    if(re_nist.test(url) || !re_absolute_address.test(url)){
+      $(this).addClass('local');
+    }else{
+      //This a href appears to be external, so tag it
+      $(this).addClass('external');
+    }
+  });
+  // Add leaveNotice to external A elements
+  $('a.external').leaveNotice();
+});
+</script>
+<link rel="stylesheet" type="text/css" href="https://pages.nist.gov/leaveNotice/css/jquery.leaveNotice.css" />
+
+
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="license_link.html" title="License"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="installing.html" title="Installation"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">pyMCR 0.3 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="usage-and-examples">
+<h1>Usage and Examples<a class="headerlink" href="#usage-and-examples" title="Permalink to this headline">¶</a></h1>
+<p>Some examples are also available in Jupyter Notebook format in the <code class="docutils literal notranslate"><span class="pre">Examples/</span></code> directory of the repository.</p>
+<div class="section" id="basic-usage">
+<h2>Basic Usage<a class="headerlink" href="#basic-usage" title="Permalink to this headline">¶</a></h2>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pymcr.mcr</span> <span class="k">import</span> <span class="n">McrAR</span>
+<span class="n">mcrar</span> <span class="o">=</span> <span class="n">McrAR</span><span class="p">()</span>
+
+<span class="c1"># MCR assumes a system of the form: D = CS^T</span>
+<span class="c1">#</span>
+<span class="c1"># Data that you will provide (hyperspectral context):</span>
+<span class="c1"># D [n_pixels, n_frequencies]  # Hyperspectral image unraveled in space (2D)</span>
+<span class="c1">#</span>
+<span class="c1"># initial_spectra [n_components, n_frequencies]  ## S^T in the literature</span>
+<span class="c1"># OR</span>
+<span class="c1"># initial_conc [n_pixels, n_components]   ## C in the literature</span>
+
+<span class="c1"># If you have an initial estimate of the spectra</span>
+<span class="n">mcrar</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">ST</span><span class="o">=</span><span class="n">initial_spectra</span><span class="p">)</span>
+
+<span class="c1"># Otherwise, if you have an initial estimate of the concentrations</span>
+<span class="n">mcrar</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="n">initial_conc</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="default-ordinary-least-squares-ols-with-non-negativity-constraints">
+<h2>Default: Ordinary Least-Squares (OLS) with Non-Negativity Constraints<a class="headerlink" href="#default-ordinary-least-squares-ols-with-non-negativity-constraints" title="Permalink to this headline">¶</a></h2>
+<p>Using OLS and post-iterative non-negativity constraints is a classic way of performing MCR-ALS.
+OLS algorithms are often faster in practice, but NNLS method may converge MCR faster.</p>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pymcr.mcr</span> <span class="k">import</span> <span class="n">McrAR</span>
+<span class="n">mcrar</span> <span class="o">=</span> <span class="n">McrAR</span><span class="p">()</span>
+
+<span class="c1"># Equivalent to</span>
+
+<span class="n">mcrar</span> <span class="o">=</span> <span class="n">McrAR</span><span class="p">(</span><span class="n">c_regr</span><span class="o">=</span><span class="s1">&#39;OLS&#39;</span><span class="p">,</span> <span class="n">st_regr</span><span class="o">=</span><span class="s1">&#39;OLS&#39;</span><span class="p">)</span>
+
+<span class="c1"># Equivalent to</span>
+
+<span class="kn">from</span> <span class="nn">pymcr.mcr</span> <span class="k">import</span> <span class="n">McrAR</span>
+<span class="kn">from</span> <span class="nn">pymcr.regressors</span> <span class="k">import</span> <span class="n">OLS</span>
+<span class="kn">from</span> <span class="nn">pymcr.constraints</span> <span class="k">import</span> <span class="n">ConstraintNonneg</span>
+
+<span class="n">mcrar</span> <span class="o">=</span> <span class="n">McrAR</span><span class="p">(</span><span class="n">c_regr</span><span class="o">=</span><span class="n">OLS</span><span class="p">(),</span> <span class="n">st_regr</span><span class="o">=</span><span class="n">OLS</span><span class="p">(),</span> <span class="n">c_constraints</span><span class="o">=</span><span class="p">[</span><span class="n">ConstraintNonneg</span><span class="p">()],</span>
+              <span class="n">st_constraints</span><span class="o">=</span><span class="p">[</span><span class="n">ConstraintNonneg</span><span class="p">()])</span>
+
+<span class="c1"># Then use the fit method with initial guesses of ST or C.</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="non-negative-least-squares-nnls-no-constraints">
+<h2>Non-Negative Least-Squares (NNLS), No Constraints<a class="headerlink" href="#non-negative-least-squares-nnls-no-constraints" title="Permalink to this headline">¶</a></h2>
+<p>Using OLS and post-iterative non-negativity constraints is a classic way of performing MCR-ALS.
+OLS algorithms are often faster in practice, but NNLS method may converge MCR faster.</p>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pymcr.mcr</span> <span class="k">import</span> <span class="n">McrAR</span>
+<span class="kn">from</span> <span class="nn">pymcr.regressors</span> <span class="k">import</span> <span class="n">NNLS</span>
+
+<span class="n">mcrar</span> <span class="o">=</span> <span class="n">McrAR</span><span class="p">(</span><span class="n">c_regr</span><span class="o">=</span><span class="n">NNLS</span><span class="p">(),</span> <span class="n">st_regr</span><span class="o">=</span><span class="n">NNLS</span><span class="p">(),</span> <span class="n">c_constraints</span><span class="o">=</span><span class="p">[],</span> <span class="n">st_constraints</span><span class="o">=</span><span class="p">[])</span>
+
+<span class="c1"># Then use the fit method with initial guesses of ST or C.</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="mix-nnls-and-ols-regressors-non-negativity-and-sum-to-1-i-e-norm-constraints">
+<h2>Mix NNLS and OLS Regressors, Non-Negativity and Sum-to-1 (i.e., Norm) Constraints<a class="headerlink" href="#mix-nnls-and-ols-regressors-non-negativity-and-sum-to-1-i-e-norm-constraints" title="Permalink to this headline">¶</a></h2>
+<p>In this example, NNLS is used to regress the signature/spectrum and OLS is used for
+abundance/concentration. Additionally, the ConstraintNorm imposes that after each iteration
+the summation of all concentrations for each data point sums-to-one. This is common and
+physical for many use-cases such as spectroscopy (as long as all analytes have a signature
+[i.e., no 0-intensity signatures])</p>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pymcr.mcr</span> <span class="k">import</span> <span class="n">McrAR</span>
+<span class="kn">from</span> <span class="nn">pymcr.regressors</span> <span class="k">import</span> <span class="n">NNLS</span><span class="p">,</span> <span class="n">OLS</span>
+<span class="kn">from</span> <span class="nn">pymcr.constraints</span> <span class="k">import</span> <span class="n">ConstraintNonneg</span><span class="p">,</span> <span class="n">ConstraintNorm</span>
+
+<span class="c1"># Note constraint order matters</span>
+<span class="n">mcrar</span> <span class="o">=</span> <span class="n">McrAR</span><span class="p">(</span><span class="n">max_iter</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">st_regr</span><span class="o">=</span><span class="s1">&#39;NNLS&#39;</span><span class="p">,</span> <span class="n">c_regr</span><span class="o">=</span><span class="s1">&#39;OLS&#39;</span><span class="p">,</span>
+              <span class="n">c_constraints</span><span class="o">=</span><span class="p">[</span><span class="n">ConstraintNonneg</span><span class="p">(),</span> <span class="n">ConstraintNorm</span><span class="p">()])</span>
+
+<span class="c1"># Equivalent to</span>
+
+<span class="c1"># Note constraint order matters</span>
+<span class="n">mcrar</span> <span class="o">=</span> <span class="n">McrAR</span><span class="p">(</span><span class="n">max_iter</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">st_regr</span><span class="o">=</span><span class="n">NNLS</span><span class="p">(),</span> <span class="n">c_regr</span><span class="o">=</span><span class="n">OLS</span><span class="p">(),</span>
+              <span class="n">c_constraints</span><span class="o">=</span><span class="p">[</span><span class="n">ConstraintNonneg</span><span class="p">(),</span> <span class="n">ConstraintNorm</span><span class="p">()])</span>
+
+<span class="c1"># Then use the fit method with initial guesses of ST or C.</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="ridge-regression-from-scikit-learn">
+<h2>Ridge-Regression from Scikit-Learn<a class="headerlink" href="#ridge-regression-from-scikit-learn" title="Permalink to this headline">¶</a></h2>
+<p>In this example, NNLS is used to regress the signatures/spectra but a ridge
+regression regressor is imported from <a class="reference external" href="http://scikit-learn.org/stable/modules/linear_model.html#ridge-regression">scikit-learn</a></p>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pymcr.mcr</span> <span class="k">import</span> <span class="n">McrAR</span>
+<span class="kn">from</span> <span class="nn">pymcr.regressors</span> <span class="k">import</span> <span class="n">NNLS</span>
+<span class="kn">from</span> <span class="nn">pymcr.constraints</span> <span class="k">import</span> <span class="n">ConstraintNonneg</span><span class="p">,</span> <span class="n">ConstraintNorm</span>
+
+<span class="kn">from</span> <span class="nn">sklearn.linear_model.ridge</span> <span class="k">import</span> <span class="n">Ridge</span>
+
+<span class="c1"># Note that an instance of Ridge can be instantiated (with hyperparameters)</span>
+<span class="c1"># within the instantiation of McrAR.</span>
+<span class="n">mcrar</span> <span class="o">=</span> <span class="n">McrAR</span><span class="p">(</span><span class="n">max_iter</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">tol_increase</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">tol_err_change</span><span class="o">=</span><span class="mf">1e-10</span><span class="p">,</span>
+              <span class="n">c_regr</span><span class="o">=</span><span class="n">Ridge</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">st_regr</span><span class="o">=</span><span class="n">NNLS</span><span class="p">(),</span>
+              <span class="n">c_constraints</span><span class="o">=</span><span class="p">[</span><span class="n">ConstraintNonneg</span><span class="p">(),</span> <span class="n">ConstraintNorm</span><span class="p">()])</span>
+
+<span class="c1"># Then use the fit method with initial guesses of ST or C.</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Usage and Examples</a><ul>
+<li><a class="reference internal" href="#basic-usage">Basic Usage</a></li>
+<li><a class="reference internal" href="#default-ordinary-least-squares-ols-with-non-negativity-constraints">Default: Ordinary Least-Squares (OLS) with Non-Negativity Constraints</a></li>
+<li><a class="reference internal" href="#non-negative-least-squares-nnls-no-constraints">Non-Negative Least-Squares (NNLS), No Constraints</a></li>
+<li><a class="reference internal" href="#mix-nnls-and-ols-regressors-non-negativity-and-sum-to-1-i-e-norm-constraints">Mix NNLS and OLS Regressors, Non-Negativity and Sum-to-1 (i.e., Norm) Constraints</a></li>
+<li><a class="reference internal" href="#ridge-regression-from-scikit-learn">Ridge-Regression from Scikit-Learn</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="installing.html"
+                        title="previous chapter">Installation</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="license_link.html"
+                        title="next chapter">License</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/usage.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="license_link.html" title="License"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="installing.html" title="Installation"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">pyMCR 0.3 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    </div>
+  </body>
+</html>

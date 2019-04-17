@@ -57,7 +57,7 @@ Classes
 
 .. autosummary::
     
-    pymcr.mcr.McrAls
+    pymcr.mcr.McrAR
 
 :mod:`pymcr.metrics`: Metrics used in pyMCR
 --------------------------------------------

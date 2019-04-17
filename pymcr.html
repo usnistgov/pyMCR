@@ -16,6 +16,8 @@
     <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="pymcr.tests package" href="pymcr.tests.html" />
+    <link rel="prev" title="pyMCR Module Information" href="modules.html" />
 <link rel="stylesheet" href="https://pages.nist.gov/nist-header-footer/css/nist-combined.css">
   <script src="https://code.jquery.com/jquery-1.12.4.min.js" type="text/javascript"></script>
   <script src="https://pages.nist.gov/nist-header-footer/js/nist-header-footer.js" type="text/javascript" defer="defer"></script>
@@ -55,7 +57,14 @@ $(document).ready(function(){
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">pyMCR 0.3 documentation</a> &#187;</li> 
+        <li class="right" >
+          <a href="pymcr.tests.html" title="pymcr.tests package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="modules.html" title="pyMCR Module Information"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">pyMCR 0.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" accesskey="U">pyMCR Module Information</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -462,10 +471,10 @@ axis does not go to 0, i.e. all values cut.</li>
 <span id="pymcr-mcr-module"></span><h2>pymcr.mcr module<a class="headerlink" href="#module-pymcr.mcr" title="Permalink to this headline">¶</a></h2>
 <p>MCR Main Class for Computation</p>
 <dl class="class">
-<dt id="pymcr.mcr.McrAls">
-<em class="property">class </em><code class="descclassname">pymcr.mcr.</code><code class="descname">McrAls</code><span class="sig-paren">(</span><em>c_regr=&lt;pymcr.regressors.OLS object&gt;, st_regr=&lt;pymcr.regressors.OLS object&gt;, c_fit_kwargs={}, st_fit_kwargs={}, c_constraints=[&lt;pymcr.constraints.ConstraintNonneg object&gt;], st_constraints=[&lt;pymcr.constraints.ConstraintNonneg object&gt;], max_iter=50, err_fcn=&lt;function mse&gt;, tol_increase=0.0, tol_n_increase=10, tol_err_change=None, tol_n_above_min=10</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymcr/mcr.html#McrAls"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymcr.mcr.McrAls" title="Permalink to this definition">¶</a></dt>
+<dt id="pymcr.mcr.McrAR">
+<em class="property">class </em><code class="descclassname">pymcr.mcr.</code><code class="descname">McrAR</code><span class="sig-paren">(</span><em>c_regr=&lt;pymcr.regressors.OLS object&gt;, st_regr=&lt;pymcr.regressors.OLS object&gt;, c_fit_kwargs={}, st_fit_kwargs={}, c_constraints=[&lt;pymcr.constraints.ConstraintNonneg object&gt;], st_constraints=[&lt;pymcr.constraints.ConstraintNonneg object&gt;], max_iter=50, err_fcn=&lt;function mse&gt;, tol_increase=0.0, tol_n_increase=10, tol_err_change=None, tol_n_above_min=10</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymcr/mcr.html#McrAR"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymcr.mcr.McrAR" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
-<p>Multivariate Curve Resolution - Alternating Least Squares</p>
+<p>Multivariate Curve Resolution - Alternating Regression</p>
 <p>D = CS^T</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -495,8 +504,8 @@ new error-minimum</li>
 </tbody>
 </table>
 <dl class="attribute">
-<dt id="pymcr.mcr.McrAls.err">
-<code class="descname">err</code><a class="headerlink" href="#pymcr.mcr.McrAls.err" title="Permalink to this definition">¶</a></dt>
+<dt id="pymcr.mcr.McrAR.err">
+<code class="descname">err</code><a class="headerlink" href="#pymcr.mcr.McrAR.err" title="Permalink to this definition">¶</a></dt>
 <dd><p>List of calculated errors (from err_fcn) after each least squares (ie
 twice per iteration)</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -510,8 +519,8 @@ twice per iteration)</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="pymcr.mcr.McrAls.C_">
-<code class="descname">C_</code><a class="headerlink" href="#pymcr.mcr.McrAls.C_" title="Permalink to this definition">¶</a></dt>
+<dt id="pymcr.mcr.McrAR.C_">
+<code class="descname">C_</code><a class="headerlink" href="#pymcr.mcr.McrAR.C_" title="Permalink to this definition">¶</a></dt>
 <dd><p>Most recently calculated C matrix (that did not cause a tolerance
 failure)</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -525,8 +534,8 @@ failure)</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="pymcr.mcr.McrAls.ST_">
-<code class="descname">ST_</code><a class="headerlink" href="#pymcr.mcr.McrAls.ST_" title="Permalink to this definition">¶</a></dt>
+<dt id="pymcr.mcr.McrAR.ST_">
+<code class="descname">ST_</code><a class="headerlink" href="#pymcr.mcr.McrAR.ST_" title="Permalink to this definition">¶</a></dt>
 <dd><p>Most recently calculated S^T matrix (that did not cause a tolerance
 failure)</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -540,8 +549,8 @@ failure)</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="pymcr.mcr.McrAls.C_opt_">
-<code class="descname">C_opt_</code><a class="headerlink" href="#pymcr.mcr.McrAls.C_opt_" title="Permalink to this definition">¶</a></dt>
+<dt id="pymcr.mcr.McrAR.C_opt_">
+<code class="descname">C_opt_</code><a class="headerlink" href="#pymcr.mcr.McrAR.C_opt_" title="Permalink to this definition">¶</a></dt>
 <dd><p>[Optimal] C matrix for lowest err attribute</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -554,8 +563,8 @@ failure)</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="pymcr.mcr.McrAls.ST_opt_">
-<code class="descname">ST_opt_</code><a class="headerlink" href="#pymcr.mcr.McrAls.ST_opt_" title="Permalink to this definition">¶</a></dt>
+<dt id="pymcr.mcr.McrAR.ST_opt_">
+<code class="descname">ST_opt_</code><a class="headerlink" href="#pymcr.mcr.McrAR.ST_opt_" title="Permalink to this definition">¶</a></dt>
 <dd><p>[Optimal] ST matrix for lowest err attribute</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -568,8 +577,8 @@ failure)</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="pymcr.mcr.McrAls.n_iter">
-<code class="descname">n_iter</code><a class="headerlink" href="#pymcr.mcr.McrAls.n_iter" title="Permalink to this definition">¶</a></dt>
+<dt id="pymcr.mcr.McrAR.n_iter">
+<code class="descname">n_iter</code><a class="headerlink" href="#pymcr.mcr.McrAR.n_iter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Total number of iterations performed</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -582,8 +591,8 @@ failure)</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="pymcr.mcr.McrAls.n_iter_opt">
-<code class="descname">n_iter_opt</code><a class="headerlink" href="#pymcr.mcr.McrAls.n_iter_opt" title="Permalink to this definition">¶</a></dt>
+<dt id="pymcr.mcr.McrAR.n_iter_opt">
+<code class="descname">n_iter_opt</code><a class="headerlink" href="#pymcr.mcr.McrAR.n_iter_opt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Iteration when optimal C and ST calculated</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -596,8 +605,8 @@ failure)</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="pymcr.mcr.McrAls.exit_max_iter_reached">
-<code class="descname">exit_max_iter_reached</code><a class="headerlink" href="#pymcr.mcr.McrAls.exit_max_iter_reached" title="Permalink to this definition">¶</a></dt>
+<dt id="pymcr.mcr.McrAR.exit_max_iter_reached">
+<code class="descname">exit_max_iter_reached</code><a class="headerlink" href="#pymcr.mcr.McrAR.exit_max_iter_reached" title="Permalink to this definition">¶</a></dt>
 <dd><p>Exited iterations due to maximum number of iteration reached (max_iter parameter)</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -610,8 +619,8 @@ failure)</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="pymcr.mcr.McrAls.exit_tol_increase">
-<code class="descname">exit_tol_increase</code><a class="headerlink" href="#pymcr.mcr.McrAls.exit_tol_increase" title="Permalink to this definition">¶</a></dt>
+<dt id="pymcr.mcr.McrAR.exit_tol_increase">
+<code class="descname">exit_tol_increase</code><a class="headerlink" href="#pymcr.mcr.McrAR.exit_tol_increase" title="Permalink to this definition">¶</a></dt>
 <dd><p>Exited iterations due to maximum fractional increase in error metric (via err_fcn)</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -624,8 +633,8 @@ failure)</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="pymcr.mcr.McrAls.exit_tol_n_increase">
-<code class="descname">exit_tol_n_increase</code><a class="headerlink" href="#pymcr.mcr.McrAls.exit_tol_n_increase" title="Permalink to this definition">¶</a></dt>
+<dt id="pymcr.mcr.McrAR.exit_tol_n_increase">
+<code class="descname">exit_tol_n_increase</code><a class="headerlink" href="#pymcr.mcr.McrAR.exit_tol_n_increase" title="Permalink to this definition">¶</a></dt>
 <dd><p>Exited iterations due to maximum number of consecutive increases in error metric
 (via err fcn)</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -639,8 +648,8 @@ failure)</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="pymcr.mcr.McrAls.exit_tol_err_change">
-<code class="descname">exit_tol_err_change</code><a class="headerlink" href="#pymcr.mcr.McrAls.exit_tol_err_change" title="Permalink to this definition">¶</a></dt>
+<dt id="pymcr.mcr.McrAR.exit_tol_err_change">
+<code class="descname">exit_tol_err_change</code><a class="headerlink" href="#pymcr.mcr.McrAR.exit_tol_err_change" title="Permalink to this definition">¶</a></dt>
 <dd><p>Exited iterations due to error metric change that is smaller than tol_err_change</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -653,8 +662,8 @@ failure)</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="pymcr.mcr.McrAls.exit_tol_n_above_min">
-<code class="descname">exit_tol_n_above_min</code><a class="headerlink" href="#pymcr.mcr.McrAls.exit_tol_n_above_min" title="Permalink to this definition">¶</a></dt>
+<dt id="pymcr.mcr.McrAR.exit_tol_n_above_min">
+<code class="descname">exit_tol_n_above_min</code><a class="headerlink" href="#pymcr.mcr.McrAR.exit_tol_n_above_min" title="Permalink to this definition">¶</a></dt>
 <dd><p>Exited iterations due to maximum number of half-iterations for which the error
 metric increased above the minimum error</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -676,34 +685,34 @@ metric increased above the minimum error</p>
 though instantiating an imported class gives more flexibility.
 -   Setting any tolerance to None turns that check off</p>
 <dl class="attribute">
-<dt id="pymcr.mcr.McrAls.D_">
-<code class="descname">D_</code><a class="headerlink" href="#pymcr.mcr.McrAls.D_" title="Permalink to this definition">¶</a></dt>
+<dt id="pymcr.mcr.McrAR.D_">
+<code class="descname">D_</code><a class="headerlink" href="#pymcr.mcr.McrAR.D_" title="Permalink to this definition">¶</a></dt>
 <dd><p>D matrix with current C and S^T matrices</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="pymcr.mcr.McrAls.D_opt_">
-<code class="descname">D_opt_</code><a class="headerlink" href="#pymcr.mcr.McrAls.D_opt_" title="Permalink to this definition">¶</a></dt>
+<dt id="pymcr.mcr.McrAR.D_opt_">
+<code class="descname">D_opt_</code><a class="headerlink" href="#pymcr.mcr.McrAR.D_opt_" title="Permalink to this definition">¶</a></dt>
 <dd><p>D matrix with optimal C and S^T matrices</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="pymcr.mcr.McrAls._check_regr">
-<code class="descname">_check_regr</code><span class="sig-paren">(</span><em>mth</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymcr/mcr.html#McrAls._check_regr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymcr.mcr.McrAls._check_regr" title="Permalink to this definition">¶</a></dt>
+<dt id="pymcr.mcr.McrAR._check_regr">
+<code class="descname">_check_regr</code><span class="sig-paren">(</span><em>mth</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymcr/mcr.html#McrAR._check_regr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymcr.mcr.McrAR._check_regr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check regressor method. If accetible strings, instantiate and return
 object. If instantiated class, make sure it has a fit attribute.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="pymcr.mcr.McrAls._ismin_err">
-<code class="descname">_ismin_err</code><span class="sig-paren">(</span><em>val</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymcr/mcr.html#McrAls._ismin_err"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymcr.mcr.McrAls._ismin_err" title="Permalink to this definition">¶</a></dt>
+<dt id="pymcr.mcr.McrAR._ismin_err">
+<code class="descname">_ismin_err</code><span class="sig-paren">(</span><em>val</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymcr/mcr.html#McrAR._ismin_err"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymcr.mcr.McrAR._ismin_err" title="Permalink to this definition">¶</a></dt>
 <dd><p>Is the current error the minimum</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="pymcr.mcr.McrAls.fit">
-<code class="descname">fit</code><span class="sig-paren">(</span><em>D</em>, <em>C=None</em>, <em>ST=None</em>, <em>st_fix=None</em>, <em>c_fix=None</em>, <em>c_first=True</em>, <em>verbose=False</em>, <em>post_iter_fcn=None</em>, <em>post_half_fcn=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymcr/mcr.html#McrAls.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymcr.mcr.McrAls.fit" title="Permalink to this definition">¶</a></dt>
-<dd><p>Perform MCR-ALS. D = CS^T. Solve for C and S^T iteratively.</p>
+<dt id="pymcr.mcr.McrAR.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>D</em>, <em>C=None</em>, <em>ST=None</em>, <em>st_fix=None</em>, <em>c_fix=None</em>, <em>c_first=True</em>, <em>verbose=False</em>, <em>post_iter_fcn=None</em>, <em>post_half_fcn=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymcr/mcr.html#McrAR.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymcr.mcr.McrAR.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform MCR-AR. D = CS^T. Solve for C and S^T iteratively.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -727,18 +736,18 @@ also be provided in this circumstance.</li>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="pymcr.mcr.McrAls.n_features">
-<code class="descname">n_features</code><a class="headerlink" href="#pymcr.mcr.McrAls.n_features" title="Permalink to this definition">¶</a></dt>
+<dt id="pymcr.mcr.McrAR.n_features">
+<code class="descname">n_features</code><a class="headerlink" href="#pymcr.mcr.McrAR.n_features" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="pymcr.mcr.McrAls.n_samples">
-<code class="descname">n_samples</code><a class="headerlink" href="#pymcr.mcr.McrAls.n_samples" title="Permalink to this definition">¶</a></dt>
+<dt id="pymcr.mcr.McrAR.n_samples">
+<code class="descname">n_samples</code><a class="headerlink" href="#pymcr.mcr.McrAR.n_samples" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="pymcr.mcr.McrAls.n_targets">
-<code class="descname">n_targets</code><a class="headerlink" href="#pymcr.mcr.McrAls.n_targets" title="Permalink to this definition">¶</a></dt>
+<dt id="pymcr.mcr.McrAR.n_targets">
+<code class="descname">n_targets</code><a class="headerlink" href="#pymcr.mcr.McrAR.n_targets" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -984,6 +993,12 @@ None use numpy.linalg.svd</li>
 </li>
 </ul>
 
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="modules.html"
+                        title="previous chapter">pyMCR Module Information</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="pymcr.tests.html"
+                        title="next chapter">pymcr.tests package</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -1016,7 +1031,14 @@ None use numpy.linalg.svd</li>
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">pyMCR 0.3 documentation</a> &#187;</li> 
+        <li class="right" >
+          <a href="pymcr.tests.html" title="pymcr.tests package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="modules.html" title="pyMCR Module Information"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">pyMCR 0.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" >pyMCR Module Information</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">

@@ -73,9 +73,9 @@ $(document).ready(function(){
 <span class="kn">from</span> <span class="nn">pymcr.constraints</span> <span class="k">import</span> <span class="n">ConstraintNonneg</span><span class="p">,</span> <span class="n">ConstraintNorm</span>
 <span class="kn">from</span> <span class="nn">pymcr.metrics</span> <span class="k">import</span> <span class="n">mse</span>
 
-<div class="viewcode-block" id="McrAls"><a class="viewcode-back" href="../../pymcr.html#pymcr.mcr.McrAls">[docs]</a><span class="k">class</span> <span class="nc">McrAls</span><span class="p">:</span>
+<div class="viewcode-block" id="McrAR"><a class="viewcode-back" href="../../pymcr.html#pymcr.mcr.McrAR">[docs]</a><span class="k">class</span> <span class="nc">McrAR</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Multivariate Curve Resolution - Alternating Least Squares</span>
+<span class="sd">    Multivariate Curve Resolution - Alternating Regression</span>
 
 <span class="sd">    D = CS^T</span>
 
@@ -229,7 +229,7 @@ $(document).ready(function(){
         <span class="bp">self</span><span class="o">.</span><span class="n">_saved_st</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_saved_c</span> <span class="o">=</span> <span class="p">[]</span>
 
-<div class="viewcode-block" id="McrAls._check_regr"><a class="viewcode-back" href="../../pymcr.html#pymcr.mcr.McrAls._check_regr">[docs]</a>    <span class="k">def</span> <span class="nf">_check_regr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mth</span><span class="p">):</span>
+<div class="viewcode-block" id="McrAR._check_regr"><a class="viewcode-back" href="../../pymcr.html#pymcr.mcr.McrAR._check_regr">[docs]</a>    <span class="k">def</span> <span class="nf">_check_regr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mth</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Check regressor method. If accetible strings, instantiate and return</span>
 <span class="sd">            object. If instantiated class, make sure it has a fit attribute.</span>
@@ -278,7 +278,7 @@ $(document).ready(function(){
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
 
-<div class="viewcode-block" id="McrAls._ismin_err"><a class="viewcode-back" href="../../pymcr.html#pymcr.mcr.McrAls._ismin_err">[docs]</a>    <span class="k">def</span> <span class="nf">_ismin_err</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+<div class="viewcode-block" id="McrAR._ismin_err"><a class="viewcode-back" href="../../pymcr.html#pymcr.mcr.McrAR._ismin_err">[docs]</a>    <span class="k">def</span> <span class="nf">_ismin_err</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Is the current error the minimum &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">err</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">True</span>
@@ -286,10 +286,10 @@ $(document).ready(function(){
             <span class="k">return</span> <span class="p">([</span><span class="n">val</span> <span class="o">&gt;</span> <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">err</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="McrAls.fit"><a class="viewcode-back" href="../../pymcr.html#pymcr.mcr.McrAls.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">D</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ST</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">st_fix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">c_fix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">c_first</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<div class="viewcode-block" id="McrAR.fit"><a class="viewcode-back" href="../../pymcr.html#pymcr.mcr.McrAR.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">D</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ST</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">st_fix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">c_fix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">c_first</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
             <span class="n">post_iter_fcn</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">post_half_fcn</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Perform MCR-ALS. D = CS^T. Solve for C and S^T iteratively.</span>
+<span class="sd">        Perform MCR-AR. D = CS^T. Solve for C and S^T iteratively.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -547,17 +547,17 @@ $(document).ready(function(){
 
     <span class="n">D_known</span> <span class="o">=</span> <span class="n">_np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">C_known</span><span class="p">,</span> <span class="n">St_known</span><span class="p">)</span>
 
-    <span class="n">mcrals</span> <span class="o">=</span> <span class="n">McrAls</span><span class="p">()</span>
-    <span class="n">mcrals</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">D_known</span><span class="p">,</span> <span class="n">ST</span><span class="o">=</span><span class="n">St_known</span><span class="p">)</span>
-    <span class="c1"># assert_equal(1, mcrals.n_iter_opt)</span>
-    <span class="k">assert</span> <span class="p">((</span><span class="n">mcrals</span><span class="o">.</span><span class="n">D_</span> <span class="o">-</span> <span class="n">D_known</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">1e-10</span>
-    <span class="k">assert</span> <span class="p">((</span><span class="n">mcrals</span><span class="o">.</span><span class="n">D_opt_</span> <span class="o">-</span> <span class="n">D_known</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">1e-10</span>
+    <span class="n">mcrar</span> <span class="o">=</span> <span class="n">McrAR</span><span class="p">()</span>
+    <span class="n">mcrar</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">D_known</span><span class="p">,</span> <span class="n">ST</span><span class="o">=</span><span class="n">St_known</span><span class="p">)</span>
+    <span class="c1"># assert_equal(1, mcrar.n_iter_opt)</span>
+    <span class="k">assert</span> <span class="p">((</span><span class="n">mcrar</span><span class="o">.</span><span class="n">D_</span> <span class="o">-</span> <span class="n">D_known</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">1e-10</span>
+    <span class="k">assert</span> <span class="p">((</span><span class="n">mcrar</span><span class="o">.</span><span class="n">D_opt_</span> <span class="o">-</span> <span class="n">D_known</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">1e-10</span>
 
-    <span class="n">mcrals</span> <span class="o">=</span> <span class="n">McrAls</span><span class="p">()</span>
-    <span class="n">mcrals</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">D_known</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="n">C_known</span><span class="p">)</span>
-    <span class="c1"># assert_equal(1, mcrals.n_iter_opt)</span>
-    <span class="k">assert</span> <span class="p">((</span><span class="n">mcrals</span><span class="o">.</span><span class="n">D_</span> <span class="o">-</span> <span class="n">D_known</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">1e-10</span>
-    <span class="k">assert</span> <span class="p">((</span><span class="n">mcrals</span><span class="o">.</span><span class="n">D_opt_</span> <span class="o">-</span> <span class="n">D_known</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">1e-10</span>
+    <span class="n">mcrar</span> <span class="o">=</span> <span class="n">McrAR</span><span class="p">()</span>
+    <span class="n">mcrar</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">D_known</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="n">C_known</span><span class="p">)</span>
+    <span class="c1"># assert_equal(1, mcrar.n_iter_opt)</span>
+    <span class="k">assert</span> <span class="p">((</span><span class="n">mcrar</span><span class="o">.</span><span class="n">D_</span> <span class="o">-</span> <span class="n">D_known</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">1e-10</span>
+    <span class="k">assert</span> <span class="p">((</span><span class="n">mcrar</span><span class="o">.</span><span class="n">D_opt_</span> <span class="o">-</span> <span class="n">D_known</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">1e-10</span>
 </pre></div>
 
           </div>
