@@ -1,16 +1,16 @@
 .. -*- mode: rst -*-
 
-.. image:: https://travis-ci.org/CCampJr/pyMCR.svg?branch=0.3.X
+.. image:: https://travis-ci.org/usnistgov/pyMCR.svg?branch=0.3.X
     :alt: Travis branch
-    :target: https://travis-ci.org/CCampJr/pyMCR
+    :target: https://travis-ci.org/usnistgov/pyMCR
 
 .. image:: https://ci.appveyor.com/api/projects/status/ajld1bj7jo4oweio/branch/0.3.X?svg=true
     :alt: AppVeyor branch
-    :target: https://ci.appveyor.com/project/CCampJr/pyMCR
+    :target: https://ci.appveyor.com/project/usnistgov/pyMCR
 
-.. image:: https://img.shields.io/codecov/c/github/CCampJr/pyMCR/0.3.X.svg
+.. image:: https://img.shields.io/codecov/c/github/usnistgov/pyMCR/0.3.X.svg
     :alt: Codecov branch
-    :target: https://codecov.io/gh/CCampJr/pyMCR
+    :target: https://codecov.io/gh/usnistgov/pyMCR
 
 .. image:: https://img.shields.io/pypi/pyversions/pyMCR.svg
     :alt: PyPI - Python Version
@@ -22,7 +22,7 @@
 
 .. image:: https://img.shields.io/badge/License-NIST%20Public%20Domain-green.svg
     :alt: NIST Public Domain
-    :target: https://github.com/CCampJr/pyMCR/blob/master/LICENSE.md
+    :target: https://github.com/usnistgov/pyMCR/blob/master/LICENSE.md
 
 pyMCR: Multivariate Curve Resolution in Python
 ===============================================================
@@ -127,7 +127,7 @@ Using pip (soft install [can update with git])
     
     # Make new directory for pyMCR and enter it
     # Clone from github
-    git clone https://github.com/CCampJr/pyMCR
+    git clone https://github.com/usnistgov/pyMCR
 
     # Only Python 3.* installed
     pip install -e .
@@ -141,14 +141,14 @@ Using pip (soft install [can update with git])
 Using setuptools
 ~~~~~~~~~~~~~~~~
 
-You will need to `download the repository <https://github.com/CCampJr/pyMCR>`_
+You will need to `download the repository <https://github.com/usnistgov/pyMCR>`_
 or clone the repository with git:
 
 .. code::
     
     # Make new directory for pyMCR and enter it
     # Clone from github
-    git clone https://github.com/CCampJr/pyMCR
+    git clone https://github.com/usnistgov/pyMCR
 
 Perform the install:
 
