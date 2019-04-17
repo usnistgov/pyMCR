@@ -9,7 +9,7 @@ Basic Usage
 .. code:: python
 
     from pymcr.mcr import McrAR
-    mcrals = McrAR()
+    mcrar = McrAR()
     
     # MCR assumes a system of the form: D = CS^T
     #
@@ -21,10 +21,10 @@ Basic Usage
     # initial_conc [n_pixels, n_components]   ## C in the literature
 
     # If you have an initial estimate of the spectra
-    mcrals.fit(D, ST=initial_spectra)
+    mcrar.fit(D, ST=initial_spectra)
 
     # Otherwise, if you have an initial estimate of the concentrations
-    mcrals.fit(D, C=initial_conc)
+    mcrar.fit(D, C=initial_conc)
 
 
 Example: 2D-Gradient with Ordinary Least-Squares and Non-Negativity Constraint
@@ -33,7 +33,7 @@ Example: 2D-Gradient with Ordinary Least-Squares and Non-Negativity Constraint
 .. code:: python
 
     from pymcr.mcr import McrAR
-    mcrals = McrAR()
+    mcrar = McrAR()
     
     # MCR assumes a system of the form: D = CS^T
     #
@@ -45,10 +45,10 @@ Example: 2D-Gradient with Ordinary Least-Squares and Non-Negativity Constraint
     # initial_conc [n_pixels, n_components]   ## C in the literature
 
     # If you have an initial estimate of the spectra
-    mcrals.fit(D, ST=initial_spectra)
+    mcrar.fit(D, ST=initial_spectra)
 
     # Otherwise, if you have an initial estimate of the concentrations
-    mcrals.fit(D, C=initial_conc)
+    mcrar.fit(D, C=initial_conc)
 
 Example: 2D-Gradient with Non-Negatively Constrained Least-Squares
 -------------------------------------------------------------------
@@ -56,7 +56,7 @@ Example: 2D-Gradient with Non-Negatively Constrained Least-Squares
 .. code:: python
 
     from pymcr.mcr import McrAR
-    mcrals = McrAR()
+    mcrar = McrAR()
     
     # MCR assumes a system of the form: D = CS^T
     #
@@ -68,7 +68,7 @@ Example: 2D-Gradient with Non-Negatively Constrained Least-Squares
     # initial_conc [n_pixels, n_components]   ## C in the literature
 
     # If you have an initial estimate of the spectra
-    mcrals.fit(D, ST=initial_spectra)
+    mcrar.fit(D, ST=initial_spectra)
 
     # Otherwise, if you have an initial estimate of the concentrations
-    mcrals.fit(D, C=initial_conc)
+    mcrar.fit(D, C=initial_conc)

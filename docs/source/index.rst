@@ -118,7 +118,7 @@ Basic Usage
 .. code:: python
 
     from pymcr.mcr import McrAR
-    mcrals = McrAR()
+    mcrar = McrAR()
     
     # MCR assumes a system of the form: D = CS^T
     #
@@ -130,10 +130,10 @@ Basic Usage
     # initial_conc [n_pixels, n_components]   ## C in the literature
 
     # If you have an initial estimate of the spectra
-    mcrals.fit(D, ST=initial_spectra)
+    mcrar.fit(D, ST=initial_spectra)
 
     # Otherwise, if you have an initial estimate of the concentrations
-    mcrals.fit(D, C=initial_conc)
+    mcrar.fit(D, C=initial_conc)
 
 
 Examples

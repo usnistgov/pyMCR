@@ -479,14 +479,14 @@ if __name__ == '__main__':  # pragma: no cover
 
     D_known = _np.dot(C_known, St_known)
 
-    mcrals = McrAR()
-    mcrals.fit(D_known, ST=St_known)
-    # assert_equal(1, mcrals.n_iter_opt)
-    assert ((mcrals.D_ - D_known)**2).mean() < 1e-10
-    assert ((mcrals.D_opt_ - D_known)**2).mean() < 1e-10
+    mcrar = McrAR()
+    mcrar.fit(D_known, ST=St_known)
+    # assert_equal(1, mcrar.n_iter_opt)
+    assert ((mcrar.D_ - D_known)**2).mean() < 1e-10
+    assert ((mcrar.D_opt_ - D_known)**2).mean() < 1e-10
 
-    mcrals = McrAR()
-    mcrals.fit(D_known, C=C_known)
-    # assert_equal(1, mcrals.n_iter_opt)
-    assert ((mcrals.D_ - D_known)**2).mean() < 1e-10
-    assert ((mcrals.D_opt_ - D_known)**2).mean() < 1e-10
+    mcrar = McrAR()
+    mcrar.fit(D_known, C=C_known)
+    # assert_equal(1, mcrar.n_iter_opt)
+    assert ((mcrar.D_ - D_known)**2).mean() < 1e-10
+    assert ((mcrar.D_opt_ - D_known)**2).mean() < 1e-10
