@@ -8,8 +8,10 @@ Dependencies
 Note: the versions are those that have been tested, but older/newer
 versions may also work.
 
-- Python 3.4, 3.5, 3.6 (3.4.4, 3.5.2, 3.6.1)
-- numpy (1.9.3, 1.11.1, 1.11.3+mkl)
+- Python 3.4, 3.5, 3.6 (3.4.4, 3.5.2, 3.6.1), 3.7.1
+- numpy (1.9.3, 1.11.1, 1.11.3+mkl, 1.14.6)
+- scipy (1.0.0, 1.0.1, 1.1.0)
+- sklearn, optional (0.20)
 - Sphinx (1.4.5, 1.5.2, 1.6.4) -- only for documentation building
 
 Notes and Known Issues
