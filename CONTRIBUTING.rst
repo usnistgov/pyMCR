@@ -2,31 +2,31 @@
 
 **Branch: 0.2.X**:
 
-.. image:: https://img.shields.io/travis/usnistgov/pyMCR/0.2.X.svg
+.. image:: https://img.shields.io/travis/CCampJr/pyMCR/0.2.X.svg
     :alt: Travis branch
-    :target: https://travis-ci.org/usnistgov/pyMCR
+    :target: https://travis-ci.org/CCampJr/pyMCR
 
 .. image:: https://ci.appveyor.com/api/projects/status/ajld1bj7jo4oweio/branch/0.2.X?svg=true
     :alt: AppVeyor branch
-    :target: https://ci.appveyor.com/project/usnistgov/pyMCR
+    :target: https://ci.appveyor.com/project/CCampJr/pyMCR
 
-.. image:: https://img.shields.io/codecov/c/github/usnistgov/pyMCR/0.2.X.svg
+.. image:: https://img.shields.io/codecov/c/github/CCampJr/pyMCR/0.2.X.svg
     :alt: Codecov branch
-    :target: https://codecov.io/gh/usnistgov/pyMCR
+    :target: https://codecov.io/gh/CCampJr/pyMCR
 
 **Branch: 0.3.X**:
 
-.. image:: https://img.shields.io/travis/usnistgov/pyMCR/0.3.X.svg
+.. image:: https://img.shields.io/travis/CCampJr/pyMCR/0.3.X.svg
     :alt: Travis branch
-    :target: https://travis-ci.org/usnistgov/pyMCR
+    :target: https://travis-ci.org/CCampJr/pyMCR
 
 .. image:: https://ci.appveyor.com/api/projects/status/ajld1bj7jo4oweio/branch/0.3.X?svg=true
     :alt: AppVeyor branch
-    :target: https://ci.appveyor.com/project/usnistgov/pyMCR
+    :target: https://ci.appveyor.com/project/CCampJr/pyMCR
 
-.. image:: https://img.shields.io/codecov/c/github/usnistgov/pyMCR/0.3.X.svg
+.. image:: https://img.shields.io/codecov/c/github/CCampJr/pyMCR/0.3.X.svg
     :alt: Codecov branch
-    :target: https://codecov.io/gh/usnistgov/pyMCR
+    :target: https://codecov.io/gh/CCampJr/pyMCR
 
 pyMCR: Contributing
 ===================
