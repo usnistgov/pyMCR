@@ -221,7 +221,7 @@ class McrAR:
     def fit(self, D, C=None, ST=None, st_fix=None, c_fix=None, c_first=True, verbose=False,
             post_iter_fcn=None, post_half_fcn=None):
         """
-        Perform MCR-ALS. D = CS^T. Solve for C and S^T iteratively.
+        Perform MCR-AR. D = CS^T. Solve for C and S^T iteratively.
 
         Parameters
         ----------

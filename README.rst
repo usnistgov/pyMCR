@@ -28,11 +28,10 @@ pyMCR: Multivariate Curve Resolution in Python
 ===============================================================
 
 pyMCR is a small package for performing multivariate curve resolution.
-Currently, it implements a simple alternating least squares method
-(i.e., MCR-ALS).
+Currently, it implements a simple alternating regression scheme (MCR-AR). The most common
+implementation is with ordinary least-squares regression, MCR-ALS.
 
-MCR-ALS, in general, is a constrained implementation of alternating
-least squares (ALS) nonnegative matrix factorization (NMF). Historically,
+MCR with non0negativity constraints on both matrices is the same as nonnegative matrix factorization (NMF). Historically,
 other names were used for MCR as well:
 
 -   Self modeling mixture analysis (SMMA)
@@ -73,7 +72,7 @@ Available methods:
 What it **does** do:
 
 -   Approximate the concentration and spectral matrices via minimization routines. 
-    This is the core the MCR-ALS methods.
+    This is the core the MCR methods.
 -   Enable the application of certain constraints in a user-defined order.
 
 What it **does not** do:
