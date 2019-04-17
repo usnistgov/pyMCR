@@ -161,8 +161,8 @@ Usage
 
 .. code:: python
 
-    from pymcr.mcr import McrAls
-    mcrals = McrAls()
+    from pymcr.mcr import McrAR
+    mcrals = McrAR()
     
     # MCR assumes a system of the form: D = CS^T
     #

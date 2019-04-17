@@ -5,9 +5,9 @@ from pymcr.regressors import OLS, NNLS
 from pymcr.constraints import ConstraintNonneg, ConstraintNorm
 from pymcr.metrics import mse
 
-class McrAls:
+class McrAR:
     """
-    Multivariate Curve Resolution - Alternating Least Squares
+    Multivariate Curve Resolution - Alternating Regression
 
     D = CS^T
 
@@ -479,13 +479,13 @@ if __name__ == '__main__':  # pragma: no cover
 
     D_known = _np.dot(C_known, St_known)
 
-    mcrals = McrAls()
+    mcrals = McrAR()
     mcrals.fit(D_known, ST=St_known)
     # assert_equal(1, mcrals.n_iter_opt)
     assert ((mcrals.D_ - D_known)**2).mean() < 1e-10
     assert ((mcrals.D_opt_ - D_known)**2).mean() < 1e-10
 
-    mcrals = McrAls()
+    mcrals = McrAR()
     mcrals.fit(D_known, C=C_known)
     # assert_equal(1, mcrals.n_iter_opt)
     assert ((mcrals.D_ - D_known)**2).mean() < 1e-10

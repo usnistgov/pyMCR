@@ -6,7 +6,7 @@ from numpy.testing import assert_allclose, assert_equal, assert_array_less
 import pytest
 
 import pymcr
-from pymcr.mcr import McrAls
+from pymcr.mcr import McrAR
 from pymcr.metrics import mse
 from pymcr.constraints import ConstraintNonneg, ConstraintNorm
 
@@ -38,7 +38,7 @@ def test_mcr_ideal_default(dataset):
 
     C_known, D_known, St_known = dataset
 
-    mcrals = McrAls()
+    mcrals = McrAR()
     mcrals.fit(D_known, ST=St_known)
     assert_equal(1, mcrals.n_iter_opt)
     assert ((mcrals.D_ - D_known)**2).mean() < 1e-10
@@ -54,13 +54,13 @@ def test_mcr_ideal_str_regressors(dataset):
 
     C_known, D_known, St_known = dataset
 
-    mcrals = McrAls(c_regr='OLS', st_regr='OLS')
+    mcrals = McrAR(c_regr='OLS', st_regr='OLS')
     mcrals.fit(D_known, ST=St_known, verbose=True)
     assert_equal(1, mcrals.n_iter_opt)
     assert isinstance(mcrals.c_regressor, pymcr.regressors.OLS)
     assert isinstance(mcrals.st_regressor, pymcr.regressors.OLS)
 
-    mcrals = McrAls(c_regr='NNLS', st_regr='NNLS')
+    mcrals = McrAR(c_regr='NNLS', st_regr='NNLS')
     mcrals.fit(D_known, ST=St_known)
     assert_equal(1, mcrals.n_iter_opt)
     assert isinstance(mcrals.c_regressor, pymcr.regressors.NNLS)
@@ -69,7 +69,7 @@ def test_mcr_ideal_str_regressors(dataset):
     assert ((mcrals.D_opt_ - D_known)**2).mean() < 1e-10
 
     # Provided C_known this time
-    mcrals = McrAls(c_regr='OLS', st_regr='OLS')
+    mcrals = McrAR(c_regr='OLS', st_regr='OLS')
     mcrals.fit(D_known, C=C_known)
 
     # Turns out some systems get it in 1 iteration, some in 2
@@ -87,7 +87,7 @@ def test_mcr_max_iterations(dataset):
     # Seeding with a constant of 0.1 for C, actually leads to a bad local
     # minimum; thus, the err_change gets really small with a relatively bad
     # error. The tol_err_change is set to None, so it makes it to max_iter.
-    mcrals = McrAls(max_iter=50, c_regr='OLS', st_regr='OLS',
+    mcrals = McrAR(max_iter=50, c_regr='OLS', st_regr='OLS',
                     st_constraints=[ConstraintNonneg()],
                     c_constraints=[ConstraintNonneg(), ConstraintNorm()],
                     tol_increase=None, tol_n_increase=None,
@@ -103,7 +103,7 @@ def test_mcr_tol_increase(dataset):
     # Seeding with a constant of 0.1 for C, actually leads to a bad local
     # minimum; thus, the err_change gets really small with a relatively bad
     # error.
-    mcrals = McrAls(max_iter=50, c_regr='OLS', st_regr='OLS',
+    mcrals = McrAR(max_iter=50, c_regr='OLS', st_regr='OLS',
                     st_constraints=[ConstraintNonneg()],
                     c_constraints=[ConstraintNonneg(), ConstraintNorm()],
                     tol_increase=0, tol_n_increase=None,
@@ -121,7 +121,7 @@ def test_mcr_tol_n_increase(dataset):
 
     C_known, D_known, St_known = dataset
 
-    mcrals = McrAls(max_iter=50, c_regr='OLS', st_regr='OLS',
+    mcrals = McrAR(max_iter=50, c_regr='OLS', st_regr='OLS',
                     st_constraints=[ConstraintNonneg()],
                     c_constraints=[ConstraintNonneg(), ConstraintNorm()],
                     tol_increase=None, tol_n_increase=0,
@@ -134,7 +134,7 @@ def test_mcr_tol_err_change(dataset):
 
     C_known, D_known, St_known = dataset
 
-    mcrals = McrAls(max_iter=50, c_regr='OLS', st_regr='OLS',
+    mcrals = McrAR(max_iter=50, c_regr='OLS', st_regr='OLS',
                     st_constraints=[ConstraintNonneg()],
                     c_constraints=[ConstraintNonneg(), ConstraintNorm()],
                     tol_increase=None, tol_n_increase=None,
@@ -152,7 +152,7 @@ def test_mcr_tol_n_above_min(dataset):
 
     C_known, D_known, St_known = dataset
 
-    mcrals = McrAls(max_iter=50, c_regr='OLS', st_regr='OLS',
+    mcrals = McrAR(max_iter=50, c_regr='OLS', st_regr='OLS',
                     st_constraints=[ConstraintNonneg()],
                     c_constraints=[ConstraintNonneg(), ConstraintNorm()],
                     tol_increase=None, tol_n_increase=None,
@@ -188,7 +188,7 @@ def test_mcr_st_semilearned():
     ST_guess = 1 * St_known
     ST_guess[2, :] = np.random.randn(P)
 
-    mcrals = McrAls(max_iter=50, tol_increase=100, tol_n_increase=10,
+    mcrals = McrAR(max_iter=50, tol_increase=100, tol_n_increase=10,
                     st_constraints=[ConstraintNonneg()],
                     c_constraints=[ConstraintNonneg(), ConstraintNorm()],
                     tol_err_change=1e-10)
@@ -224,7 +224,7 @@ def test_mcr_c_semilearned():
     C_guess = 1 * C_known
     C_guess[:, 2] = np.random.randn(int(M*N))
 
-    mcrals = McrAls(max_iter=50, tol_increase=100, tol_n_increase=10,
+    mcrals = McrAR(max_iter=50, tol_increase=100, tol_n_increase=10,
                     st_constraints=[ConstraintNonneg()],
                     c_constraints=[ConstraintNonneg(), ConstraintNorm()],
                     tol_err_change=1e-10)
@@ -263,7 +263,7 @@ def test_mcr_semilearned_both_c_st():
     C_guess = 1 * C_known
     C_guess[:, 2] = np.abs(np.random.randn(int(M*N)))
 
-    mcrals = McrAls(max_iter=50, tol_increase=100, tol_n_increase=10,
+    mcrals = McrAR(max_iter=50, tol_increase=100, tol_n_increase=10,
                     st_constraints=[ConstraintNonneg()],
                     c_constraints=[ConstraintNonneg(), ConstraintNorm()],
                     tol_err_change=1e-10)
@@ -283,41 +283,41 @@ def test_mcr_errors():
 
     # Providing both C and S^T estimates without C_fix and St_fix
     with pytest.raises(TypeError):
-        mcrals = McrAls()
+        mcrals = McrAR()
         mcrals.fit(np.random.randn(10,5), C=np.random.randn(10,3),
                    ST=np.random.randn(3,5))
 
     # Providing both C and S^T estimates without both C_fix and St_fix
     with pytest.raises(TypeError):
-        mcrals = McrAls()
+        mcrals = McrAR()
         # Only c_fix
         mcrals.fit(np.random.randn(10,5), C=np.random.randn(10,3),
                    ST=np.random.randn(3,5), c_fix=[0])
 
     with pytest.raises(TypeError):
-        mcrals = McrAls()
+        mcrals = McrAR()
         # Only st_fix
         mcrals.fit(np.random.randn(10,5), C=np.random.randn(10,3),
                    ST=np.random.randn(3,5), st_fix=[0])
 
     # Providing no estimates
     with pytest.raises(TypeError):
-        mcrals = McrAls()
+        mcrals = McrAR()
         mcrals.fit(np.random.randn(10,5))
 
     # Unknown regression method
     with pytest.raises(ValueError):
-        mcrals = McrAls(c_regr='NOTREAL')
+        mcrals = McrAR(c_regr='NOTREAL')
 
     # regression object with no fit method
     with pytest.raises(ValueError):
-        mcrals = McrAls(c_regr=print)
+        mcrals = McrAR(c_regr=print)
 
 def test_props_features_samples_targets(dataset):
     """ Test mcrals properties for features, targets, samples """
     C_known, D_known, St_known = dataset
 
-    mcrals = McrAls()
+    mcrals = McrAR()
     mcrals.fit(D_known, ST=St_known)
 
     assert mcrals.n_targets == C_known.shape[-1]  # n_components
