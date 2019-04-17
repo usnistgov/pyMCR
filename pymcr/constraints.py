@@ -9,14 +9,19 @@ from abc import (ABC as _ABC, abstractmethod as _abstractmethod)
 
 import numpy as _np
 
-__all__ = ['ConstraintNonneg', 'ConstraintCumsumNonneg',
+__all__ = ['Constraint','ConstraintNonneg', 'ConstraintCumsumNonneg',
            'ConstraintZeroEndPoints', 'ConstraintZeroCumSumEndPoints',
            'ConstraintNorm', 'ConstraintCutBelow', 'ConstraintCutBelow',
            'ConstraintCompressBelow', 'ConstraintCutAbove',
            'ConstraintCompressAbove']
 
 class Constraint(_ABC):
-    """ Abstract class for constraints """
+    """ Abstract class for constraints 
+    
+    Parameters
+    ----------
+    
+    """
 
     @_abstractmethod
     def transform(self, A):

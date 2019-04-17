@@ -1,6 +1,8 @@
 """ Functions to condition / preprocess data """
 import numpy as _np
 
+__all__ = ['standardize']
+
 def standardize(X, mean_ctr=True, with_std=True, axis=-1, copy=True):
     """
     Standardization of data
