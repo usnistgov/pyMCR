@@ -9,7 +9,7 @@
     :alt: AppVeyor CI Status
     :target: https://ci.appveyor.com/project/CCampJr/pyMCR
 
-.. image:: https://img.shields.io/codecov/c/github/CCampJr/pyMCR/0.3.X.svg
+.. image:: https://codecov.io/gh/CCampJr/pyMCR/branch/0.3.X/graph/badge.svg
     :alt: Codecov
     :target: https://codecov.io/gh/CCampJr/pyMCR
 
