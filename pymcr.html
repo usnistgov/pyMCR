@@ -22,7 +22,7 @@
   <script src="https://code.jquery.com/jquery-1.12.4.min.js" type="text/javascript"></script>
   <script src="https://pages.nist.gov/nist-header-footer/js/nist-header-footer.js" type="text/javascript" defer="defer"></script>
 
-
+<script async type="text/javascript" id="_fed_an_ua_tag" src="https://dap.digitalgov.gov/Universal-Federated-Analytics-Min.js?agency=NIST&subagency=github&pua=UA-42404149-54&yt=true&exts=ppsx,pps,f90,sch,rtf,wrl,txz,m1v,xlsm,msi,xsd,f,tif,eps,mpg,xml,pl,xlt,c"></script>
 <script type="text/javascript" src="https://pages.nist.gov/leaveNotice/js/jquery.leaveNotice-nist.min.js"></script>
 <script>
 $(document).ready(function(){
@@ -339,17 +339,17 @@ axis does not go to 0, i.e. all values cut.</li>
 </dd></dl>
 
 <dl class="class">
-<dt>
-<em class="property">class </em><code class="descclassname">pymcr.constraints.</code><code class="descname">ConstraintCutBelow</code><span class="sig-paren">(</span><em>value=0</em>, <em>axis_sumnz=None</em>, <em>exclude=None</em>, <em>exclude_axis=-1</em>, <em>copy=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymcr/constraints.html#ConstraintCutBelow"><span class="viewcode-link">[source]</span></a></dt>
+<dt id="pymcr.constraints.ConstraintCutAbove">
+<em class="property">class </em><code class="descclassname">pymcr.constraints.</code><code class="descname">ConstraintCutAbove</code><span class="sig-paren">(</span><em>value=0</em>, <em>axis_sumnz=None</em>, <em>exclude=None</em>, <em>exclude_axis=-1</em>, <em>copy=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymcr/constraints.html#ConstraintCutAbove"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymcr.constraints.ConstraintCutAbove" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pymcr.constraints._CutExclude</span></code></p>
-<p>Cut values below (and not-equal to) a certain threshold.</p>
+<p>Cut values above (and not-equal to) a certain threshold</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – Cutoff value</li>
-<li><strong>axis_sumnz</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – If not None, cut below value only applied where sum across specified
+<li><strong>axis_sumnz</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – If not None, cut above value only applied where sum across specified
 axis does not go to 0, i.e. all values cut.</li>
 <li><strong>exclude</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a><em> , </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.7)"><em>tuple</em></a><em>, </em><em>ndarray</em>) – Exclude targets</li>
 <li><strong>exclude_axis</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – Along which axis to enumerate targets</li>
@@ -360,14 +360,14 @@ axis does not go to 0, i.e. all values cut.</li>
 </tbody>
 </table>
 <dl class="attribute">
-<dt>
-<code class="descname">_abc_impl</code><em class="property"> = &lt;_abc_data object&gt;</em></dt>
+<dt id="pymcr.constraints.ConstraintCutAbove._abc_impl">
+<code class="descname">_abc_impl</code><em class="property"> = &lt;_abc_data object&gt;</em><a class="headerlink" href="#pymcr.constraints.ConstraintCutAbove._abc_impl" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt>
-<code class="descname">transform</code><span class="sig-paren">(</span><em>A</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymcr/constraints.html#ConstraintCutBelow.transform"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>Apply cut-below value constraint</p>
+<dt id="pymcr.constraints.ConstraintCutAbove.transform">
+<code class="descname">transform</code><span class="sig-paren">(</span><em>A</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymcr/constraints.html#ConstraintCutAbove.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymcr.constraints.ConstraintCutAbove.transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply cut-above value constraint</p>
 </dd></dl>
 
 </dd></dl>
@@ -403,8 +403,8 @@ axis does not go to 0, i.e. all values cut.</li>
 </dd></dl>
 
 <dl class="class">
-<dt id="pymcr.constraints.ConstraintCutAbove">
-<em class="property">class </em><code class="descclassname">pymcr.constraints.</code><code class="descname">ConstraintCutAbove</code><span class="sig-paren">(</span><em>value=0</em>, <em>axis_sumnz=None</em>, <em>exclude=None</em>, <em>exclude_axis=-1</em>, <em>copy=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymcr/constraints.html#ConstraintCutAbove"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymcr.constraints.ConstraintCutAbove" title="Permalink to this definition">¶</a></dt>
+<dt>
+<em class="property">class </em><code class="descclassname">pymcr.constraints.</code><code class="descname">ConstraintCutAbove</code><span class="sig-paren">(</span><em>value=0</em>, <em>axis_sumnz=None</em>, <em>exclude=None</em>, <em>exclude_axis=-1</em>, <em>copy=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymcr/constraints.html#ConstraintCutAbove"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pymcr.constraints._CutExclude</span></code></p>
 <p>Cut values above (and not-equal to) a certain threshold</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -424,13 +424,13 @@ axis does not go to 0, i.e. all values cut.</li>
 </tbody>
 </table>
 <dl class="attribute">
-<dt id="pymcr.constraints.ConstraintCutAbove._abc_impl">
-<code class="descname">_abc_impl</code><em class="property"> = &lt;_abc_data object&gt;</em><a class="headerlink" href="#pymcr.constraints.ConstraintCutAbove._abc_impl" title="Permalink to this definition">¶</a></dt>
+<dt>
+<code class="descname">_abc_impl</code><em class="property"> = &lt;_abc_data object&gt;</em></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="pymcr.constraints.ConstraintCutAbove.transform">
-<code class="descname">transform</code><span class="sig-paren">(</span><em>A</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymcr/constraints.html#ConstraintCutAbove.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymcr.constraints.ConstraintCutAbove.transform" title="Permalink to this definition">¶</a></dt>
+<dt>
+<code class="descname">transform</code><span class="sig-paren">(</span><em>A</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymcr/constraints.html#ConstraintCutAbove.transform"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Apply cut-above value constraint</p>
 </dd></dl>
 
@@ -462,6 +462,93 @@ axis does not go to 0, i.e. all values cut.</li>
 <dt id="pymcr.constraints.ConstraintCompressAbove.transform">
 <code class="descname">transform</code><span class="sig-paren">(</span><em>A</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymcr/constraints.html#ConstraintCompressAbove.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymcr.constraints.ConstraintCompressAbove.transform" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply compress-above value constraint</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pymcr.constraints.ConstraintReplaceZeros">
+<em class="property">class </em><code class="descclassname">pymcr.constraints.</code><code class="descname">ConstraintReplaceZeros</code><span class="sig-paren">(</span><em>axis=-1</em>, <em>feature=None</em>, <em>fval=1</em>, <em>copy=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymcr/constraints.html#ConstraintReplaceZeros"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymcr.constraints.ConstraintReplaceZeros" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pymcr.constraints.Constraint" title="pymcr.constraints.Constraint"><code class="xref py py-class docutils literal notranslate"><span class="pre">pymcr.constraints.Constraint</span></code></a></p>
+<p>Samples that sum-to-zero across axis are replaced with a vector of 0’s except
+for a 1 at feature if a single value. In a concentration context, e.g., samples with
+no concentration are replaced with 100% concentration of a set feature. If multiple
+features given, equal amounts of each feature (summing to 1) are used.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>axis</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – Which axis of input matrix A to apply normalization acorss.</li>
+<li><strong>feature</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.7)"><em>tuple</em></a>) – Set all samples which sum-to-zero across axis to fval for a particular feature (or fractional)
+for multiple features.</li>
+<li><strong>fval</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – Value of summation across axis of replacement vector.</li>
+<li><strong>copy</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – Make copy of input data, A; otherwise, overwrite (if mutable)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="pymcr.constraints.ConstraintReplaceZeros._abc_impl">
+<code class="descname">_abc_impl</code><em class="property"> = &lt;_abc_data object&gt;</em><a class="headerlink" href="#pymcr.constraints.ConstraintReplaceZeros._abc_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pymcr.constraints.ConstraintReplaceZeros.transform">
+<code class="descname">transform</code><span class="sig-paren">(</span><em>A</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymcr/constraints.html#ConstraintReplaceZeros.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymcr.constraints.ConstraintReplaceZeros.transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply constraint</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pymcr.constraints.ConstraintPlanarize">
+<em class="property">class </em><code class="descclassname">pymcr.constraints.</code><code class="descname">ConstraintPlanarize</code><span class="sig-paren">(</span><em>target</em>, <em>shape</em>, <em>use_vals_above=None</em>, <em>use_vals_below=None</em>, <em>lims_to_plane=True</em>, <em>scaler=None</em>, <em>recalc_scaler=False</em>, <em>copy=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymcr/constraints.html#ConstraintPlanarize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymcr.constraints.ConstraintPlanarize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pymcr.constraints.Constraint" title="pymcr.constraints.Constraint"><code class="xref py py-class docutils literal notranslate"><span class="pre">pymcr.constraints.Constraint</span></code></a></p>
+<p>Set a particular target to a plane</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>target</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.7)"><em>tuple</em></a>) – Target numbers to set to a fitted plane</li>
+<li><strong>shape</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.7)"><em>tuple</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – Shape of array (M,N) which is (Y,X)</li>
+<li><strong>use_vals_above</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – Only calculate based on values above (not including)</li>
+<li><strong>use_vals_below</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – Only calculate based on values below (not including)</li>
+<li><strong>lims_to_plane</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – The returned plane will be limited to the range of the optionally supplied
+use_vals_below, use_vals above.</li>
+<li><strong>scaler</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – A large value that is much bigger than any values in the input array.
+Needed to ensure SVD properly creates plane. If None, auto-calculates.</li>
+<li><strong>recalc_scaler</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – Auto-calculate for every new input (does not use previously provided or
+calculated value)</li>
+<li><strong>copy</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – Make copy of input data, A; otherwise, overwrite (if mutable)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li>This uses an SVD to calculate the vector normal to the plane that fits the input data. It</li>
+</ul>
+<p>assumes that the 3rd singular vector is the normal; thus, the x and y vectors for the data need
+be larger than the variance of the input data. Scaler enables this by scaling the auto-generated
+x and y vectors to be much larger than the max-min of the input data</p>
+<dl class="attribute">
+<dt id="pymcr.constraints.ConstraintPlanarize._abc_impl">
+<code class="descname">_abc_impl</code><em class="property"> = &lt;_abc_data object&gt;</em><a class="headerlink" href="#pymcr.constraints.ConstraintPlanarize._abc_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pymcr.constraints.ConstraintPlanarize._setup_xy">
+<code class="descname">_setup_xy</code><span class="sig-paren">(</span><em>scaler</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymcr/constraints.html#ConstraintPlanarize._setup_xy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymcr.constraints.ConstraintPlanarize._setup_xy" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pymcr.constraints.ConstraintPlanarize.transform">
+<code class="descname">transform</code><span class="sig-paren">(</span><em>A</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymcr/constraints.html#ConstraintPlanarize.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymcr.constraints.ConstraintPlanarize.transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set targets, t, to fit planes</p>
 </dd></dl>
 
 </dd></dl>
