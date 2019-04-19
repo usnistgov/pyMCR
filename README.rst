@@ -103,7 +103,7 @@ packages may work.
 
     - Tested with 1.0.0, 1.0.1, 1.1.0
 
--   scikit-learn (0.2.0)
+-   scikit-learn, optional (0.2.0)
 
 Known Issues
 ------------
