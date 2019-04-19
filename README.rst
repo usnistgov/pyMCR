@@ -193,7 +193,14 @@ From ``Examples/Demo.ipynb``:
 .. image:: ./Examples/mcr_spectra_retr.png
 
 .. image:: ./Examples/mcr_conc_retr.png
-    
+
+
+Citing this Software
+--------------------
+
+Coming soon...
+
+
 References
 ----------
 
