@@ -43,14 +43,6 @@ pymcr.metrics module
     :undoc-members:
     :show-inheritance:
 
-pymcr.rank module
------------------
-
-.. automodule:: pymcr.rank
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 pymcr.regressors module
 -----------------------
 

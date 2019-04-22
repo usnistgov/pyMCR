@@ -44,14 +44,6 @@ pymcr.tests.test\_metrics module
     :undoc-members:
     :show-inheritance:
 
-pymcr.tests.test\_rank module
------------------------------
-
-.. automodule:: pymcr.tests.test_rank
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 pymcr.tests.test\_regressors module
 -----------------------------------
 
