@@ -3,7 +3,7 @@
 
 .. image:: https://travis-ci.com/CCampJr/pyMCR.svg?branch=0.3.X
     :alt: Travis CI Status
-    :target: https://travis-ci.org/CCampJr/pyMCR
+    :target: https://travis-ci.com/CCampJr/pyMCR
 
 .. image:: https://ci.appveyor.com/api/projects/status/ajld1bj7jo4oweio/branch/0.3.X?svg=true
     :alt: AppVeyor CI Status

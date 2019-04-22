@@ -2,9 +2,9 @@
 
 **Branch: 0.2.X**:
 
-.. image:: https://img.shields.io/travis/CCampJr/pyMCR/0.2.X.svg
+.. image:: https://travis-ci.com/CCampJr/pyMCR.svg?branch=0.2.X
     :alt: Travis branch
-    :target: https://travis-ci.org/CCampJr/pyMCR
+    :target: https://travis-ci.com/CCampJr/pyMCR
 
 .. image:: https://ci.appveyor.com/api/projects/status/ajld1bj7jo4oweio/branch/0.2.X?svg=true
     :alt: AppVeyor branch
@@ -16,9 +16,9 @@
 
 **Branch: 0.3.X**:
 
-.. image:: https://img.shields.io/travis/CCampJr/pyMCR/0.3.X.svg
+.. image:: https://travis-ci.com/CCampJr/pyMCR.svg?branch=0.3.X
     :alt: Travis branch
-    :target: https://travis-ci.org/CCampJr/pyMCR
+    :target: https://travis-ci.com/CCampJr/pyMCR
 
 .. image:: https://ci.appveyor.com/api/projects/status/ajld1bj7jo4oweio/branch/0.3.X?svg=true
     :alt: AppVeyor branch
@@ -30,9 +30,9 @@
 
 **Branch: 0.4.X**:
 
-.. image:: https://img.shields.io/travis/CCampJr/pyMCR/0.4.X.svg
+.. image:: https://travis-ci.com/CCampJr/pyMCR.svg?branch=0.4.X
     :alt: Travis branch
-    :target: https://travis-ci.org/CCampJr/pyMCR
+    :target: https://travis-ci.com/CCampJr/pyMCR
 
 .. image:: https://ci.appveyor.com/api/projects/status/ajld1bj7jo4oweio/branch/0.4.X?svg=true
     :alt: AppVeyor branch
