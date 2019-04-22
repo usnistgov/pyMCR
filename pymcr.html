@@ -17,7 +17,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="pymcr.tests package" href="pymcr.tests.html" />
-    <link rel="prev" title="pyMCR Module Information" href="modules.html" />
+    <link rel="prev" title="pyMCR" href="modules.html" />
 <link rel="stylesheet" href="https://pages.nist.gov/nist-header-footer/css/nist-combined.css">
   <script src="https://code.jquery.com/jquery-1.12.4.min.js" type="text/javascript"></script>
   <script src="https://pages.nist.gov/nist-header-footer/js/nist-header-footer.js" type="text/javascript" defer="defer"></script>
@@ -61,10 +61,10 @@ $(document).ready(function(){
           <a href="pymcr.tests.html" title="pymcr.tests package"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="modules.html" title="pyMCR Module Information"
+          <a href="modules.html" title="pyMCR"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">pyMCR 0.3 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="modules.html" accesskey="U">pyMCR Module Information</a> &#187;</li> 
+          <li class="nav-item nav-item-1"><a href="modules.html" accesskey="U">pyMCR</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -86,7 +86,6 @@ $(document).ready(function(){
 <li class="toctree-l2"><a class="reference internal" href="pymcr.tests.html#module-pymcr.tests.test_external_regressors">pymcr.tests.test_external_regressors module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pymcr.tests.html#module-pymcr.tests.test_mcr">pymcr.tests.test_mcr module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pymcr.tests.html#module-pymcr.tests.test_metrics">pymcr.tests.test_metrics module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pymcr.tests.html#module-pymcr.tests.test_rank">pymcr.tests.test_rank module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pymcr.tests.html#module-pymcr.tests.test_regressors">pymcr.tests.test_regressors module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pymcr.tests.html#module-pymcr.tests">Module contents</a></li>
 </ul>
@@ -851,47 +850,6 @@ also be provided in this circumstance.</li>
 </dd></dl>
 
 </div>
-<div class="section" id="module-pymcr.rank">
-<span id="pymcr-rank-module"></span><h2>pymcr.rank module<a class="headerlink" href="#module-pymcr.rank" title="Permalink to this headline">¶</a></h2>
-<p>Functions to estimate number of factors / rank</p>
-<dl class="function">
-<dt id="pymcr.rank.ind">
-<code class="descclassname">pymcr.rank.</code><code class="descname">ind</code><span class="sig-paren">(</span><em>D_actual</em>, <em>ul_rank=100</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymcr/rank.html#ind"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymcr.rank.ind" title="Permalink to this definition">¶</a></dt>
-<dd><p>Malinowski’s indicator function</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="pymcr.rank.rod">
-<code class="descclassname">pymcr.rank.</code><code class="descname">rod</code><span class="sig-paren">(</span><em>D_actual</em>, <em>ul_rank=100</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymcr/rank.html#rod"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymcr.rank.rod" title="Permalink to this definition">¶</a></dt>
-<dd><p>Ratio of derivatives</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="pymcr.rank.pca">
-<code class="descclassname">pymcr.rank.</code><code class="descname">pca</code><span class="sig-paren">(</span><em>D</em>, <em>n_components=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymcr/rank.html#pca"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymcr.rank.pca" title="Permalink to this definition">¶</a></dt>
-<dd><p>Principle component analysis</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>D</strong> (<em>ndarray</em><em> [</em><em>n_sample</em><em>, </em><em>n_features</em><em>]</em>) – Data</li>
-<li><strong>n_components</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – Number of components to calculate (using scipy.sparse.linalg.svds). If
-None use numpy.linalg.svd</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>Tuple with 3 items</strong></p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Scores (T), Loadings (W), eigenvalues (singular values-squared)</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</div>
 <div class="section" id="module-pymcr.regressors">
 <span id="pymcr-regressors-module"></span><h2>pymcr.regressors module<a class="headerlink" href="#module-pymcr.regressors" title="Permalink to this headline">¶</a></h2>
 <p>Built-in least squares / regression methods.</p>
@@ -1073,7 +1031,6 @@ None use numpy.linalg.svd</li>
 <li><a class="reference internal" href="#module-pymcr.constraints">pymcr.constraints module</a></li>
 <li><a class="reference internal" href="#module-pymcr.mcr">pymcr.mcr module</a></li>
 <li><a class="reference internal" href="#module-pymcr.metrics">pymcr.metrics module</a></li>
-<li><a class="reference internal" href="#module-pymcr.rank">pymcr.rank module</a></li>
 <li><a class="reference internal" href="#module-pymcr.regressors">pymcr.regressors module</a></li>
 <li><a class="reference internal" href="#module-pymcr">Module contents</a></li>
 </ul>
@@ -1082,7 +1039,7 @@ None use numpy.linalg.svd</li>
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="modules.html"
-                        title="previous chapter">pyMCR Module Information</a></p>
+                        title="previous chapter">pyMCR</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="pymcr.tests.html"
                         title="next chapter">pymcr.tests package</a></p>
@@ -1122,10 +1079,10 @@ None use numpy.linalg.svd</li>
           <a href="pymcr.tests.html" title="pymcr.tests package"
              >next</a> |</li>
         <li class="right" >
-          <a href="modules.html" title="pyMCR Module Information"
+          <a href="modules.html" title="pyMCR"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">pyMCR 0.3 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="modules.html" >pyMCR Module Information</a> &#187;</li> 
+          <li class="nav-item nav-item-1"><a href="modules.html" >pyMCR</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">

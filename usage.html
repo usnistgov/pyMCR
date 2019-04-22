@@ -179,6 +179,94 @@ regression regressor is imported from <a class="reference external" href="http:/
 </pre></div>
 </div>
 </div>
+<div class="section" id="single-gaussian-distribution-spectral-fitting-with-lmfit">
+<h2>Single-Gaussian Distribution Spectral Fitting with LMFIT<a class="headerlink" href="#single-gaussian-distribution-spectral-fitting-with-lmfit" title="Permalink to this headline">¶</a></h2>
+<p>In this example, the <a class="reference external" href="https://lmfit.github.io/lmfit-py/">LMFIT Library</a> is used to perform Gaussian distribution fitting on each spectral component.
+A longer example of this can be found in the <code class="docutils literal notranslate"><span class="pre">Examples/NIST_JRes_Paper</span></code> Jupyter Notebook.</p>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">lmfit.models</span> <span class="k">import</span> <span class="n">GaussianModel</span>
+
+<span class="kn">from</span> <span class="nn">pymcr.mcr</span> <span class="k">import</span> <span class="n">McrAR</span>
+<span class="kn">from</span> <span class="nn">pymcr.constraints</span> <span class="k">import</span> <span class="n">Constraint</span><span class="p">,</span> <span class="n">ConstraintNorm</span>
+
+<span class="k">class</span> <span class="nc">ConstraintSingleGauss</span><span class="p">(</span><span class="n">Constraint</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Perform a nonlinear least-squares fitting to enforce a Gaussian.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    copy : bool</span>
+<span class="sd">        Make copy of input data, A; otherwise, overwrite (if mutable)</span>
+
+<span class="sd">    axis : int</span>
+<span class="sd">        Axis to perform fitting over</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; A must be non-negative&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">copy</span> <span class="o">=</span> <span class="n">copy</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">axis</span> <span class="o">=</span> <span class="n">axis</span>
+
+    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">A</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Fit &quot;&quot;&quot;</span>
+        <span class="n">n_components</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_components</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">axis</span><span class="p">])</span>
+        <span class="n">n_components</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">axis</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">n_components</span><span class="p">)</span><span class="o">==</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Input must be 2D&quot;</span>
+        <span class="n">n_components</span> <span class="o">=</span> <span class="n">n_components</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="n">A_fit</span> <span class="o">=</span> <span class="mi">0</span><span class="o">*</span><span class="n">A</span>
+
+        <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_components</span><span class="p">):</span>
+            <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">axis</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">axis</span> <span class="o">==</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="n">y</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">num</span><span class="p">,</span> <span class="p">:]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">y</span> <span class="o">=</span> <span class="n">A</span><span class="p">[:,</span> <span class="n">num</span><span class="p">]</span>
+
+            <span class="n">mod</span> <span class="o">=</span> <span class="n">GaussianModel</span><span class="p">()</span>
+            <span class="n">pars</span> <span class="o">=</span> <span class="n">mod</span><span class="o">.</span><span class="n">guess</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">)</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="n">mod</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">pars</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">axis</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">axis</span> <span class="o">==</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="n">A_fit</span><span class="p">[</span><span class="n">num</span><span class="p">,:]</span> <span class="o">=</span> <span class="mi">1</span><span class="o">*</span><span class="n">out</span><span class="o">.</span><span class="n">best_fit</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">A_fit</span><span class="p">[:,</span> <span class="n">num</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="o">*</span><span class="n">out</span><span class="o">.</span><span class="n">best_fit</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">A_fit</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">A</span> <span class="o">*=</span> <span class="mi">0</span>
+            <span class="n">A</span> <span class="o">+=</span> <span class="n">A_fit</span>
+            <span class="k">return</span> <span class="n">A</span>
+
+<span class="n">mcrar</span> <span class="o">=</span> <span class="n">McrAR</span><span class="p">(</span><span class="n">max_iter</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">st_regr</span><span class="o">=</span><span class="s1">&#39;NNLS&#39;</span><span class="p">,</span> <span class="n">c_regr</span><span class="o">=</span><span class="s1">&#39;NNLS&#39;</span><span class="p">,</span>
+              <span class="n">c_constraints</span><span class="o">=</span><span class="p">[</span><span class="n">ConstraintNorm</span><span class="p">()],</span>
+              <span class="n">st_constraints</span><span class="o">=</span><span class="p">[</span><span class="n">ConstraintSingleGauss</span><span class="p">()])</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="semi-learned-fitting">
+<h2>Semi-Learned Fitting<a class="headerlink" href="#semi-learned-fitting" title="Permalink to this headline">¶</a></h2>
+<p>In semi-learned fitting, one has <em>a priori</em> knowledge about some or all of the spectra and/or concentration components. To use this information,
+the known entities are put into the initial guesses and the <a href="#id1"><span class="problematic" id="id2">``</span></a>fix” parameter is used to tell the fit method the indices. Effectively the fit method
+will <strong>not</strong> alter these values during iterations.</p>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Example 1: 2 known concentration maps</span>
+<span class="c1"># D: Mixture Spectra</span>
+<span class="c1"># C_guess: Concentration guesses, but the 0 and 1 indices are known ahead of time</span>
+
+<span class="n">mcrar</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="n">C_guess</span><span class="p">,</span> <span class="n">c_fix</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="c1"># Example 1: 2 known concentration maps, 1 known spectrum</span>
+<span class="c1"># D: Mixture Spectra</span>
+<span class="c1"># C_guess: Concentration guesses, but the 0 and 1 indices are known ahead of time</span>
+<span class="c1"># St_guess: Spectra guesses, but the 0-index is known ahead of time</span>
+<span class="c1"># c_first: In first iteration, solve for C first (fixed St)?</span>
+
+<span class="n">mcrar</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">D_known</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="n">C_guess</span><span class="p">,</span> <span class="n">ST</span><span class="o">=</span><span class="n">St_guess</span><span class="p">,</span> <span class="n">c_fix</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">st_fix</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">c_first</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
 </div>
 
 
@@ -195,6 +283,8 @@ regression regressor is imported from <a class="reference external" href="http:/
 <li><a class="reference internal" href="#non-negative-least-squares-nnls-no-constraints">Non-Negative Least-Squares (NNLS), No Constraints</a></li>
 <li><a class="reference internal" href="#mix-nnls-and-ols-regressors-non-negativity-and-sum-to-1-i-e-norm-constraints">Mix NNLS and OLS Regressors, Non-Negativity and Sum-to-1 (i.e., Norm) Constraints</a></li>
 <li><a class="reference internal" href="#ridge-regression-from-scikit-learn">Ridge-Regression from Scikit-Learn</a></li>
+<li><a class="reference internal" href="#single-gaussian-distribution-spectral-fitting-with-lmfit">Single-Gaussian Distribution Spectral Fitting with LMFIT</a></li>
+<li><a class="reference internal" href="#semi-learned-fitting">Semi-Learned Fitting</a></li>
 </ul>
 </li>
 </ul>

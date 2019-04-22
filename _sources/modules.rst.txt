@@ -1,5 +1,5 @@
-pyMCR Module Information
-========================
+pyMCR
+=====
 
 .. toctree::
    :maxdepth: 4

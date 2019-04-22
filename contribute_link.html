@@ -73,20 +73,24 @@ $(document).ready(function(){
           <div class="body" role="main">
             
   <p><strong>Branch: 0.2.X</strong>:</p>
-<a class="reference external image-reference" href="https://travis-ci.org/CCampJr/pyMCR"><img alt="Travis branch" src="https://img.shields.io/travis/CCampJr/pyMCR/0.2.X.svg" /></a>
+<a class="reference external image-reference" href="https://travis-ci.com/CCampJr/pyMCR"><img alt="Travis branch" src="https://travis-ci.com/CCampJr/pyMCR.svg?branch=0.2.X" /></a>
 <a class="reference external image-reference" href="https://ci.appveyor.com/project/CCampJr/pyMCR"><img alt="AppVeyor branch" src="https://ci.appveyor.com/api/projects/status/ajld1bj7jo4oweio/branch/0.2.X?svg=true" /></a>
-<a class="reference external image-reference" href="https://codecov.io/gh/CCampJr/pyMCR"><img alt="Codecov branch" src="https://img.shields.io/codecov/c/github/CCampJr/pyMCR/0.2.X.svg" /></a>
+<a class="reference external image-reference" href="https://codecov.io/gh/CCampJr/pyMCR"><img alt="Codecov" src="https://codecov.io/gh/CCampJr/pyMCR/branch/0.2.X/graph/badge.svg" /></a>
 <p><strong>Branch: 0.3.X</strong>:</p>
-<a class="reference external image-reference" href="https://travis-ci.org/CCampJr/pyMCR"><img alt="Travis branch" src="https://img.shields.io/travis/CCampJr/pyMCR/0.3.X.svg" /></a>
+<a class="reference external image-reference" href="https://travis-ci.com/CCampJr/pyMCR"><img alt="Travis branch" src="https://travis-ci.com/CCampJr/pyMCR.svg?branch=0.3.X" /></a>
 <a class="reference external image-reference" href="https://ci.appveyor.com/project/CCampJr/pyMCR"><img alt="AppVeyor branch" src="https://ci.appveyor.com/api/projects/status/ajld1bj7jo4oweio/branch/0.3.X?svg=true" /></a>
-<a class="reference external image-reference" href="https://codecov.io/gh/CCampJr/pyMCR"><img alt="Codecov branch" src="https://img.shields.io/codecov/c/github/CCampJr/pyMCR/0.3.X.svg" /></a>
+<a class="reference external image-reference" href="https://codecov.io/gh/CCampJr/pyMCR"><img alt="Codecov" src="https://codecov.io/gh/CCampJr/pyMCR/branch/0.3.X/graph/badge.svg" /></a>
+<p><strong>Branch: 0.4.X</strong>:</p>
+<a class="reference external image-reference" href="https://travis-ci.com/CCampJr/pyMCR"><img alt="Travis branch" src="https://travis-ci.com/CCampJr/pyMCR.svg?branch=0.4.X" /></a>
+<a class="reference external image-reference" href="https://ci.appveyor.com/project/CCampJr/pyMCR"><img alt="AppVeyor branch" src="https://ci.appveyor.com/api/projects/status/ajld1bj7jo4oweio/branch/0.4.X?svg=true" /></a>
+<a class="reference external image-reference" href="https://codecov.io/gh/CCampJr/pyMCR"><img alt="Codecov" src="https://codecov.io/gh/CCampJr/pyMCR/branch/0.4.X/graph/badge.svg" /></a>
 <div class="section" id="contributing">
 <h1>Contributing<a class="headerlink" href="#contributing" title="Permalink to this headline">¶</a></h1>
 <p><strong>Thank you for your interest in contributing!</strong> This document is in pre-pre-alpha stage, so feel free to make edits and suggestions through Pull Requests.</p>
 <ul class="simple">
 <li>Until pyMCR gets to v1.0.X; the versioning will increment by 0.1 for every new release that adds new functionality.</li>
-<li>Pull-requests that do not add new functionality, will be merged into the <strong>0.2.X</strong> branch prior to being merged into <strong>master</strong>.</li>
-<li>Functional changes will be merged into the <strong>0.3.X</strong> branch.</li>
+<li>Pull-requests that do not add new functionality, will be merged into the <strong>0.3.X</strong> branch prior to being merged into <strong>master</strong>.</li>
+<li>Functional changes will be merged into the <strong>0.4.X</strong> branch.</li>
 <li><strong>Avoid adding external dependencies</strong> unless absolutely necessary – try to stick to the SciPy stack.</li>
 <li>All functional contributions should have associated tests added to the <em>/pymcr/tests</em> directory.</li>
 <li>Testing is performed via pytest</li>
@@ -104,18 +108,30 @@ exempt).</li>
 <li>For mathematical functions involving matrix math, capitalized and lower-case variables names
 are permissable to distinguish between vectors and matrices.</li>
 </ul>
+</div>
+<div class="section" id="commit-messages">
+<h2>Commit Messages<a class="headerlink" href="#commit-messages" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>I’m working on implementing a standardized notation for commit messages to facilitate auto-changelog. Comments encouraged (send me an email or leave an issue)</li>
+</ul>
 <div class="section" id="branches">
 <h3>Branches<a class="headerlink" href="#branches" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li><strong>0.2.X</strong>: Updates to current <strong>master</strong><ul>
+<li><strong>0.2.X</strong>: Old version<ul>
+<li>Non-new functionality</li>
+<li>Typos in 0.2.X docstrings</li>
+</ul>
+</li>
+<li><strong>0.3.X</strong>: Updates to current <strong>master</strong><ul>
 <li>Non-new functionality</li>
 <li>Typos and <strong>master</strong> branch documentation</li>
 </ul>
 </li>
-<li><strong>0.3.X</strong>: Next version of pyMCR<ul>
+<li><strong>0.4.X</strong>: Next version of pyMCR<ul>
 <li>New functionality</li>
 <li>New regressors</li>
 <li>New constraints</li>
+<li>New modules</li>
 <li>Documentation for new features</li>
 </ul>
 </li>
@@ -159,7 +175,8 @@ RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.</p>
   <h3><a href="index.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Contributing</a><ul>
-<li><a class="reference internal" href="#style-notes">Style Notes</a><ul>
+<li><a class="reference internal" href="#style-notes">Style Notes</a></li>
+<li><a class="reference internal" href="#commit-messages">Commit Messages</a><ul>
 <li><a class="reference internal" href="#branches">Branches</a></li>
 <li><a class="reference internal" href="#license">LICENSE</a></li>
 <li><a class="reference internal" href="#contact">Contact</a></li>
