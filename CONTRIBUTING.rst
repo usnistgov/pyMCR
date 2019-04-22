@@ -2,59 +2,96 @@
 
 **Branch: 0.2.X**:
 
-.. image:: https://img.shields.io/travis/CCampJr/pyMCR/0.2.X.svg
+.. image:: https://travis-ci.com/CCampJr/pyMCR.svg?branch=0.2.X
     :alt: Travis branch
-    :target: https://travis-ci.org/CCampJr/pyMCR
+    :target: https://travis-ci.com/CCampJr/pyMCR
 
 .. image:: https://ci.appveyor.com/api/projects/status/ajld1bj7jo4oweio/branch/0.2.X?svg=true
     :alt: AppVeyor branch
     :target: https://ci.appveyor.com/project/CCampJr/pyMCR
 
-.. image:: https://img.shields.io/codecov/c/github/CCampJr/pyMCR/0.2.X.svg
-    :alt: Codecov branch
+.. image:: https://codecov.io/gh/CCampJr/pyMCR/branch/0.2.X/graph/badge.svg
+    :alt: Codecov
     :target: https://codecov.io/gh/CCampJr/pyMCR
 
 **Branch: 0.3.X**:
 
-.. image:: https://img.shields.io/travis/CCampJr/pyMCR/0.3.X.svg
+.. image:: https://travis-ci.com/CCampJr/pyMCR.svg?branch=0.3.X
     :alt: Travis branch
-    :target: https://travis-ci.org/CCampJr/pyMCR
+    :target: https://travis-ci.com/CCampJr/pyMCR
 
 .. image:: https://ci.appveyor.com/api/projects/status/ajld1bj7jo4oweio/branch/0.3.X?svg=true
     :alt: AppVeyor branch
     :target: https://ci.appveyor.com/project/CCampJr/pyMCR
 
-.. image:: https://img.shields.io/codecov/c/github/CCampJr/pyMCR/0.3.X.svg
-    :alt: Codecov branch
+.. image:: https://codecov.io/gh/CCampJr/pyMCR/branch/0.3.X/graph/badge.svg
+    :alt: Codecov
     :target: https://codecov.io/gh/CCampJr/pyMCR
 
-pyMCR: Contributing
-===================
+**Branch: 0.4.X**:
+
+.. image:: https://travis-ci.com/CCampJr/pyMCR.svg?branch=0.4.X
+    :alt: Travis branch
+    :target: https://travis-ci.com/CCampJr/pyMCR
+
+.. image:: https://ci.appveyor.com/api/projects/status/ajld1bj7jo4oweio/branch/0.4.X?svg=true
+    :alt: AppVeyor branch
+    :target: https://ci.appveyor.com/project/CCampJr/pyMCR
+
+.. image:: https://codecov.io/gh/CCampJr/pyMCR/branch/0.4.X/graph/badge.svg
+    :alt: Codecov
+    :target: https://codecov.io/gh/CCampJr/pyMCR
+
+
+Contributing
+=============
 
 **Thank you for your interest in contributing!** This document is in pre-pre-alpha stage, so feel free to make edits and suggestions through Pull Requests.
 
--    Until pyMCR gets to v1.0.X; the versioning will increment by 0.1 for every new release that adds new functionality. 
--    Pull-requests that do not add new functionality, will be merged into the **0.2.X** branch prior to being merged into **master**. Functional changes will be merged into the **0.3.X** branch.
--    All functional contributions should have associated tests added to the */pymcr/tests* directory.
--    Testing is performed via pytest
--    Test coverage should be > 90%, with some exceptions
--    After contributing, please add your name to the bottom of the README file. No matter how small, all contributors will be recognized.
--    `Gist of the release process <https://gist.github.com/CCampJr/dca856a4322c9640f857956ba08161e6>`_
+-   Until pyMCR gets to v1.0.X; the versioning will increment by 0.1 for every new release that adds new functionality. 
+-   Pull-requests that do not add new functionality, will be merged into the **0.3.X** branch prior to being merged into **master**. 
+-   Functional changes will be merged into the **0.4.X** branch.
+-   **Avoid adding external dependencies** unless absolutely necessary -- try to stick to the SciPy stack.
+-   All functional contributions should have associated tests added to the */pymcr/tests* directory.
+-   Testing is performed via pytest
+-   Test coverage should be > 90%, with some exceptions
+-   After contributing, please add your name to the bottom of the README file. No matter how small, all contributors will be recognized.
+-   `Gist of the release process <https://gist.github.com/CCampJr/dca856a4322c9640f857956ba08161e6>`_
+
+Style Notes
+~~~~~~~~~~~
+
+-   External imports (e.g., import numpy as _np) should have a prepended underscore to prevent
+    code completion from identifying numpy as belonging to the pymcr module. (Demos and test files
+    exempt).
+-   Avoid all-capitalized variables unless constants.
+-   For mathematical functions involving matrix math, capitalized and lower-case variables names
+    are permissable to distinguish between vectors and matrices.
+
+Commit Messages
+~~~~~~~~~~~~~~~
+-   I'm working on implementing a standardized notation for commit messages to facilitate auto-changelog. Comments encouraged (send me an email or leave an issue)
 
 
 Branches
 --------
 
--    **0.2.X**: Updates to current **master**
+-   **0.2.X**: Old version
+
+    - Non-new functionality
+    - Typos in 0.2.X docstrings
+
+-   **0.3.X**: Updates to current **master**
 
     - Non-new functionality
     - Typos and **master** branch documentation
 
--    **0.3.X**: Next version of pyMCR
+-   **0.4.X**: Next version of pyMCR
 
     - New functionality
     - New regressors
     - New constraints
+    - New modules
     - Documentation for new features
 
 LICENSE

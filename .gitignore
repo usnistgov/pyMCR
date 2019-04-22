@@ -6,6 +6,9 @@ __pycache__/
 #VS Code Files
 .vscode/
 
+# Image files saved from Jupyter
+*.eps
+
 # C extensions
 *.so
 
@@ -65,7 +68,8 @@ instance/
 .scrapy
 
 # Sphinx documentation
-#docs/_build/
+docs/_build/
+docs/_static/
 
 # PyBuilder
 target/
