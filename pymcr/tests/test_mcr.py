@@ -222,7 +222,7 @@ def test_mcr_c_semilearned():
     D_known = np.dot(C_known, St_known)
 
     C_guess = 1 * C_known
-    C_guess[:, 2] = np.random.randn(int(M*N))
+    C_guess[:, 2] = np.abs(np.random.randn(int(M*N))+0.1)
 
     mcrar = McrAR(max_iter=50, tol_increase=100, tol_n_increase=10,
                     st_constraints=[ConstraintNonneg()],
