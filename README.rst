@@ -22,7 +22,7 @@
 
 .. image:: https://img.shields.io/badge/License-NIST%20Public%20Domain-green.svg
     :alt: NIST Public Domain
-    :target: https://github.com/CCampJr/pyMCR/blob/master/LICENSE.md
+    :target: https://github.com/usnistgov/pyMCR/blob/master/LICENSE.md
 
 pyMCR: Multivariate Curve Resolution in Python
 ===============================================================
@@ -130,7 +130,7 @@ Using pip (soft install [can update with git])
     
     # Make new directory for pyMCR and enter it
     # Clone from github
-    git clone https://github.com/CCampJr/pyMCR
+    git clone https://github.com/usnistgov/pyMCR
 
     # Only Python 3.* installed
     pip install -e .
@@ -144,14 +144,14 @@ Using pip (soft install [can update with git])
 Using setuptools
 ~~~~~~~~~~~~~~~~
 
-You will need to `download the repository <https://github.com/CCampJr/pyMCR>`_
+You will need to `download the repository <https://github.com/usnistgov/pyMCR>`_
 or clone the repository with git:
 
 .. code::
     
     # Make new directory for pyMCR and enter it
     # Clone from github
-    git clone https://github.com/CCampJr/pyMCR
+    git clone https://github.com/usnistgov/pyMCR
 
 Perform the install:
 

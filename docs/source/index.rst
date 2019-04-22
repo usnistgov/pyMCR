@@ -23,7 +23,7 @@
 
 .. image:: https://img.shields.io/badge/License-NIST%20Public%20Domain-green.svg
     :alt: NIST Public Domain
-    :target: https://github.com/CCampJr/pyMCR/blob/master/LICENSE.md
+    :target: https://github.com/usnistgov/pyMCR/blob/master/LICENSE.md
 
 
 pyMCR: Multivariate Curve Resolution in Python
