@@ -186,3 +186,28 @@ A longer example of this can be found in the ``Examples/NIST_JRes_Paper`` Jupyte
     mcrar = McrAR(max_iter=1000, st_regr='NNLS', c_regr='NNLS', 
                   c_constraints=[ConstraintNorm()],
                   st_constraints=[ConstraintSingleGauss()])
+
+
+Semi-Learned Fitting
+---------------------
+
+In semi-learned fitting, one has *a priori* knowledge about some or all of the spectra and/or concentration components. To use this information,
+the known entities are put into the initial guesses and the ``fix" parameter is used to tell the fit method the indices. Effectively the fit method
+will **not** alter these values during iterations.
+
+
+.. code:: python
+
+    # Example 1: 2 known concentration maps
+    # D: Mixture Spectra
+    # C_guess: Concentration guesses, but the 0 and 1 indices are known ahead of time
+    
+    mcrar.fit(D, C=C_guess, c_fix=[0,1])
+
+    # Example 1: 2 known concentration maps, 1 known spectrum
+    # D: Mixture Spectra
+    # C_guess: Concentration guesses, but the 0 and 1 indices are known ahead of time
+    # St_guess: Spectra guesses, but the 0-index is known ahead of time
+    # c_first: In first iteration, solve for C first (fixed St)?
+
+    mcrar.fit(D_known, C=C_guess, ST=St_guess, c_fix=[0,1], st_fix=[0], c_first=True)
