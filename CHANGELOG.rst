@@ -8,6 +8,12 @@ This document records all notable changes to
 This project adheres to `PEP 440 -- Version Identification 
 and Dependency Specification <https://www.python.org/dev/peps/pep-0440/>`_.
 
+0.4.0
+-----
+
+- New features:
+
+
 0.3.1
 ------
 
