@@ -1,15 +1,15 @@
 .. -*- mode: rst -*-
 
-.. image:: https://travis-ci.org/CCampJr/pyMCR.svg?branch=0.3.X
-    :alt: Travis branch
-    :target: https://travis-ci.org/CCampJr/pyMCR
+.. image:: https://travis-ci.com/CCampJr/pyMCR.svg?branch=0.3.X
+    :alt: Travis CI Status
+    :target: https://travis-ci.com/CCampJr/pyMCR
 
 .. image:: https://ci.appveyor.com/api/projects/status/ajld1bj7jo4oweio/branch/0.3.X?svg=true
-    :alt: AppVeyor branch
+    :alt: AppVeyor CI Status
     :target: https://ci.appveyor.com/project/CCampJr/pyMCR
 
-.. image:: https://img.shields.io/codecov/c/github/CCampJr/pyMCR/0.3.X.svg
-    :alt: Codecov branch
+.. image:: https://codecov.io/gh/CCampJr/pyMCR/branch/0.3.X/graph/badge.svg
+    :alt: Codecov
     :target: https://codecov.io/gh/CCampJr/pyMCR
 
 .. image:: https://img.shields.io/pypi/pyversions/pyMCR.svg
@@ -17,7 +17,7 @@
     :target: https://pypi.org/project/pyMCR/
 
 .. image:: https://img.shields.io/pypi/v/pyMCR.svg
-    :alt: PyPI
+    :alt: PyPI Project Page
     :target: https://pypi.org/project/pyMCR/
 
 .. image:: https://img.shields.io/badge/License-NIST%20Public%20Domain-green.svg
@@ -33,7 +33,7 @@ pyMCR is a small package for performing multivariate curve resolution.
 Currently, it implements a simple alternating regression scheme (MCR-AR). The most common
 implementation is with ordinary least-squares regression, MCR-ALS.
 
-MCR with non0negativity constraints on both matrices is the same as nonnegative matrix factorization (NMF). Historically,
+MCR with non0negativity constraints on both matrices is the same as non-negative matrix factorization (NMF). Historically,
 other names were used for MCR as well:
 
 -   Self modeling mixture analysis (SMMA)
@@ -61,7 +61,7 @@ Available methods:
     -   Non-negativity of cumulative summation
     -   Compress or cut values above or below a threshold value
     -   Replace sum-across-features samples (e.g., 0 concentration) with prescribed target
-    -   Enforce a plane ("planarize"). E.g., a concenctration image is a plane.
+    -   Enforce a plane ("planarize"). E.g., a concentration image is a plane.
 
 -   Error metrics / Loss function
 
@@ -103,7 +103,7 @@ packages may work.
 
     - Tested with 1.0.0, 1.0.1, 1.1.0
 
--   scikit-learn (0.2.0)
+-   scikit-learn, optional (0.2.0)
 
 Known Issues
 ------------
@@ -193,7 +193,14 @@ From ``Examples/Demo.ipynb``:
 .. image:: ./Examples/mcr_spectra_retr.png
 
 .. image:: ./Examples/mcr_conc_retr.png
-    
+
+
+Citing this Software
+--------------------
+
+Coming soon...
+
+
 References
 ----------
 

@@ -11,9 +11,9 @@ import numpy as _np
 
 __all__ = ['Constraint','ConstraintNonneg', 'ConstraintCumsumNonneg',
            'ConstraintZeroEndPoints', 'ConstraintZeroCumSumEndPoints',
-           'ConstraintNorm', 'ConstraintCutBelow', 'ConstraintCutBelow',
+           'ConstraintNorm', 'ConstraintCutBelow', 'ConstraintCutAbove',
            'ConstraintCompressBelow', 'ConstraintCutAbove',
-           'ConstraintCompressAbove']
+           'ConstraintCompressAbove', 'ConstraintReplaceZeros', 'ConstraintPlanarize']
 
 class Constraint(_ABC):
     """ Abstract class for constraints 
