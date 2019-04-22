@@ -9,3 +9,4 @@ prune docs/build
 recursive-include Examples *
 recursive-include Examples *.ipynb *.png
 prune Examples/.ipynb_checkpoints
+exclude Examples/*.eps
