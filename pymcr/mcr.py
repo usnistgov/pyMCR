@@ -1,15 +1,16 @@
-""" MCR-ALS Main Class for Computation"""
+""" MCR Main Class for Computation"""
 import numpy as _np
 
 from pymcr.regressors import OLS, NNLS
 from pymcr.constraints import ConstraintNonneg, ConstraintNorm
 from pymcr.metrics import mse
 
-class McrAls:
+class McrAR:
     """
-    Multivariate Curve Resolution - Alternating Least Squares
+    Multivariate Curve Resolution - Alternating Regression
 
     D = CS^T
+
 
     Parameters
     ----------
@@ -45,29 +46,33 @@ class McrAls:
         allowed. E.g., setting to 1.0 means the err can double per iteration.
 
     tol_n_increase : int
-        Number of iterations for which the err attribute can increase
+        Number of consecutive iterations for which the err attribute can increase
 
     tol_err_change : float
         If err changes less than tol_err_change, per iteration, break.
 
-    Parameters
+    tol_n_above_min : int
+        Number of half-iterations that can be performed without reaching a
+        new error-minimum
+
+    Attributes
     ----------
     err : list
         List of calculated errors (from err_fcn) after each least squares (ie
         twice per iteration)
 
-    C_ : ndarray
+    C_ : ndarray [n_samples, n_targets]
         Most recently calculated C matrix (that did not cause a tolerance
         failure)
 
-    ST_ : ndarray
+    ST_ : ndarray [n_targets, n_features]
         Most recently calculated S^T matrix (that did not cause a tolerance
         failure)
 
-    C_opt_ : ndarray
+    C_opt_ : ndarray [n_samples, n_targets]
         [Optimal] C matrix for lowest err attribute
 
-    ST_opt_ : ndarray
+    ST_opt_ : ndarray [n_targets, n_features]
         [Optimal] ST matrix for lowest err attribute
 
     n_iter : int
@@ -76,34 +81,53 @@ class McrAls:
     n_iter_opt : int
         Iteration when optimal C and ST calculated
 
-    max_iter_reached : bool
-        Was the maximum number of iteration reached (max_iter parameter)
+    exit_max_iter_reached : bool
+        Exited iterations due to maximum number of iteration reached (max_iter parameter)
+
+    exit_tol_increase : bool
+        Exited iterations due to maximum fractional increase in error metric (via err_fcn)
+
+    exit_tol_n_increase : bool
+        Exited iterations due to maximum number of consecutive increases in error metric 
+        (via err fcn)
+
+    exit_tol_err_change : bool
+        Exited iterations due to error metric change that is smaller than tol_err_change
+
+    exit_tol_n_above_min : bool
+        Exited iterations due to maximum number of half-iterations for which the error
+        metric increased above the minimum error
 
     Notes
     -----
-    Built-in regressor classes (str can be used): OLS (ordinary least squares),
-    NNLS (non-negatively constrained least squares). See mcr.regressors.
 
-    Built-in regressor methods can be given as a string to c_regr, st_regr;
+    -   Built-in regressor classes (str can be used): OLS (ordinary least squares),
+    NNLS (non-negatively constrained least squares). See mcr.regressors.
+    -   Built-in regressor methods can be given as a string to c_regr, st_regr;
     though instantiating an imported class gives more flexibility.
+    -   Setting any tolerance to None turns that check off
+
     """
     def __init__(self, c_regr=OLS(), st_regr=OLS(), c_fit_kwargs={},
-                 st_fit_kwargs={}, c_constraints=[ConstraintNonneg()], 
+                 st_fit_kwargs={}, c_constraints=[ConstraintNonneg()],
                  st_constraints=[ConstraintNonneg()],
                  max_iter=50, err_fcn=mse,
-                 tol_increase=0.0, tol_n_increase=10, tol_err_change=None
+                 tol_increase=0.0, tol_n_increase=10, tol_err_change=None,
+                 tol_n_above_min=10
                 ):
         """
         Multivariate Curve Resolution - Alternating Regression
         """
 
         self.max_iter = max_iter
+
         self.tol_increase = tol_increase
         self.tol_n_increase = tol_n_increase
         self.tol_err_change = tol_err_change
+        self.tol_n_above_min = tol_n_above_min
 
         self.err_fcn = err_fcn
-        self.err = []
+        self.err = None
 
         self.c_constraints = c_constraints
         self.st_constraints = st_constraints
@@ -122,7 +146,13 @@ class McrAls:
 
         self.n_iter = None
         self.n_increase = None
-        self.max_iter_reached = False
+        self.n_above_min = None
+
+        self.exit_max_iter_reached = False
+        self.exit_tol_increase = False
+        self.exit_tol_n_increase = False
+        self.exit_tol_err_change = False
+        self.exit_tol_n_above_min = False
 
         # Saving every C or S^T matrix at each iteration
         # Could create huge memory usage
@@ -159,6 +189,27 @@ class McrAls:
         """ D matrix with optimal C and S^T matrices """
         return _np.dot(self.C_opt_, self.ST_opt_)
 
+    @property
+    def n_features(self):
+        if self.ST_ is not None:
+            return self.ST_.shape[-1]
+        else:
+            return None
+
+    @property
+    def n_targets(self):
+        if self.C_ is not None:
+            return self.C_.shape[1]
+        else:
+            return None
+
+    @property
+    def n_samples(self):
+        if self.C_ is not None:
+            return self.C_.shape[0]
+        else:
+            return None
+
     def _ismin_err(self, val):
         """ Is the current error the minimum """
         if len(self.err) == 0:
@@ -167,9 +218,10 @@ class McrAls:
             return ([val > x for x in self.err].count(True) == 0)
 
 
-    def fit(self, D, C=None, ST=None, verbose=False):
+    def fit(self, D, C=None, ST=None, st_fix=None, c_fix=None, c_first=True, verbose=False,
+            post_iter_fcn=None, post_half_fcn=None):
         """
-        Perform MCR-ALS. D = CS^T. Solve for C and S^T iteratively.
+        Perform MCR-AR. D = CS^T. Solve for C and S^T iteratively.
 
         Parameters
         ----------
@@ -182,35 +234,73 @@ class McrAls:
         ST : ndarray
             Initial S^T matrix estimate. Only provide initial C OR S^T.
 
+        st_fix : list
+            The spectral component numbers to keep fixed.
+
+        c_fix : list
+            The concentration component numbers to keep fixed.
+
+        c_first : bool
+            Calculate C first when both C and ST are provided. c_fix and st_fix must
+            also be provided in this circumstance.
+
         verbose : bool
             Display iteration and per-least squares err results.
+
+        post_iter_fcn : function
+            Function to perform after each iteration
+
+        post_half_fcn : function
+            Function to perform after half-iteration
         """
 
         # Ensure only C or ST provided
         if (C is None) & (ST is None):
             raise TypeError('C or ST estimate must be provided')
-        elif (C is not None) & (ST is not None):
-            raise TypeError('Only C or ST estimate must be provided, only one')
+        elif (C is not None) & (ST is not None) & ((c_fix is None) | (st_fix is None)):
+            err_str1 = 'Only C or ST estimate must be provided, '
+            raise TypeError(err_str1 + 'unless c_fix and st_fix are both provided')
         else:
             self.C_ = C
             self.ST_ = ST
 
         self.n_increase = 0
+        self.n_above_min = 0
+        self.err = []
+
+        # Both C and ST provided. special_skip_c comes into play below
+        both_condition = (self.ST_ is not None) & (self.C_ is not None)
 
         for num in range(self.max_iter):
             self.n_iter = num + 1
-            if self.ST_ is not None:
+
+            # Both st and c provided, but c_first is False
+            if both_condition & (num == 0) & (not c_first):
+                special_skip_c = True
+            else:
+                special_skip_c = False
+
+            if (self.ST_ is not None) & (not special_skip_c):
                 # Debugging feature -- saves every S^T matrix in a list
                 # Can create huge memory usage
                 if self._saveall_st:
                     self._saved_st.append(self.ST_)
 
+                # * Target is the feature of the regression
                 self.c_regressor.fit(self.ST_.T, D.T, **self.c_fit_kwargs)
                 C_temp = self.c_regressor.coef_
 
+                # Apply fixed C's
+                if c_fix:
+                    C_temp[:, c_fix] = self.C_[:, c_fix]
+                
                 # Apply c-constraints
                 for constr in self.c_constraints:
                     C_temp = constr.transform(C_temp)
+
+                # Apply fixed C's
+                if c_fix:
+                    C_temp[:, c_fix] = self.C_[:, c_fix]
 
                 D_calc = _np.dot(C_temp, self.ST_)
 
@@ -220,16 +310,32 @@ class McrAls:
                     self.C_opt_ = 1*C_temp
                     self.ST_opt_ = 1*self.ST_
                     self.n_iter_opt = num + 1
+                    self.n_above_min = 0
+                else:
+                    self.n_above_min += 1
+
+                if self.tol_n_above_min is not None:
+                    if self.n_above_min > self.tol_n_above_min:
+                        err_str1 = 'Half-iterated {} times since min '.format(self.n_above_min)
+                        err_str2 = 'error. Exiting.'
+                        print(err_str1 + err_str2)
+                        self.exit_tol_n_above_min = True
+                        break
 
                 # Calculate error fcn and check for tolerance increase
-                if self.err != 0:
+                if len(self.err) == 0:
+                    self.err.append(1*err_temp)
+                    self.C_ = 1*C_temp
+                elif self.tol_increase is None:
                     self.err.append(1*err_temp)
                     self.C_ = 1*C_temp
                 elif (err_temp <= self.err[-1]*(1+self.tol_increase)):
                     self.err.append(1*err_temp)
                     self.C_ = 1*C_temp
                 else:
-                    print('Mean squared residual increased above tol_increase {:.4e}. Exiting'.format(err_temp))
+                    err_str1 = 'Error increased above fractional tol_increase (C iter). Exiting'
+                    print(err_str1)
+                    self.exit_tol_increase = True
                     break
 
                 # Check if err went up
@@ -240,13 +346,18 @@ class McrAls:
                         self.n_increase *= 0
 
                 # Break if too many error-increases in a row
-                if self.n_increase > self.tol_n_increase:
-                    print('Maximum error increases reached ({}). Exiting.'.format(self.tol_n_increase))
-                    break
-
+                if self.tol_n_increase is not None:
+                    if self.n_increase > self.tol_n_increase:
+                        out_str1 = 'Maximum error increases reached '
+                        print(out_str1 + '({}) (C iter). Exiting.'.format(self.tol_n_increase))
+                        self.exit_tol_n_increase = True
+                        break
 
                 if verbose:
                     print('Iter: {} (C)\t{}: {:.4e}'.format(self.n_iter, self.err_fcn.__name__, err_temp))
+
+                if post_half_fcn is not None:
+                    post_half_fcn(self.C_, self.ST_, D, D_calc)
 
             if self.C_ is not None:
 
@@ -255,16 +366,22 @@ class McrAls:
                 if self._saveall_c:
                     self._saved_c.append(self.C_)
 
+                # * Target is the feature of the regression
                 self.st_regressor.fit(self.C_, D, **self.st_fit_kwargs)
                 ST_temp = self.st_regressor.coef_.T
-#                 als = AlsCvxopt(smoothness_param=1e-5, asym_param=1e-4, max_iter=2, order=3)
-#                 als = AlsCvxopt(smoothness_param=1e-7, asym_param=1e-8, max_iter=2, order=3)
 
+                # Apply fixed ST's
+                if st_fix:
+                    ST_temp[st_fix] = self.ST_[st_fix]
 
                 # Apply ST-constraints
                 for constr in self.st_constraints:
                     ST_temp = constr.transform(ST_temp)
-#
+
+                # Apply fixed ST's
+                if st_fix:
+                    ST_temp[st_fix] = self.ST_[st_fix]
+
                 D_calc = _np.dot(self.C_, ST_temp)
 
                 err_temp = self.err_fcn(self.C_, ST_temp, D, D_calc)
@@ -274,15 +391,31 @@ class McrAls:
                     self.ST_opt_ = 1*ST_temp
                     self.C_opt_ = 1*self.C_
                     self.n_iter_opt = num + 1
+                    self.n_above_min = 0
+                else:
+                    self.n_above_min += 1
+
+                if self.tol_n_above_min is not None:
+                    if self.n_above_min > self.tol_n_above_min:
+                        err_str1 = 'Half-iterated {} times since min '.format(self.n_above_min)
+                        err_str2 = 'error. Exiting.'
+                        print(err_str1 + err_str2)
+                        self.exit_tol_n_above_min = True
+                        break
 
                 if len(self.err) == 0:
+                    self.err.append(1*err_temp)
+                    self.ST_ = 1*ST_temp
+                elif self.tol_increase is None:
                     self.err.append(1*err_temp)
                     self.ST_ = 1*ST_temp
                 elif (err_temp <= self.err[-1]*(1+self.tol_increase)):
                     self.err.append(1*err_temp)
                     self.ST_ = 1*ST_temp
                 else:
-                    print('Mean squared residual increased above tol_increase {:.4e}. Exiting'.format(err_temp))
+                    err_str1 = 'Error increased above fractional tol_increase (ST iter). Exiting'
+                    print(err_str1)
+                    self.exit_tol_increase = True
                     break
 
                 # Check if err went up
@@ -293,16 +426,25 @@ class McrAls:
                         self.n_increase *= 0
 
                 # Break if too many error-increases in a row
-                if self.n_increase > self.tol_n_increase:
-                    print('Maximum error increases reached ({}). Exiting.'.format(self.tol_n_increase))
-                    break
+                if self.tol_n_increase is not None:
+                    if self.n_increase > self.tol_n_increase:
+                        out_str = 'Maximum error increases reached '
+                        print(out_str + '({}) (ST iter). Exiting.'.format(self.tol_n_increase))
+                        self.exit_tol_n_increase = True
+                        break
 
                 if verbose:
                     print('Iter: {} (ST)\t{}: {:.4e}'.format(self.n_iter, self.err_fcn.__name__, err_temp))
 
+                if post_half_fcn is not None:
+                    post_half_fcn(self.C_, self.ST_, D, D_calc)
+
+                if post_iter_fcn is not None:
+                    post_iter_fcn(self.C_, self.ST_, D, D_calc)
+
             if self.n_iter >= self.max_iter:
                 print('Max iterations reached ({}).'.format(num+1))
-                self.max_iter_reached = True
+                self.exit_max_iter_reached = True
                 break
 
             self.n_iter = num + 1
@@ -314,6 +456,7 @@ class McrAls:
                 err_differ = _np.abs(self.err[-1] - self.err[-3])
                 if err_differ < _np.abs(self.tol_err_change):
                     print('Change in err below tol_err_change ({:.4e}). Exiting.'.format(err_differ))
+                    self.exit_tol_err_change = True
                     break
 
 
@@ -325,23 +468,25 @@ if __name__ == '__main__':  # pragma: no cover
     n_components = 2
 
     C_img = _np.zeros((M,N,n_components))
-    C_img[..., 0] = _np.dot(_np.ones((M, 1)), _np.linspace(0, 1, N)[None, :])
-    C_img[..., 1] = 1 - C_img[..., 0]
+    C_img[...,0] = _np.dot(_np.ones((M,1)), _np.linspace(0,1,N)[None,:])
+    C_img[...,1] = 1 - C_img[...,0]
 
-    ST_known = _np.zeros((n_components, P))
-    ST_known[0, 40:60] = 1
-    ST_known[1, 60:80] = 2
+    St_known = _np.zeros((n_components, P))
+    St_known[0,40:60] = 1
+    St_known[1,60:80] = 2
 
     C_known = C_img.reshape((-1, n_components))
 
-    D_known = _np.dot(C_known, ST_known)
+    D_known = _np.dot(C_known, St_known)
 
-    mcrals = McrAls(max_iter=50, tol_increase=100, tol_n_increase=10,
-                    st_constraints=[ConstraintNonneg()],
-                    c_constraints=[ConstraintNonneg(), ConstraintNorm()],
-                    tol_err_change=1e-30)
-    mcrals._saveall_st = True
-    mcrals._saveall_c = True
-    # mcrals.fit(D_known, ST=ST_known+1*_np.random.randn(*ST_known.shape), verbose=True)
-    mcrals.fit(D_known, C=C_known*0+1e-1, verbose=True)
-    
+    mcrar = McrAR()
+    mcrar.fit(D_known, ST=St_known)
+    # assert_equal(1, mcrar.n_iter_opt)
+    assert ((mcrar.D_ - D_known)**2).mean() < 1e-10
+    assert ((mcrar.D_opt_ - D_known)**2).mean() < 1e-10
+
+    mcrar = McrAR()
+    mcrar.fit(D_known, C=C_known)
+    # assert_equal(1, mcrar.n_iter_opt)
+    assert ((mcrar.D_ - D_known)**2).mean() < 1e-10
+    assert ((mcrar.D_opt_ - D_known)**2).mean() < 1e-10
