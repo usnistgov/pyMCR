@@ -116,3 +116,73 @@ regression regressor is imported from `scikit-learn <http://scikit-learn.org/sta
                   c_constraints=[ConstraintNonneg(), ConstraintNorm()])
 
     # Then use the fit method with initial guesses of ST or C.
+
+
+Single-Gaussian Distribution Spectral Fitting with LMFIT
+---------------------------------------------------------
+
+In this example, the `LMFIT Library <https://lmfit.github.io/lmfit-py/>`_ is used to perform Gaussian distribution fitting on each spectral component. 
+A longer example of this can be found in the ``Examples/NIST_JRes_Paper`` Jupyter Notebook.
+
+.. code:: python
+
+    import numpy as np
+
+    from lmfit.models import GaussianModel
+
+    from pymcr.mcr import McrAR
+    from pymcr.constraints import Constraint, ConstraintNorm
+    
+    class ConstraintSingleGauss(Constraint):
+        """
+        Perform a nonlinear least-squares fitting to enforce a Gaussian. 
+
+        Parameters
+        ----------
+        copy : bool
+            Make copy of input data, A; otherwise, overwrite (if mutable)
+
+        axis : int
+            Axis to perform fitting over
+
+        """
+        def __init__(self, copy=False, axis=-1):
+            """ A must be non-negative"""
+            self.copy = copy
+            self.axis = axis
+            
+        def transform(self, A):
+            """ Fit """
+            n_components = list(A.shape)
+            x = np.arange(n_components[self.axis])
+            n_components.pop(self.axis)
+            assert len(n_components)==1, "Input must be 2D"
+            n_components = n_components[0]
+            
+            A_fit = 0*A
+            
+            for num in range(n_components):
+                if (self.axis == -1) | (self.axis == 1):
+                    y = A[num, :]
+                else:
+                    y = A[:, num]
+                    
+                mod = GaussianModel()
+                pars = mod.guess(y, x=x)
+                out = mod.fit(y, pars, x=x)
+                
+                if (self.axis == -1) | (self.axis == 1):
+                    A_fit[num,:] = 1*out.best_fit
+                else:
+                    A_fit[:, num] = 1*out.best_fit
+                
+            if self.copy:
+                return A_fit
+            else:
+                A *= 0
+                A += A_fit
+                return A
+
+    mcrar = McrAR(max_iter=1000, st_regr='NNLS', c_regr='NNLS', 
+                  c_constraints=[ConstraintNorm()],
+                  st_constraints=[ConstraintSingleGauss()])
