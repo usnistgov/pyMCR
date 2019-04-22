@@ -135,8 +135,8 @@ Basic Usage
     mcrar.fit(D, C=initial_conc)
 
 
-Examples
---------
+Example Results
+----------------
 
 Command line and Jupyter notebook examples are provided in the ``Examples/`` folder.
 
