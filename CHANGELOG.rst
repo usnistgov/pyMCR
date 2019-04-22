@@ -8,10 +8,13 @@ This document records all notable changes to
 This project adheres to `PEP 440 -- Version Identification 
 and Dependency Specification <https://www.python.org/dev/peps/pep-0440/>`_.
 
-0.3.0
+0.3.0 (19-04-19)
 ------
 
--   Perform semi-learning assigning some input ST or C components to be fixed.
+-   Added local documentation that can be built with Sphinx.
+-   Website: https://pages.nist.gov/pyMCR
+-   Added Jupyter Notebook that generates images from forthcoming publication.
+-   Perform semi-learning assigning some input ST or C components to be static in fit method.
 -   **Constraints**
 
     -   Non-negative cumulative summation
