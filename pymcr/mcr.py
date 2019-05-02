@@ -6,6 +6,7 @@ from pymcr.regressors import OLS, NNLS
 from pymcr.constraints import ConstraintNonneg, ConstraintNorm
 from pymcr.metrics import mse
 
+# create logger for mcr.py and set default level
 _logger = _logging.getLogger(__name__)
 _logger.setLevel(_logging.INFO)
 
@@ -334,7 +335,7 @@ class McrAR:
                         err_str1 = 'Half-iterated {} times since ' \
                                    'min '.format(self.n_above_min)
                         err_str2 = 'error. Exiting.'
-                        _logger.error(err_str1 + err_str2)
+                        _logger.info(err_str1 + err_str2)
                         self.exit_tol_n_above_min = True
                         break
 
@@ -351,7 +352,7 @@ class McrAR:
                 else:
                     err_str1 = 'Error increased above fractional tol_increase' \
                                ' (C iter). Exiting'
-                    _logger.error(err_str1)
+                    _logger.info(err_str1)
                     self.exit_tol_increase = True
                     break
 
@@ -421,7 +422,7 @@ class McrAR:
                         err_str1 = 'Half-iterated {} times ' \
                                    'since min '.format(self.n_above_min)
                         err_str2 = 'error. Exiting.'
-                        _logger.error(err_str1 + err_str2)
+                        _logger.info(err_str1 + err_str2)
                         self.exit_tol_n_above_min = True
                         break
 
@@ -437,7 +438,7 @@ class McrAR:
                 else:
                     err_str1 = 'Error increased above fractional ' \
                                'tol_increase (ST iter). Exiting'
-                    _logger.error(err_str1)
+                    _logger.info(err_str1)
                     self.exit_tol_increase = True
                     break
 
@@ -481,8 +482,8 @@ class McrAR:
             if (self.tol_err_change is not None) & (len(self.err) > 2):
                 err_differ = _np.abs(self.err[-1] - self.err[-3])
                 if err_differ < _np.abs(self.tol_err_change):
-                    _logger.error('Change in err below tol_err_change '
-                                  '({:.4e}). Exiting.'.format(err_differ))
+                    _logger.info('Change in err below tol_err_change '
+                                 '({:.4e}). Exiting.'.format(err_differ))
                     self.exit_tol_err_change = True
                     break
 
