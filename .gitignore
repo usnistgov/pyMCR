@@ -6,8 +6,13 @@ __pycache__/
 #VS Code Files
 .vscode/
 
-# Image files saved from Jupyter
+# Image and data files saved from Jupyter
 *.eps
+*.xlsx
+*.pickle
+
+# Old Examples
+Examples/Old/
 
 # C extensions
 *.so
