@@ -1,9 +1,15 @@
 """ MCR Main Class for Computation"""
 import numpy as _np
+import logging as _logging
 
 from pymcr.regressors import OLS, NNLS
 from pymcr.constraints import ConstraintNonneg, ConstraintNorm
 from pymcr.metrics import mse
+
+# create logger for mcr.py and set default level
+_logger = _logging.getLogger(__name__)
+_logger.setLevel(_logging.INFO)
+
 
 class McrAR:
     """
@@ -46,7 +52,8 @@ class McrAR:
         allowed. E.g., setting to 1.0 means the err can double per iteration.
 
     tol_n_increase : int
-        Number of consecutive iterations for which the err attribute can increase
+        Number of consecutive iterations for which the err attribute can
+        increase
 
     tol_err_change : float
         If err changes less than tol_err_change, per iteration, break.
@@ -82,39 +89,44 @@ class McrAR:
         Iteration when optimal C and ST calculated
 
     exit_max_iter_reached : bool
-        Exited iterations due to maximum number of iteration reached (max_iter parameter)
+        Exited iterations due to maximum number of iteration reached (max_iter
+        parameter)
 
     exit_tol_increase : bool
-        Exited iterations due to maximum fractional increase in error metric (via err_fcn)
+        Exited iterations due to maximum fractional increase in error metric
+        (via err_fcn)
 
     exit_tol_n_increase : bool
-        Exited iterations due to maximum number of consecutive increases in error metric 
-        (via err fcn)
+        Exited iterations due to maximum number of consecutive increases in
+        error metric (via err fcn)
 
     exit_tol_err_change : bool
-        Exited iterations due to error metric change that is smaller than tol_err_change
+        Exited iterations due to error metric change that is smaller than
+        tol_err_change
 
     exit_tol_n_above_min : bool
-        Exited iterations due to maximum number of half-iterations for which the error
-        metric increased above the minimum error
+        Exited iterations due to maximum number of half-iterations for which
+        the error metric increased above the minimum error
 
     Notes
     -----
 
-    -   Built-in regressor classes (str can be used): OLS (ordinary least squares),
-    NNLS (non-negatively constrained least squares). See mcr.regressors.
+    -   Built-in regressor classes (str can be used): OLS (ordinary least
+        squares), NNLS (non-negatively constrained least squares). See
+        mcr.regressors.
     -   Built-in regressor methods can be given as a string to c_regr, st_regr;
-    though instantiating an imported class gives more flexibility.
+        though instantiating an imported class gives more flexibility.
     -   Setting any tolerance to None turns that check off
 
     """
+
     def __init__(self, c_regr=OLS(), st_regr=OLS(), c_fit_kwargs={},
                  st_fit_kwargs={}, c_constraints=[ConstraintNonneg()],
                  st_constraints=[ConstraintNonneg()],
                  max_iter=50, err_fcn=mse,
                  tol_increase=0.0, tol_n_increase=10, tol_err_change=None,
                  tol_n_above_min=10
-                ):
+                 ):
         """
         Multivariate Curve Resolution - Alternating Regression
         """
@@ -176,8 +188,8 @@ class McrAR:
         elif hasattr(mth, 'fit'):
             return mth
         else:
-            raise ValueError('Input class {} does not have a \'fit\' method'.format(mth))
-
+            raise ValueError('Input class '
+                             '{} does not have a \'fit\' method'.format(mth))
 
     @property
     def D_(self):
@@ -217,9 +229,8 @@ class McrAR:
         else:
             return ([val > x for x in self.err].count(True) == 0)
 
-
-    def fit(self, D, C=None, ST=None, st_fix=None, c_fix=None, c_first=True, verbose=False,
-            post_iter_fcn=None, post_half_fcn=None):
+    def fit(self, D, C=None, ST=None, st_fix=None, c_fix=None, c_first=True,
+            verbose=False, post_iter_fcn=None, post_half_fcn=None):
         """
         Perform MCR-AR. D = CS^T. Solve for C and S^T iteratively.
 
@@ -241,8 +252,8 @@ class McrAR:
             The concentration component numbers to keep fixed.
 
         c_first : bool
-            Calculate C first when both C and ST are provided. c_fix and st_fix must
-            also be provided in this circumstance.
+            Calculate C first when both C and ST are provided. c_fix and st_fix
+            must also be provided in this circumstance.
 
         verbose : bool
             Display iteration and per-least squares err results.
@@ -254,12 +265,17 @@ class McrAR:
             Function to perform after half-iteration
         """
 
+        if verbose:
+            _logger.setLevel(_logging.DEBUG)
+
         # Ensure only C or ST provided
         if (C is None) & (ST is None):
             raise TypeError('C or ST estimate must be provided')
-        elif (C is not None) & (ST is not None) & ((c_fix is None) | (st_fix is None)):
+        elif (C is not None) & (ST is not None) & ((c_fix is None) |
+                                                   (st_fix is None)):
             err_str1 = 'Only C or ST estimate must be provided, '
-            raise TypeError(err_str1 + 'unless c_fix and st_fix are both provided')
+            raise TypeError(
+                err_str1 + 'unless c_fix and st_fix are both provided')
         else:
             self.C_ = C
             self.ST_ = ST
@@ -293,7 +309,7 @@ class McrAR:
                 # Apply fixed C's
                 if c_fix:
                     C_temp[:, c_fix] = self.C_[:, c_fix]
-                
+
                 # Apply c-constraints
                 for constr in self.c_constraints:
                     C_temp = constr.transform(C_temp)
@@ -307,8 +323,8 @@ class McrAR:
                 err_temp = self.err_fcn(C_temp, self.ST_, D, D_calc)
 
                 if self._ismin_err(err_temp):
-                    self.C_opt_ = 1*C_temp
-                    self.ST_opt_ = 1*self.ST_
+                    self.C_opt_ = 1 * C_temp
+                    self.ST_opt_ = 1 * self.ST_
                     self.n_iter_opt = num + 1
                     self.n_above_min = 0
                 else:
@@ -316,25 +332,27 @@ class McrAR:
 
                 if self.tol_n_above_min is not None:
                     if self.n_above_min > self.tol_n_above_min:
-                        err_str1 = 'Half-iterated {} times since min '.format(self.n_above_min)
+                        err_str1 = 'Half-iterated {} times since ' \
+                                   'min '.format(self.n_above_min)
                         err_str2 = 'error. Exiting.'
-                        print(err_str1 + err_str2)
+                        _logger.info(err_str1 + err_str2)
                         self.exit_tol_n_above_min = True
                         break
 
                 # Calculate error fcn and check for tolerance increase
                 if len(self.err) == 0:
-                    self.err.append(1*err_temp)
-                    self.C_ = 1*C_temp
+                    self.err.append(1 * err_temp)
+                    self.C_ = 1 * C_temp
                 elif self.tol_increase is None:
-                    self.err.append(1*err_temp)
-                    self.C_ = 1*C_temp
-                elif (err_temp <= self.err[-1]*(1+self.tol_increase)):
-                    self.err.append(1*err_temp)
-                    self.C_ = 1*C_temp
+                    self.err.append(1 * err_temp)
+                    self.C_ = 1 * C_temp
+                elif err_temp <= self.err[-1] * (1 + self.tol_increase):
+                    self.err.append(1 * err_temp)
+                    self.C_ = 1 * C_temp
                 else:
-                    err_str1 = 'Error increased above fractional tol_increase (C iter). Exiting'
-                    print(err_str1)
+                    err_str1 = 'Error increased above fractional tol_increase' \
+                               ' (C iter). Exiting'
+                    _logger.info(err_str1)
                     self.exit_tol_increase = True
                     break
 
@@ -349,12 +367,16 @@ class McrAR:
                 if self.tol_n_increase is not None:
                     if self.n_increase > self.tol_n_increase:
                         out_str1 = 'Maximum error increases reached '
-                        print(out_str1 + '({}) (C iter). Exiting.'.format(self.tol_n_increase))
+                        _logger.info(
+                            out_str1 + '({}) (C iter). '
+                                       'Exiting.'.format(self.tol_n_increase))
                         self.exit_tol_n_increase = True
                         break
 
-                if verbose:
-                    print('Iter: {} (C)\t{}: {:.4e}'.format(self.n_iter, self.err_fcn.__name__, err_temp))
+                _logger.debug('Iter: {} (C)\t{}: '
+                              '{:.4e}'.format(self.n_iter,
+                                              self.err_fcn.__name__,
+                                              err_temp))
 
                 if post_half_fcn is not None:
                     post_half_fcn(self.C_, self.ST_, D, D_calc)
@@ -388,8 +410,8 @@ class McrAR:
 
                 # Calculate error fcn and check for tolerance increase
                 if self._ismin_err(err_temp):
-                    self.ST_opt_ = 1*ST_temp
-                    self.C_opt_ = 1*self.C_
+                    self.ST_opt_ = 1 * ST_temp
+                    self.C_opt_ = 1 * self.C_
                     self.n_iter_opt = num + 1
                     self.n_above_min = 0
                 else:
@@ -397,24 +419,26 @@ class McrAR:
 
                 if self.tol_n_above_min is not None:
                     if self.n_above_min > self.tol_n_above_min:
-                        err_str1 = 'Half-iterated {} times since min '.format(self.n_above_min)
+                        err_str1 = 'Half-iterated {} times ' \
+                                   'since min '.format(self.n_above_min)
                         err_str2 = 'error. Exiting.'
-                        print(err_str1 + err_str2)
+                        _logger.info(err_str1 + err_str2)
                         self.exit_tol_n_above_min = True
                         break
 
                 if len(self.err) == 0:
-                    self.err.append(1*err_temp)
-                    self.ST_ = 1*ST_temp
+                    self.err.append(1 * err_temp)
+                    self.ST_ = 1 * ST_temp
                 elif self.tol_increase is None:
-                    self.err.append(1*err_temp)
-                    self.ST_ = 1*ST_temp
-                elif (err_temp <= self.err[-1]*(1+self.tol_increase)):
-                    self.err.append(1*err_temp)
-                    self.ST_ = 1*ST_temp
+                    self.err.append(1 * err_temp)
+                    self.ST_ = 1 * ST_temp
+                elif err_temp <= self.err[-1] * (1 + self.tol_increase):
+                    self.err.append(1 * err_temp)
+                    self.ST_ = 1 * ST_temp
                 else:
-                    err_str1 = 'Error increased above fractional tol_increase (ST iter). Exiting'
-                    print(err_str1)
+                    err_str1 = 'Error increased above fractional ' \
+                               'tol_increase (ST iter). Exiting'
+                    _logger.info(err_str1)
                     self.exit_tol_increase = True
                     break
 
@@ -429,12 +453,15 @@ class McrAR:
                 if self.tol_n_increase is not None:
                     if self.n_increase > self.tol_n_increase:
                         out_str = 'Maximum error increases reached '
-                        print(out_str + '({}) (ST iter). Exiting.'.format(self.tol_n_increase))
+                        _logger.info(out_str +
+                                     '({}) (ST iter). '
+                                     'Exiting.'.format(self.tol_n_increase))
                         self.exit_tol_n_increase = True
                         break
 
-                if verbose:
-                    print('Iter: {} (ST)\t{}: {:.4e}'.format(self.n_iter, self.err_fcn.__name__, err_temp))
+                _logger.debug('Iter: {} (ST)\t{}: '
+                              '{:.4e}'.format(self.n_iter,
+                                              self.err_fcn.__name__, err_temp))
 
                 if post_half_fcn is not None:
                     post_half_fcn(self.C_, self.ST_, D, D_calc)
@@ -443,7 +470,7 @@ class McrAR:
                     post_iter_fcn(self.C_, self.ST_, D, D_calc)
 
             if self.n_iter >= self.max_iter:
-                print('Max iterations reached ({}).'.format(num+1))
+                _logger.info('Max iterations reached ({}).'.format(num + 1))
                 self.exit_max_iter_reached = True
                 break
 
@@ -452,10 +479,11 @@ class McrAR:
             # Check if err changed (absolute value), per iteration, less
             #  than abs(tol_err_change)
 
-            if ((self.tol_err_change is not None) & (len(self.err) > 2)):
+            if (self.tol_err_change is not None) & (len(self.err) > 2):
                 err_differ = _np.abs(self.err[-1] - self.err[-3])
                 if err_differ < _np.abs(self.tol_err_change):
-                    print('Change in err below tol_err_change ({:.4e}). Exiting.'.format(err_differ))
+                    _logger.info('Change in err below tol_err_change '
+                                 '({:.4e}). Exiting.'.format(err_differ))
                     self.exit_tol_err_change = True
                     break
 
@@ -467,13 +495,13 @@ if __name__ == '__main__':  # pragma: no cover
     P = 101
     n_components = 2
 
-    C_img = _np.zeros((M,N,n_components))
-    C_img[...,0] = _np.dot(_np.ones((M,1)), _np.linspace(0,1,N)[None,:])
-    C_img[...,1] = 1 - C_img[...,0]
+    C_img = _np.zeros((M, N, n_components))
+    C_img[..., 0] = _np.dot(_np.ones((M, 1)), _np.linspace(0, 1, N)[None, :])
+    C_img[..., 1] = 1 - C_img[..., 0]
 
     St_known = _np.zeros((n_components, P))
-    St_known[0,40:60] = 1
-    St_known[1,60:80] = 2
+    St_known[0, 40:60] = 1
+    St_known[1, 60:80] = 2
 
     C_known = C_img.reshape((-1, n_components))
 
@@ -482,11 +510,11 @@ if __name__ == '__main__':  # pragma: no cover
     mcrar = McrAR()
     mcrar.fit(D_known, ST=St_known)
     # assert_equal(1, mcrar.n_iter_opt)
-    assert ((mcrar.D_ - D_known)**2).mean() < 1e-10
-    assert ((mcrar.D_opt_ - D_known)**2).mean() < 1e-10
+    assert ((mcrar.D_ - D_known) ** 2).mean() < 1e-10
+    assert ((mcrar.D_opt_ - D_known) ** 2).mean() < 1e-10
 
     mcrar = McrAR()
     mcrar.fit(D_known, C=C_known)
     # assert_equal(1, mcrar.n_iter_opt)
-    assert ((mcrar.D_ - D_known)**2).mean() < 1e-10
-    assert ((mcrar.D_opt_ - D_known)**2).mean() < 1e-10
+    assert ((mcrar.D_ - D_known) ** 2).mean() < 1e-10
+    assert ((mcrar.D_opt_ - D_known) ** 2).mean() < 1e-10
