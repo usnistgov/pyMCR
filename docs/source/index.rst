@@ -1,15 +1,15 @@
 |
 |
 
-.. image:: https://travis-ci.com/CCampJr/pyMCR.svg?branch=master
+.. image:: https://travis-ci.com/CCampJr/pyMCR.svg?branch=0.3.X
     :alt: Travis CI Status
     :target: https://travis-ci.com/CCampJr/pyMCR
 
-.. image:: https://ci.appveyor.com/api/projects/status/ajld1bj7jo4oweio/branch/master?svg=true
+.. image:: https://ci.appveyor.com/api/projects/status/ajld1bj7jo4oweio/branch/0.3.X?svg=true
     :alt: AppVeyor CI Status
     :target: https://ci.appveyor.com/project/CCampJr/pyMCR
 
-.. image:: https://codecov.io/gh/CCampJr/pyMCR/branch/master/graph/badge.svg
+.. image:: https://codecov.io/gh/CCampJr/pyMCR/branch/0.3.X/graph/badge.svg
     :alt: Codecov
     :target: https://codecov.io/gh/CCampJr/pyMCR
 
@@ -29,11 +29,13 @@
 pyMCR: Multivariate Curve Resolution in Python
 ===============================================
 
+**GitHub Repository:** https://www.github.com/usnistgov/pyMCR
+
 pyMCR is a small package for performing multivariate curve resolution.
 Currently, it implements a simple alternating regression scheme (MCR-AR). The most common
 implementation is with ordinary least-squares regression, MCR-ALS.
 
-MCR with non0negativity constraints on both matrices is the same as nonnegative matrix factorization (NMF). Historically,
+MCR with non-negativity constraints on both matrices is the same as nonnegative matrix factorization (NMF). Historically,
 other names were used for MCR as well:
 
 -   Self modeling mixture analysis (SMMA)
