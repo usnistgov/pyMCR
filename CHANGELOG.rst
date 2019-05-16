@@ -11,6 +11,8 @@ and Dependency Specification <https://www.python.org/dev/peps/pep-0440/>`_.
 0.3.1
 ------
 
+- Moved from print() to logging
+- Removed Jupyter Notebook from forthcoming pub -- will return in the future with better examples
 - Minor fixes to CI
 
 

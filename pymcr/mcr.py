@@ -1,4 +1,6 @@
 """ MCR Main Class for Computation"""
+import sys as _sys
+
 import numpy as _np
 import logging as _logging
 
@@ -490,6 +492,7 @@ class McrAR:
 
 if __name__ == '__main__':  # pragma: no cover
 
+    _logging.basicConfig(stream=_sys.stdout)
     M = 21
     N = 21
     P = 101
@@ -508,7 +511,7 @@ if __name__ == '__main__':  # pragma: no cover
     D_known = _np.dot(C_known, St_known)
 
     mcrar = McrAR()
-    mcrar.fit(D_known, ST=St_known)
+    mcrar.fit(D_known, ST=St_known, verbose=True)
     # assert_equal(1, mcrar.n_iter_opt)
     assert ((mcrar.D_ - D_known) ** 2).mean() < 1e-10
     assert ((mcrar.D_opt_ - D_known) ** 2).mean() < 1e-10
