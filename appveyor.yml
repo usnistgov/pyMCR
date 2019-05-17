@@ -1,6 +1,8 @@
 # https://github.com/astropy/astropy/blob/master/appveyor.yml
 
-# branches:
+branches:
+    except:
+    - nist-pages
 #   only:
 #     - master
 #     - dev
