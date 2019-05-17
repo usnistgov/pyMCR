@@ -112,9 +112,45 @@ What it **does not** do:
     - In MATLAB: https://mcrals.wordpress.com/
     - In R: https://cran.r-project.org/web/packages/ALS/index.html
 
+Logging
+-------
+
+**New in pyMCR 0.3.1**, Python's native logging module is now used to capture messages. Though this is not as 
+convenient as print() statements, it has many advantages.
+
+- Logging module docs: https://docs.python.org/3.7/library/logging.html
+- Logging tutorial: https://docs.python.org/3.7/howto/logging.html#logging-basic-tutorial
+- Logging cookbook: https://docs.python.org/3.7/howto/logging-cookbook.html#logging-cookbook
+
+A simple example that prints simplified logging messages to the stdout (command line):
+
+.. code:: python
+
+    import sys
+    import logging
+    
+    # Need to import pymcr or mcr prior to setting up the logger
+    from pymcr.mcr import McrAR
+
+    logger = logging.getLogger('pymcr')
+    logger.setLevel(logging.DEBUG)
+
+    # StdOut is a "stream"; thus, StreamHandler
+    stdout_handler = logging.StreamHandler(stream=sys.stdout)
+
+    # Set the message format. Simple and removing log level or date info
+    stdout_format = logging.Formatter('%(message)s')  # Just a basic message akin to print statements
+    stdout_handler.setFormatter(stdout_format)
+
+    logger.addHandler(stdout_handler)
+
+    # Begin your code for pyMCR below
+    
 
 Basic Usage
 -----------
+
+See also :doc:`usage`.
 
 .. code:: python
 
