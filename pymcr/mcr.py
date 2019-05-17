@@ -87,6 +87,15 @@ class McrAR:
     n_iter : int
         Total number of iterations performed
 
+    n_features : int
+        Total number of features, e.g. spectral frequencies.
+
+    n_samples : int
+        Total number of samples (e.g., pixels)
+
+    n_targets : int
+        Total number of targets (e.g., pure analytes)
+
     n_iter_opt : int
         Iteration when optimal C and ST calculated
 
@@ -206,6 +215,7 @@ class McrAR:
 
     @property
     def n_features(self):
+        """ Number of features """
         if self.ST_ is not None:
             return self.ST_.shape[-1]
         else:
@@ -213,6 +223,7 @@ class McrAR:
 
     @property
     def n_targets(self):
+        """ Number of targets """
         if self.C_ is not None:
             return self.C_.shape[1]
         else:
@@ -220,6 +231,7 @@ class McrAR:
 
     @property
     def n_samples(self):
+        """ Number of samples """
         if self.C_ is not None:
             return self.C_.shape[0]
         else:
@@ -259,13 +271,22 @@ class McrAR:
             must also be provided in this circumstance.
 
         verbose : bool
-            Display iteration and per-least squares err results.
+            Log iteration and per-least squares err results. See Notes.
 
         post_iter_fcn : function
             Function to perform after each iteration
 
         post_half_fcn : function
             Function to perform after half-iteration
+
+        Notes
+        -----
+
+        -   pyMCR (>= 0.3.1) uses the native Python logging module
+            rather than print statements; thus, to see the messages, one will
+            need to log-to-file or stream to stdout. More info is available in
+            the docs.
+
         """
 
         if verbose:
