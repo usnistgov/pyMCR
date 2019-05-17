@@ -192,7 +192,7 @@ Semi-Learned Fitting
 ---------------------
 
 In semi-learned fitting, one has *a priori* knowledge about some or all of the spectra and/or concentration components. To use this information,
-the known entities are put into the initial guesses and the ``fix" parameter is used to tell the fit method the indices. Effectively the fit method
+the known entities are put into the initial guesses and the "fix" parameter is used to tell the fit method the indices. Effectively the fit method
 will **not** alter these values during iterations.
 
 
