@@ -5,7 +5,7 @@ import numpy as _np
 import logging as _logging
 
 from pymcr.regressors import OLS, NNLS
-from pymcr.constraints import ConstraintNonneg, ConstraintNorm
+from pymcr.constraints import ConstraintNonneg
 from pymcr.metrics import mse
 
 # create logger for mcr.py and set default level
@@ -23,12 +23,12 @@ class McrAR:
     Parameters
     ----------
     c_regr : str, class
-        Instantiated regression class (or string, see Notes) for calculating the
-        C matrix
+        Instantiated regression class (or string, see Notes) for calculating
+        the C matrix
 
     st_regr : str, class
-        Instantiated regression class (or string, see Notes) for calculating the
-        S^T matrix
+        Instantiated regression class (or string, see Notes) for calculating
+        the S^T matrix
 
     c_fit_kwargs : dict
         kwargs sent to c_regr.fit method
@@ -47,7 +47,7 @@ class McrAR:
 
     err_fcn : function
         Function to calculate error/differences after each least squares
-        calculaton (ie twice per iteration). Outputs to err attribute.
+        calculation (ie twice per iteration). Outputs to err attribute.
 
     tol_increase : float
         Factor increase to allow in err attribute. Set to 0 for no increase
@@ -177,8 +177,9 @@ class McrAR:
 
     def _check_regr(self, mth):
         """
-            Check regressor method. If accetible strings, instantiate and return
-            object. If instantiated class, make sure it has a fit attribute.
+            Check regressor method. If acceptable strings, instantiate and
+            return object. If instantiated class, make sure it has a fit
+            attribute.
         """
         if isinstance(mth, str):
             if mth.upper() == 'OLS':
@@ -352,8 +353,8 @@ class McrAR:
                     self.err.append(1 * err_temp)
                     self.C_ = 1 * C_temp
                 else:
-                    err_str1 = 'Error increased above fractional tol_increase' \
-                               ' (C iter). Exiting'
+                    err_str1 = 'Error increased above fractional' \
+                               'ctol_increase (C iter). Exiting'
                     _logger.info(err_str1)
                     self.exit_tol_increase = True
                     break
@@ -491,8 +492,13 @@ class McrAR:
 
 
 if __name__ == '__main__':  # pragma: no cover
+    # PyMCR uses the Logging facility to capture messaging
+    # Sends logging messages to stdout (prints them)
+    stdout_handler = _logging.StreamHandler(stream=_sys.stdout)
+    stdout_format = _logging.Formatter('%(message)s')
+    stdout_handler.setFormatter(stdout_format)
+    _logger.addHandler(stdout_handler)
 
-    _logging.basicConfig(stream=_sys.stdout)
     M = 21
     N = 21
     P = 101
