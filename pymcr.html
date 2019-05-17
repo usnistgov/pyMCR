@@ -13,7 +13,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="pymcr.tests package" href="pymcr.tests.html" />
@@ -174,7 +174,10 @@ or overwrite input depending on copy attribute.</p>
 <dt id="pymcr.constraints.ConstraintCumsumNonneg">
 <em class="property">class </em><code class="descclassname">pymcr.constraints.</code><code class="descname">ConstraintCumsumNonneg</code><span class="sig-paren">(</span><em>axis=-1</em>, <em>copy=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymcr/constraints.html#ConstraintCumsumNonneg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymcr.constraints.ConstraintCumsumNonneg" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#pymcr.constraints.Constraint" title="pymcr.constraints.Constraint"><code class="xref py py-class docutils literal notranslate"><span class="pre">pymcr.constraints.Constraint</span></code></a></p>
-<p>Cumulative-Summation non-negativity constraint. All negative entries made 0.</p>
+<dl class="docutils">
+<dt>Cumulative-Summation non-negativity constraint. All negative</dt>
+<dd>entries made 0.</dd>
+</dl>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -231,8 +234,8 @@ or overwrite input depending on copy attribute.</p>
 <dt id="pymcr.constraints.ConstraintZeroCumSumEndPoints">
 <em class="property">class </em><code class="descclassname">pymcr.constraints.</code><code class="descname">ConstraintZeroCumSumEndPoints</code><span class="sig-paren">(</span><em>nodes=None</em>, <em>axis=-1</em>, <em>copy=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymcr/constraints.html#ConstraintZeroCumSumEndPoints"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymcr.constraints.ConstraintZeroCumSumEndPoints" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#pymcr.constraints.Constraint" title="pymcr.constraints.Constraint"><code class="xref py py-class docutils literal notranslate"><span class="pre">pymcr.constraints.Constraint</span></code></a></p>
-<p>Enforce the endpoints of the cumsum (or the mean over a range) is near-zero.
-Note: this is an approximation.</p>
+<p>Enforce the endpoints of the cumsum (or the mean over a range) is
+near-zero. Note: this is an approximation.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -273,8 +276,11 @@ Note: this is an approximation.</p>
 <li><strong>axis</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – Which axis of input matrix A to apply normalization acorss.</li>
 <li><strong>fix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – Keep fix-axes as-is and normalize the remaining axes based on the
 residual of the fixed axes.</li>
-<li><strong>set_zeros_to_feature</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – Set all samples which sum-to-zero across axis to 1 for a particular feature
-(See Notes)</li>
+<li><strong>set_zeros_to_feature</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – <dl class="docutils">
+<dt>Set all samples which sum-to-zero across axis to 1 for a particular</dt>
+<dd>feature (See Notes)</dd>
+</dl>
+</li>
 <li><strong>copy</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – Make copy of input data, A; otherwise, overwrite (if mutable)</li>
 </ul>
 </td>
@@ -283,13 +289,16 @@ residual of the fixed axes.</li>
 </table>
 <p class="rubric">Notes</p>
 <ul class="simple">
-<li>For set_zeros_to_feature, assuming the data represents concentration with</li>
+<li><dl class="first docutils">
+<dt>For set_zeros_to_feature, assuming the data represents concentration</dt>
+<dd>with a matrix [n_samples, n_features] and the axis is across the
+features, for every sample that sums to 0 across axis, would be
+replaced with a vector [n_features] of zeros except at
+set_zeros_to_feature, which would equal 1. I.e., this pixel is
+now pure substance of index value set_zeros_to_feature.</dd>
+</dl>
+</li>
 </ul>
-<blockquote>
-<div>a matrix [n_samples, n_features] and the axis is across the features, for every
-sample that sums to 0 across axis, would be replaced with a vector [n_features]
-of zeros except at set_zeros_to_feature, which would equal 1. I.e., this pixel is
-now pure substance of index value set_zeros_to_feature.</div></blockquote>
 <dl class="attribute">
 <dt id="pymcr.constraints.ConstraintNorm._abc_impl">
 <code class="descname">_abc_impl</code><em class="property"> = &lt;_abc_data object&gt;</em><a class="headerlink" href="#pymcr.constraints.ConstraintNorm._abc_impl" title="Permalink to this definition">¶</a></dt>
@@ -479,8 +488,11 @@ features given, equal amounts of each feature (summing to 1) are used.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>axis</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – Which axis of input matrix A to apply normalization acorss.</li>
-<li><strong>feature</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.7)"><em>tuple</em></a>) – Set all samples which sum-to-zero across axis to fval for a particular feature (or fractional)
-for multiple features.</li>
+<li><strong>feature</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.7)"><em>tuple</em></a>) – <dl class="docutils">
+<dt>Set all samples which sum-to-zero across axis to fval for a particular</dt>
+<dd>feature (or fractional) for multiple features.</dd>
+</dl>
+</li>
 <li><strong>fval</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – Value of summation across axis of replacement vector.</li>
 <li><strong>copy</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – Make copy of input data, A; otherwise, overwrite (if mutable)</li>
 </ul>
@@ -529,11 +541,11 @@ calculated value)</li>
 </table>
 <p class="rubric">Notes</p>
 <ul class="simple">
-<li>This uses an SVD to calculate the vector normal to the plane that fits the input data. It</li>
-</ul>
-<p>assumes that the 3rd singular vector is the normal; thus, the x and y vectors for the data need
+<li>This uses an SVD to calculate the vector normal to the plane that fits the input data. It
+assumes that the 3rd singular vector is the normal; thus, the x and y vectors for the data need
 be larger than the variance of the input data. Scaler enables this by scaling the auto-generated
-x and y vectors to be much larger than the max-min of the input data</p>
+x and y vectors to be much larger than the max-min of the input data</li>
+</ul>
 <dl class="attribute">
 <dt id="pymcr.constraints.ConstraintPlanarize._abc_impl">
 <code class="descname">_abc_impl</code><em class="property"> = &lt;_abc_data object&gt;</em><a class="headerlink" href="#pymcr.constraints.ConstraintPlanarize._abc_impl" title="Permalink to this definition">¶</a></dt>
@@ -567,20 +579,21 @@ x and y vectors to be much larger than the max-min of the input data</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>c_regr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a><em>, </em><em>class</em>) – Instantiated regression class (or string, see Notes) for calculating the
-C matrix</li>
-<li><strong>st_regr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a><em>, </em><em>class</em>) – Instantiated regression class (or string, see Notes) for calculating the
-S^T matrix</li>
+<li><strong>c_regr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a><em>, </em><em>class</em>) – Instantiated regression class (or string, see Notes) for calculating
+the C matrix</li>
+<li><strong>st_regr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a><em>, </em><em>class</em>) – Instantiated regression class (or string, see Notes) for calculating
+the S^T matrix</li>
 <li><strong>c_fit_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – kwargs sent to c_regr.fit method</li>
 <li><strong>st_fit_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – kwargs sent to st_regr.fit method</li>
 <li><strong>c_constraints</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – List of constraints applied to calculation of C matrix</li>
 <li><strong>st_constraints</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – List of constraints applied to calculation of S^T matrix</li>
 <li><strong>max_iter</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – Maximum number of iterations. One iteration calculates both C and S^T</li>
 <li><strong>err_fcn</strong> (<em>function</em>) – Function to calculate error/differences after each least squares
-calculaton (ie twice per iteration). Outputs to err attribute.</li>
+calculation (ie twice per iteration). Outputs to err attribute.</li>
 <li><strong>tol_increase</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – Factor increase to allow in err attribute. Set to 0 for no increase
 allowed. E.g., setting to 1.0 means the err can double per iteration.</li>
-<li><strong>tol_n_increase</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – Number of consecutive iterations for which the err attribute can increase</li>
+<li><strong>tol_n_increase</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – Number of consecutive iterations for which the err attribute can
+increase</li>
 <li><strong>tol_err_change</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – If err changes less than tol_err_change, per iteration, break.</li>
 <li><strong>tol_n_above_min</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – Number of half-iterations that can be performed without reaching a
 new error-minimum</li>
@@ -677,6 +690,48 @@ failure)</p>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="pymcr.mcr.McrAR.n_features">
+<code class="descname">n_features</code><a class="headerlink" href="#pymcr.mcr.McrAR.n_features" title="Permalink to this definition">¶</a></dt>
+<dd><p>Total number of features, e.g. spectral frequencies.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)">int</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pymcr.mcr.McrAR.n_samples">
+<code class="descname">n_samples</code><a class="headerlink" href="#pymcr.mcr.McrAR.n_samples" title="Permalink to this definition">¶</a></dt>
+<dd><p>Total number of samples (e.g., pixels)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)">int</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pymcr.mcr.McrAR.n_targets">
+<code class="descname">n_targets</code><a class="headerlink" href="#pymcr.mcr.McrAR.n_targets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Total number of targets (e.g., pure analytes)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)">int</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="pymcr.mcr.McrAR.n_iter_opt">
 <code class="descname">n_iter_opt</code><a class="headerlink" href="#pymcr.mcr.McrAR.n_iter_opt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Iteration when optimal C and ST calculated</p>
@@ -693,7 +748,8 @@ failure)</p>
 <dl class="attribute">
 <dt id="pymcr.mcr.McrAR.exit_max_iter_reached">
 <code class="descname">exit_max_iter_reached</code><a class="headerlink" href="#pymcr.mcr.McrAR.exit_max_iter_reached" title="Permalink to this definition">¶</a></dt>
-<dd><p>Exited iterations due to maximum number of iteration reached (max_iter parameter)</p>
+<dd><p>Exited iterations due to maximum number of iteration reached (max_iter
+parameter)</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -707,7 +763,8 @@ failure)</p>
 <dl class="attribute">
 <dt id="pymcr.mcr.McrAR.exit_tol_increase">
 <code class="descname">exit_tol_increase</code><a class="headerlink" href="#pymcr.mcr.McrAR.exit_tol_increase" title="Permalink to this definition">¶</a></dt>
-<dd><p>Exited iterations due to maximum fractional increase in error metric (via err_fcn)</p>
+<dd><p>Exited iterations due to maximum fractional increase in error metric
+(via err_fcn)</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -721,8 +778,8 @@ failure)</p>
 <dl class="attribute">
 <dt id="pymcr.mcr.McrAR.exit_tol_n_increase">
 <code class="descname">exit_tol_n_increase</code><a class="headerlink" href="#pymcr.mcr.McrAR.exit_tol_n_increase" title="Permalink to this definition">¶</a></dt>
-<dd><p>Exited iterations due to maximum number of consecutive increases in error metric
-(via err fcn)</p>
+<dd><p>Exited iterations due to maximum number of consecutive increases in
+error metric (via err fcn)</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -736,7 +793,8 @@ failure)</p>
 <dl class="attribute">
 <dt id="pymcr.mcr.McrAR.exit_tol_err_change">
 <code class="descname">exit_tol_err_change</code><a class="headerlink" href="#pymcr.mcr.McrAR.exit_tol_err_change" title="Permalink to this definition">¶</a></dt>
-<dd><p>Exited iterations due to error metric change that is smaller than tol_err_change</p>
+<dd><p>Exited iterations due to error metric change that is smaller than
+tol_err_change</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -750,8 +808,8 @@ failure)</p>
 <dl class="attribute">
 <dt id="pymcr.mcr.McrAR.exit_tol_n_above_min">
 <code class="descname">exit_tol_n_above_min</code><a class="headerlink" href="#pymcr.mcr.McrAR.exit_tol_n_above_min" title="Permalink to this definition">¶</a></dt>
-<dd><p>Exited iterations due to maximum number of half-iterations for which the error
-metric increased above the minimum error</p>
+<dd><p>Exited iterations due to maximum number of half-iterations for which
+the error metric increased above the minimum error</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -764,12 +822,13 @@ metric increased above the minimum error</p>
 
 <p class="rubric">Notes</p>
 <ul class="simple">
-<li>Built-in regressor classes (str can be used): OLS (ordinary least squares),</li>
+<li>Built-in regressor classes (str can be used): OLS (ordinary least
+squares), NNLS (non-negatively constrained least squares). See
+mcr.regressors.</li>
+<li>Built-in regressor methods can be given as a string to c_regr, st_regr;
+though instantiating an imported class gives more flexibility.</li>
+<li>Setting any tolerance to None turns that check off</li>
 </ul>
-<p>NNLS (non-negatively constrained least squares). See mcr.regressors.
--   Built-in regressor methods can be given as a string to c_regr, st_regr;
-though instantiating an imported class gives more flexibility.
--   Setting any tolerance to None turns that check off</p>
 <dl class="attribute">
 <dt id="pymcr.mcr.McrAR.D_">
 <code class="descname">D_</code><a class="headerlink" href="#pymcr.mcr.McrAR.D_" title="Permalink to this definition">¶</a></dt>
@@ -785,8 +844,9 @@ though instantiating an imported class gives more flexibility.
 <dl class="method">
 <dt id="pymcr.mcr.McrAR._check_regr">
 <code class="descname">_check_regr</code><span class="sig-paren">(</span><em>mth</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymcr/mcr.html#McrAR._check_regr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymcr.mcr.McrAR._check_regr" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check regressor method. If accetible strings, instantiate and return
-object. If instantiated class, make sure it has a fit attribute.</p>
+<dd><p>Check regressor method. If acceptable strings, instantiate and
+return object. If instantiated class, make sure it has a fit
+attribute.</p>
 </dd></dl>
 
 <dl class="method">
@@ -809,9 +869,9 @@ object. If instantiated class, make sure it has a fit attribute.</p>
 <li><strong>ST</strong> (<em>ndarray</em>) – Initial S^T matrix estimate. Only provide initial C OR S^T.</li>
 <li><strong>st_fix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – The spectral component numbers to keep fixed.</li>
 <li><strong>c_fix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – The concentration component numbers to keep fixed.</li>
-<li><strong>c_first</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – Calculate C first when both C and ST are provided. c_fix and st_fix must
-also be provided in this circumstance.</li>
-<li><strong>verbose</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – Display iteration and per-least squares err results.</li>
+<li><strong>c_first</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – Calculate C first when both C and ST are provided. c_fix and st_fix
+must also be provided in this circumstance.</li>
+<li><strong>verbose</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – Log iteration and per-least squares err results. See Notes.</li>
 <li><strong>post_iter_fcn</strong> (<em>function</em>) – Function to perform after each iteration</li>
 <li><strong>post_half_fcn</strong> (<em>function</em>) – Function to perform after half-iteration</li>
 </ul>
@@ -819,22 +879,32 @@ also be provided in this circumstance.</li>
 </tr>
 </tbody>
 </table>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li>pyMCR (&gt;= 0.3.1) uses the native Python logging module
+rather than print statements; thus, to see the messages, one will
+need to log-to-file or stream to stdout. More info is available in
+the docs.</li>
+</ul>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="pymcr.mcr.McrAR.n_features">
-<code class="descname">n_features</code><a class="headerlink" href="#pymcr.mcr.McrAR.n_features" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt>
+<code class="descname">n_features</code></dt>
+<dd><p>Number of features</p>
+</dd></dl>
 
 <dl class="attribute">
-<dt id="pymcr.mcr.McrAR.n_samples">
-<code class="descname">n_samples</code><a class="headerlink" href="#pymcr.mcr.McrAR.n_samples" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt>
+<code class="descname">n_samples</code></dt>
+<dd><p>Number of samples</p>
+</dd></dl>
 
 <dl class="attribute">
-<dt id="pymcr.mcr.McrAR.n_targets">
-<code class="descname">n_targets</code><a class="headerlink" href="#pymcr.mcr.McrAR.n_targets" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt>
+<code class="descname">n_targets</code></dt>
+<dd><p>Number of targets</p>
+</dd></dl>
 
 </dd></dl>
 

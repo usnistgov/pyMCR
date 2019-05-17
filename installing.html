@@ -13,7 +13,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Usage and Examples" href="usage.html" />
@@ -76,14 +76,14 @@ $(document).ready(function(){
 <span id="installing"></span><h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="dependencies">
 <h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h2>
-<p>Note: the versions are those that have been tested, but older/newer
-versions may also work.</p>
+<p>Note: the versions are those that have been tested (at some point),
+but older/newer versions may also work.</p>
 <ul class="simple">
-<li>Python 3.4, 3.5, 3.6 (3.4.4, 3.5.2, 3.6.1), 3.7.1</li>
-<li>numpy (1.9.3, 1.11.1, 1.11.3+mkl, 1.14.6)</li>
+<li>Python (3.4, 3.5, 3.6, 3.7)</li>
+<li>numpy (1.9.3, 1.11.1, 1.11.3+mkl, 1.14.6, 1.16.2)</li>
 <li>scipy (1.0.0, 1.0.1, 1.1.0)</li>
 <li>sklearn, optional (0.20)</li>
-<li>Sphinx (1.4.5, 1.5.2, 1.6.4) – only for documentation building</li>
+<li>Sphinx, optional (1.4.5, 1.5.2, 1.6.4, 1.8.4) – only for documentation building</li>
 </ul>
 </div>
 <div class="section" id="notes-and-known-issues">
@@ -121,12 +121,9 @@ versions may also work.</p>
 <div class="section" id="re-building-documentation">
 <h3>(Re)-Building documentation<a class="headerlink" href="#re-building-documentation" title="Permalink to this headline">¶</a></h3>
 <p>The documentation was built using Sphinx.:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Build all APIs</span>
-<span class="c1"># From within the docs/ directory</span>
-<span class="n">sphinx</span><span class="o">-</span><span class="n">apidoc</span> <span class="o">-</span><span class="n">o</span> <span class="o">./</span><span class="n">source</span><span class="o">/</span> <span class="o">../</span><span class="n">pymcr</span><span class="o">/</span>
-
-<span class="c1"># Build API w/o pyuic5-generated files</span>
-<span class="n">sphinx</span><span class="o">-</span><span class="n">apidoc</span> <span class="o">-</span><span class="n">f</span> <span class="o">-</span><span class="n">o</span> <span class="o">.</span>\<span class="n">source</span>\ <span class="o">..</span>\<span class="n">pymcr</span>\
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># From within the docs/ directory (Note: on Windows sphinx-apidoc.exe)</span>
+<span class="c1"># Exclude setup.py from doc-build</span>
+<span class="n">sphinx</span><span class="o">-</span><span class="n">apidoc</span> <span class="o">-</span><span class="n">f</span> <span class="o">-</span><span class="n">o</span> <span class="o">./</span><span class="n">source</span><span class="o">/</span> <span class="o">..</span> <span class="o">../</span><span class="n">setup</span><span class="o">.</span><span class="n">py</span>
 
 <span class="n">make</span> <span class="n">html</span>
 <span class="c1"># On Windows</span>

@@ -13,7 +13,7 @@
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
 <link rel="stylesheet" href="https://pages.nist.gov/nist-header-footer/css/nist-combined.css">
@@ -67,11 +67,19 @@ $(document).ready(function(){
             
   <h1>Source code for pymcr.mcr</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot; MCR Main Class for Computation&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">sys</span> <span class="k">as</span> <span class="nn">_sys</span>
+
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">_np</span>
+<span class="kn">import</span> <span class="nn">logging</span> <span class="k">as</span> <span class="nn">_logging</span>
 
 <span class="kn">from</span> <span class="nn">pymcr.regressors</span> <span class="k">import</span> <span class="n">OLS</span><span class="p">,</span> <span class="n">NNLS</span>
-<span class="kn">from</span> <span class="nn">pymcr.constraints</span> <span class="k">import</span> <span class="n">ConstraintNonneg</span><span class="p">,</span> <span class="n">ConstraintNorm</span>
+<span class="kn">from</span> <span class="nn">pymcr.constraints</span> <span class="k">import</span> <span class="n">ConstraintNonneg</span>
 <span class="kn">from</span> <span class="nn">pymcr.metrics</span> <span class="k">import</span> <span class="n">mse</span>
+
+<span class="c1"># create logger for mcr.py and set default level</span>
+<span class="n">_logger</span> <span class="o">=</span> <span class="n">_logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+<span class="n">_logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">_logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+
 
 <div class="viewcode-block" id="McrAR"><a class="viewcode-back" href="../../pymcr.html#pymcr.mcr.McrAR">[docs]</a><span class="k">class</span> <span class="nc">McrAR</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -83,12 +91,12 @@ $(document).ready(function(){
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    c_regr : str, class</span>
-<span class="sd">        Instantiated regression class (or string, see Notes) for calculating the</span>
-<span class="sd">        C matrix</span>
+<span class="sd">        Instantiated regression class (or string, see Notes) for calculating</span>
+<span class="sd">        the C matrix</span>
 
 <span class="sd">    st_regr : str, class</span>
-<span class="sd">        Instantiated regression class (or string, see Notes) for calculating the</span>
-<span class="sd">        S^T matrix</span>
+<span class="sd">        Instantiated regression class (or string, see Notes) for calculating</span>
+<span class="sd">        the S^T matrix</span>
 
 <span class="sd">    c_fit_kwargs : dict</span>
 <span class="sd">        kwargs sent to c_regr.fit method</span>
@@ -107,14 +115,15 @@ $(document).ready(function(){
 
 <span class="sd">    err_fcn : function</span>
 <span class="sd">        Function to calculate error/differences after each least squares</span>
-<span class="sd">        calculaton (ie twice per iteration). Outputs to err attribute.</span>
+<span class="sd">        calculation (ie twice per iteration). Outputs to err attribute.</span>
 
 <span class="sd">    tol_increase : float</span>
 <span class="sd">        Factor increase to allow in err attribute. Set to 0 for no increase</span>
 <span class="sd">        allowed. E.g., setting to 1.0 means the err can double per iteration.</span>
 
 <span class="sd">    tol_n_increase : int</span>
-<span class="sd">        Number of consecutive iterations for which the err attribute can increase</span>
+<span class="sd">        Number of consecutive iterations for which the err attribute can</span>
+<span class="sd">        increase</span>
 
 <span class="sd">    tol_err_change : float</span>
 <span class="sd">        If err changes less than tol_err_change, per iteration, break.</span>
@@ -146,43 +155,57 @@ $(document).ready(function(){
 <span class="sd">    n_iter : int</span>
 <span class="sd">        Total number of iterations performed</span>
 
+<span class="sd">    n_features : int</span>
+<span class="sd">        Total number of features, e.g. spectral frequencies.</span>
+
+<span class="sd">    n_samples : int</span>
+<span class="sd">        Total number of samples (e.g., pixels)</span>
+
+<span class="sd">    n_targets : int</span>
+<span class="sd">        Total number of targets (e.g., pure analytes)</span>
+
 <span class="sd">    n_iter_opt : int</span>
 <span class="sd">        Iteration when optimal C and ST calculated</span>
 
 <span class="sd">    exit_max_iter_reached : bool</span>
-<span class="sd">        Exited iterations due to maximum number of iteration reached (max_iter parameter)</span>
+<span class="sd">        Exited iterations due to maximum number of iteration reached (max_iter</span>
+<span class="sd">        parameter)</span>
 
 <span class="sd">    exit_tol_increase : bool</span>
-<span class="sd">        Exited iterations due to maximum fractional increase in error metric (via err_fcn)</span>
+<span class="sd">        Exited iterations due to maximum fractional increase in error metric</span>
+<span class="sd">        (via err_fcn)</span>
 
 <span class="sd">    exit_tol_n_increase : bool</span>
-<span class="sd">        Exited iterations due to maximum number of consecutive increases in error metric </span>
-<span class="sd">        (via err fcn)</span>
+<span class="sd">        Exited iterations due to maximum number of consecutive increases in</span>
+<span class="sd">        error metric (via err fcn)</span>
 
 <span class="sd">    exit_tol_err_change : bool</span>
-<span class="sd">        Exited iterations due to error metric change that is smaller than tol_err_change</span>
+<span class="sd">        Exited iterations due to error metric change that is smaller than</span>
+<span class="sd">        tol_err_change</span>
 
 <span class="sd">    exit_tol_n_above_min : bool</span>
-<span class="sd">        Exited iterations due to maximum number of half-iterations for which the error</span>
-<span class="sd">        metric increased above the minimum error</span>
+<span class="sd">        Exited iterations due to maximum number of half-iterations for which</span>
+<span class="sd">        the error metric increased above the minimum error</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
 
-<span class="sd">    -   Built-in regressor classes (str can be used): OLS (ordinary least squares),</span>
-<span class="sd">    NNLS (non-negatively constrained least squares). See mcr.regressors.</span>
+<span class="sd">    -   Built-in regressor classes (str can be used): OLS (ordinary least</span>
+<span class="sd">        squares), NNLS (non-negatively constrained least squares). See</span>
+<span class="sd">        mcr.regressors.</span>
 <span class="sd">    -   Built-in regressor methods can be given as a string to c_regr, st_regr;</span>
-<span class="sd">    though instantiating an imported class gives more flexibility.</span>
+<span class="sd">        though instantiating an imported class gives more flexibility.</span>
 <span class="sd">    -   Setting any tolerance to None turns that check off</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">c_regr</span><span class="o">=</span><span class="n">OLS</span><span class="p">(),</span> <span class="n">st_regr</span><span class="o">=</span><span class="n">OLS</span><span class="p">(),</span> <span class="n">c_fit_kwargs</span><span class="o">=</span><span class="p">{},</span>
                  <span class="n">st_fit_kwargs</span><span class="o">=</span><span class="p">{},</span> <span class="n">c_constraints</span><span class="o">=</span><span class="p">[</span><span class="n">ConstraintNonneg</span><span class="p">()],</span>
                  <span class="n">st_constraints</span><span class="o">=</span><span class="p">[</span><span class="n">ConstraintNonneg</span><span class="p">()],</span>
                  <span class="n">max_iter</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">err_fcn</span><span class="o">=</span><span class="n">mse</span><span class="p">,</span>
                  <span class="n">tol_increase</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">tol_n_increase</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">tol_err_change</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">tol_n_above_min</span><span class="o">=</span><span class="mi">10</span>
-                <span class="p">):</span>
+                 <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Multivariate Curve Resolution - Alternating Regression</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -231,8 +254,9 @@ $(document).ready(function(){
 
 <div class="viewcode-block" id="McrAR._check_regr"><a class="viewcode-back" href="../../pymcr.html#pymcr.mcr.McrAR._check_regr">[docs]</a>    <span class="k">def</span> <span class="nf">_check_regr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mth</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Check regressor method. If accetible strings, instantiate and return</span>
-<span class="sd">            object. If instantiated class, make sure it has a fit attribute.</span>
+<span class="sd">            Check regressor method. If acceptable strings, instantiate and</span>
+<span class="sd">            return object. If instantiated class, make sure it has a fit</span>
+<span class="sd">            attribute.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mth</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">mth</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;OLS&#39;</span><span class="p">:</span>
@@ -244,8 +268,8 @@ $(document).ready(function(){
         <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">mth</span><span class="p">,</span> <span class="s1">&#39;fit&#39;</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">mth</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Input class </span><span class="si">{}</span><span class="s1"> does not have a </span><span class="se">\&#39;</span><span class="s1">fit</span><span class="se">\&#39;</span><span class="s1"> method&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mth</span><span class="p">))</span></div>
-
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Input class &#39;</span>
+                             <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> does not have a </span><span class="se">\&#39;</span><span class="s1">fit</span><span class="se">\&#39;</span><span class="s1"> method&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mth</span><span class="p">))</span></div>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">D_</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -259,6 +283,7 @@ $(document).ready(function(){
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">n_features</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Number of features &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ST_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ST_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
@@ -266,6 +291,7 @@ $(document).ready(function(){
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">n_targets</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Number of targets &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">C_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">C_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
@@ -273,6 +299,7 @@ $(document).ready(function(){
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">n_samples</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Number of samples &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">C_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">C_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
@@ -285,9 +312,8 @@ $(document).ready(function(){
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">([</span><span class="n">val</span> <span class="o">&gt;</span> <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">err</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="McrAR.fit"><a class="viewcode-back" href="../../pymcr.html#pymcr.mcr.McrAR.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">D</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ST</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">st_fix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">c_fix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">c_first</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-            <span class="n">post_iter_fcn</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">post_half_fcn</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="McrAR.fit"><a class="viewcode-back" href="../../pymcr.html#pymcr.mcr.McrAR.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">D</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ST</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">st_fix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">c_fix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">c_first</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">post_iter_fcn</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">post_half_fcn</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Perform MCR-AR. D = CS^T. Solve for C and S^T iteratively.</span>
 
@@ -309,25 +335,39 @@ $(document).ready(function(){
 <span class="sd">            The concentration component numbers to keep fixed.</span>
 
 <span class="sd">        c_first : bool</span>
-<span class="sd">            Calculate C first when both C and ST are provided. c_fix and st_fix must</span>
-<span class="sd">            also be provided in this circumstance.</span>
+<span class="sd">            Calculate C first when both C and ST are provided. c_fix and st_fix</span>
+<span class="sd">            must also be provided in this circumstance.</span>
 
 <span class="sd">        verbose : bool</span>
-<span class="sd">            Display iteration and per-least squares err results.</span>
+<span class="sd">            Log iteration and per-least squares err results. See Notes.</span>
 
 <span class="sd">        post_iter_fcn : function</span>
 <span class="sd">            Function to perform after each iteration</span>
 
 <span class="sd">        post_half_fcn : function</span>
 <span class="sd">            Function to perform after half-iteration</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+
+<span class="sd">        -   pyMCR (&gt;= 0.3.1) uses the native Python logging module</span>
+<span class="sd">            rather than print statements; thus, to see the messages, one will</span>
+<span class="sd">            need to log-to-file or stream to stdout. More info is available in</span>
+<span class="sd">            the docs.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="n">_logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">_logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
 
         <span class="c1"># Ensure only C or ST provided</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">C</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">ST</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;C or ST estimate must be provided&#39;</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="p">(</span><span class="n">C</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">ST</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">((</span><span class="n">c_fix</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">st_fix</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)):</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">C</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">ST</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">((</span><span class="n">c_fix</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="o">|</span>
+                                                   <span class="p">(</span><span class="n">st_fix</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)):</span>
             <span class="n">err_str1</span> <span class="o">=</span> <span class="s1">&#39;Only C or ST estimate must be provided, &#39;</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">err_str1</span> <span class="o">+</span> <span class="s1">&#39;unless c_fix and st_fix are both provided&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="n">err_str1</span> <span class="o">+</span> <span class="s1">&#39;unless c_fix and st_fix are both provided&#39;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">C_</span> <span class="o">=</span> <span class="n">C</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">ST_</span> <span class="o">=</span> <span class="n">ST</span>
@@ -361,7 +401,7 @@ $(document).ready(function(){
                 <span class="c1"># Apply fixed C&#39;s</span>
                 <span class="k">if</span> <span class="n">c_fix</span><span class="p">:</span>
                     <span class="n">C_temp</span><span class="p">[:,</span> <span class="n">c_fix</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">C_</span><span class="p">[:,</span> <span class="n">c_fix</span><span class="p">]</span>
-                
+
                 <span class="c1"># Apply c-constraints</span>
                 <span class="k">for</span> <span class="n">constr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">c_constraints</span><span class="p">:</span>
                     <span class="n">C_temp</span> <span class="o">=</span> <span class="n">constr</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">C_temp</span><span class="p">)</span>
@@ -375,8 +415,8 @@ $(document).ready(function(){
                 <span class="n">err_temp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">err_fcn</span><span class="p">(</span><span class="n">C_temp</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ST_</span><span class="p">,</span> <span class="n">D</span><span class="p">,</span> <span class="n">D_calc</span><span class="p">)</span>
 
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ismin_err</span><span class="p">(</span><span class="n">err_temp</span><span class="p">):</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">C_opt_</span> <span class="o">=</span> <span class="mi">1</span><span class="o">*</span><span class="n">C_temp</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">ST_opt_</span> <span class="o">=</span> <span class="mi">1</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">ST_</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">C_opt_</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">*</span> <span class="n">C_temp</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">ST_opt_</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">ST_</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">n_iter_opt</span> <span class="o">=</span> <span class="n">num</span> <span class="o">+</span> <span class="mi">1</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">n_above_min</span> <span class="o">=</span> <span class="mi">0</span>
                 <span class="k">else</span><span class="p">:</span>
@@ -384,25 +424,27 @@ $(document).ready(function(){
 
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tol_n_above_min</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_above_min</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">tol_n_above_min</span><span class="p">:</span>
-                        <span class="n">err_str1</span> <span class="o">=</span> <span class="s1">&#39;Half-iterated </span><span class="si">{}</span><span class="s1"> times since min &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_above_min</span><span class="p">)</span>
+                        <span class="n">err_str1</span> <span class="o">=</span> <span class="s1">&#39;Half-iterated </span><span class="si">{}</span><span class="s1"> times since &#39;</span> \
+                                   <span class="s1">&#39;min &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_above_min</span><span class="p">)</span>
                         <span class="n">err_str2</span> <span class="o">=</span> <span class="s1">&#39;error. Exiting.&#39;</span>
-                        <span class="nb">print</span><span class="p">(</span><span class="n">err_str1</span> <span class="o">+</span> <span class="n">err_str2</span><span class="p">)</span>
+                        <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">err_str1</span> <span class="o">+</span> <span class="n">err_str2</span><span class="p">)</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">exit_tol_n_above_min</span> <span class="o">=</span> <span class="kc">True</span>
                         <span class="k">break</span>
 
                 <span class="c1"># Calculate error fcn and check for tolerance increase</span>
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">err</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">err</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1</span><span class="o">*</span><span class="n">err_temp</span><span class="p">)</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">C_</span> <span class="o">=</span> <span class="mi">1</span><span class="o">*</span><span class="n">C_temp</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">err</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1</span> <span class="o">*</span> <span class="n">err_temp</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">C_</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">*</span> <span class="n">C_temp</span>
                 <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">tol_increase</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">err</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1</span><span class="o">*</span><span class="n">err_temp</span><span class="p">)</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">C_</span> <span class="o">=</span> <span class="mi">1</span><span class="o">*</span><span class="n">C_temp</span>
-                <span class="k">elif</span> <span class="p">(</span><span class="n">err_temp</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">err</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">tol_increase</span><span class="p">)):</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">err</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1</span><span class="o">*</span><span class="n">err_temp</span><span class="p">)</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">C_</span> <span class="o">=</span> <span class="mi">1</span><span class="o">*</span><span class="n">C_temp</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">err</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1</span> <span class="o">*</span> <span class="n">err_temp</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">C_</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">*</span> <span class="n">C_temp</span>
+                <span class="k">elif</span> <span class="n">err_temp</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">err</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">tol_increase</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">err</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1</span> <span class="o">*</span> <span class="n">err_temp</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">C_</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">*</span> <span class="n">C_temp</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">err_str1</span> <span class="o">=</span> <span class="s1">&#39;Error increased above fractional tol_increase (C iter). Exiting&#39;</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="n">err_str1</span><span class="p">)</span>
+                    <span class="n">err_str1</span> <span class="o">=</span> <span class="s1">&#39;Error increased above fractional&#39;</span> \
+                               <span class="s1">&#39;ctol_increase (C iter). Exiting&#39;</span>
+                    <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">err_str1</span><span class="p">)</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">exit_tol_increase</span> <span class="o">=</span> <span class="kc">True</span>
                     <span class="k">break</span>
 
@@ -417,12 +459,16 @@ $(document).ready(function(){
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tol_n_increase</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_increase</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">tol_n_increase</span><span class="p">:</span>
                         <span class="n">out_str1</span> <span class="o">=</span> <span class="s1">&#39;Maximum error increases reached &#39;</span>
-                        <span class="nb">print</span><span class="p">(</span><span class="n">out_str1</span> <span class="o">+</span> <span class="s1">&#39;(</span><span class="si">{}</span><span class="s1">) (C iter). Exiting.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tol_n_increase</span><span class="p">))</span>
+                        <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                            <span class="n">out_str1</span> <span class="o">+</span> <span class="s1">&#39;(</span><span class="si">{}</span><span class="s1">) (C iter). &#39;</span>
+                                       <span class="s1">&#39;Exiting.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tol_n_increase</span><span class="p">))</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">exit_tol_n_increase</span> <span class="o">=</span> <span class="kc">True</span>
                         <span class="k">break</span>
 
-                <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Iter: </span><span class="si">{}</span><span class="s1"> (C)</span><span class="se">\t</span><span class="si">{}</span><span class="s1">: </span><span class="si">{:.4e}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_iter</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">err_fcn</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">err_temp</span><span class="p">))</span>
+                <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Iter: </span><span class="si">{}</span><span class="s1"> (C)</span><span class="se">\t</span><span class="si">{}</span><span class="s1">: &#39;</span>
+                              <span class="s1">&#39;</span><span class="si">{:.4e}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_iter</span><span class="p">,</span>
+                                              <span class="bp">self</span><span class="o">.</span><span class="n">err_fcn</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                                              <span class="n">err_temp</span><span class="p">))</span>
 
                 <span class="k">if</span> <span class="n">post_half_fcn</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">post_half_fcn</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">C_</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ST_</span><span class="p">,</span> <span class="n">D</span><span class="p">,</span> <span class="n">D_calc</span><span class="p">)</span>
@@ -456,8 +502,8 @@ $(document).ready(function(){
 
                 <span class="c1"># Calculate error fcn and check for tolerance increase</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ismin_err</span><span class="p">(</span><span class="n">err_temp</span><span class="p">):</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">ST_opt_</span> <span class="o">=</span> <span class="mi">1</span><span class="o">*</span><span class="n">ST_temp</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">C_opt_</span> <span class="o">=</span> <span class="mi">1</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">C_</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">ST_opt_</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">*</span> <span class="n">ST_temp</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">C_opt_</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">C_</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">n_iter_opt</span> <span class="o">=</span> <span class="n">num</span> <span class="o">+</span> <span class="mi">1</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">n_above_min</span> <span class="o">=</span> <span class="mi">0</span>
                 <span class="k">else</span><span class="p">:</span>
@@ -465,24 +511,26 @@ $(document).ready(function(){
 
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tol_n_above_min</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_above_min</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">tol_n_above_min</span><span class="p">:</span>
-                        <span class="n">err_str1</span> <span class="o">=</span> <span class="s1">&#39;Half-iterated </span><span class="si">{}</span><span class="s1"> times since min &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_above_min</span><span class="p">)</span>
+                        <span class="n">err_str1</span> <span class="o">=</span> <span class="s1">&#39;Half-iterated </span><span class="si">{}</span><span class="s1"> times &#39;</span> \
+                                   <span class="s1">&#39;since min &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_above_min</span><span class="p">)</span>
                         <span class="n">err_str2</span> <span class="o">=</span> <span class="s1">&#39;error. Exiting.&#39;</span>
-                        <span class="nb">print</span><span class="p">(</span><span class="n">err_str1</span> <span class="o">+</span> <span class="n">err_str2</span><span class="p">)</span>
+                        <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">err_str1</span> <span class="o">+</span> <span class="n">err_str2</span><span class="p">)</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">exit_tol_n_above_min</span> <span class="o">=</span> <span class="kc">True</span>
                         <span class="k">break</span>
 
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">err</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">err</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1</span><span class="o">*</span><span class="n">err_temp</span><span class="p">)</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">ST_</span> <span class="o">=</span> <span class="mi">1</span><span class="o">*</span><span class="n">ST_temp</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">err</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1</span> <span class="o">*</span> <span class="n">err_temp</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">ST_</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">*</span> <span class="n">ST_temp</span>
                 <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">tol_increase</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">err</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1</span><span class="o">*</span><span class="n">err_temp</span><span class="p">)</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">ST_</span> <span class="o">=</span> <span class="mi">1</span><span class="o">*</span><span class="n">ST_temp</span>
-                <span class="k">elif</span> <span class="p">(</span><span class="n">err_temp</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">err</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">tol_increase</span><span class="p">)):</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">err</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1</span><span class="o">*</span><span class="n">err_temp</span><span class="p">)</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">ST_</span> <span class="o">=</span> <span class="mi">1</span><span class="o">*</span><span class="n">ST_temp</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">err</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1</span> <span class="o">*</span> <span class="n">err_temp</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">ST_</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">*</span> <span class="n">ST_temp</span>
+                <span class="k">elif</span> <span class="n">err_temp</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">err</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">tol_increase</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">err</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1</span> <span class="o">*</span> <span class="n">err_temp</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">ST_</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">*</span> <span class="n">ST_temp</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">err_str1</span> <span class="o">=</span> <span class="s1">&#39;Error increased above fractional tol_increase (ST iter). Exiting&#39;</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="n">err_str1</span><span class="p">)</span>
+                    <span class="n">err_str1</span> <span class="o">=</span> <span class="s1">&#39;Error increased above fractional &#39;</span> \
+                               <span class="s1">&#39;tol_increase (ST iter). Exiting&#39;</span>
+                    <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">err_str1</span><span class="p">)</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">exit_tol_increase</span> <span class="o">=</span> <span class="kc">True</span>
                     <span class="k">break</span>
 
@@ -497,12 +545,15 @@ $(document).ready(function(){
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tol_n_increase</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_increase</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">tol_n_increase</span><span class="p">:</span>
                         <span class="n">out_str</span> <span class="o">=</span> <span class="s1">&#39;Maximum error increases reached &#39;</span>
-                        <span class="nb">print</span><span class="p">(</span><span class="n">out_str</span> <span class="o">+</span> <span class="s1">&#39;(</span><span class="si">{}</span><span class="s1">) (ST iter). Exiting.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tol_n_increase</span><span class="p">))</span>
+                        <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">out_str</span> <span class="o">+</span>
+                                     <span class="s1">&#39;(</span><span class="si">{}</span><span class="s1">) (ST iter). &#39;</span>
+                                     <span class="s1">&#39;Exiting.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tol_n_increase</span><span class="p">))</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">exit_tol_n_increase</span> <span class="o">=</span> <span class="kc">True</span>
                         <span class="k">break</span>
 
-                <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Iter: </span><span class="si">{}</span><span class="s1"> (ST)</span><span class="se">\t</span><span class="si">{}</span><span class="s1">: </span><span class="si">{:.4e}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_iter</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">err_fcn</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">err_temp</span><span class="p">))</span>
+                <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Iter: </span><span class="si">{}</span><span class="s1"> (ST)</span><span class="se">\t</span><span class="si">{}</span><span class="s1">: &#39;</span>
+                              <span class="s1">&#39;</span><span class="si">{:.4e}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_iter</span><span class="p">,</span>
+                                              <span class="bp">self</span><span class="o">.</span><span class="n">err_fcn</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">err_temp</span><span class="p">))</span>
 
                 <span class="k">if</span> <span class="n">post_half_fcn</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">post_half_fcn</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">C_</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ST_</span><span class="p">,</span> <span class="n">D</span><span class="p">,</span> <span class="n">D_calc</span><span class="p">)</span>
@@ -511,7 +562,7 @@ $(document).ready(function(){
                     <span class="n">post_iter_fcn</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">C_</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ST_</span><span class="p">,</span> <span class="n">D</span><span class="p">,</span> <span class="n">D_calc</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_iter</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_iter</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Max iterations reached (</span><span class="si">{}</span><span class="s1">).&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">num</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+                <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Max iterations reached (</span><span class="si">{}</span><span class="s1">).&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">num</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">exit_max_iter_reached</span> <span class="o">=</span> <span class="kc">True</span>
                 <span class="k">break</span>
 
@@ -520,44 +571,51 @@ $(document).ready(function(){
             <span class="c1"># Check if err changed (absolute value), per iteration, less</span>
             <span class="c1">#  than abs(tol_err_change)</span>
 
-            <span class="k">if</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">tol_err_change</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">err</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tol_err_change</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">err</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">):</span>
                 <span class="n">err_differ</span> <span class="o">=</span> <span class="n">_np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">err</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">err</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">])</span>
                 <span class="k">if</span> <span class="n">err_differ</span> <span class="o">&lt;</span> <span class="n">_np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tol_err_change</span><span class="p">):</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Change in err below tol_err_change (</span><span class="si">{:.4e}</span><span class="s1">). Exiting.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">err_differ</span><span class="p">))</span>
+                    <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Change in err below tol_err_change &#39;</span>
+                                 <span class="s1">&#39;(</span><span class="si">{:.4e}</span><span class="s1">). Exiting.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">err_differ</span><span class="p">))</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">exit_tol_err_change</span> <span class="o">=</span> <span class="kc">True</span>
                     <span class="k">break</span></div></div>
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+    <span class="c1"># PyMCR uses the Logging facility to capture messaging</span>
+    <span class="c1"># Sends logging messages to stdout (prints them)</span>
+    <span class="n">stdout_handler</span> <span class="o">=</span> <span class="n">_logging</span><span class="o">.</span><span class="n">StreamHandler</span><span class="p">(</span><span class="n">stream</span><span class="o">=</span><span class="n">_sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
+    <span class="n">stdout_format</span> <span class="o">=</span> <span class="n">_logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%(message)s</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">stdout_handler</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">stdout_format</span><span class="p">)</span>
+    <span class="n">_logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">stdout_handler</span><span class="p">)</span>
 
     <span class="n">M</span> <span class="o">=</span> <span class="mi">21</span>
     <span class="n">N</span> <span class="o">=</span> <span class="mi">21</span>
     <span class="n">P</span> <span class="o">=</span> <span class="mi">101</span>
     <span class="n">n_components</span> <span class="o">=</span> <span class="mi">2</span>
 
-    <span class="n">C_img</span> <span class="o">=</span> <span class="n">_np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">M</span><span class="p">,</span><span class="n">N</span><span class="p">,</span><span class="n">n_components</span><span class="p">))</span>
-    <span class="n">C_img</span><span class="p">[</span><span class="o">...</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">_np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">_np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">M</span><span class="p">,</span><span class="mi">1</span><span class="p">)),</span> <span class="n">_np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">N</span><span class="p">)[</span><span class="kc">None</span><span class="p">,:])</span>
-    <span class="n">C_img</span><span class="p">[</span><span class="o">...</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">C_img</span><span class="p">[</span><span class="o">...</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">C_img</span> <span class="o">=</span> <span class="n">_np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">M</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">n_components</span><span class="p">))</span>
+    <span class="n">C_img</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">_np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">_np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">M</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span> <span class="n">_np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">N</span><span class="p">)[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:])</span>
+    <span class="n">C_img</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">C_img</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
 
     <span class="n">St_known</span> <span class="o">=</span> <span class="n">_np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_components</span><span class="p">,</span> <span class="n">P</span><span class="p">))</span>
-    <span class="n">St_known</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">40</span><span class="p">:</span><span class="mi">60</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="n">St_known</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">60</span><span class="p">:</span><span class="mi">80</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">St_known</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">40</span><span class="p">:</span><span class="mi">60</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">St_known</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">60</span><span class="p">:</span><span class="mi">80</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
 
     <span class="n">C_known</span> <span class="o">=</span> <span class="n">C_img</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_components</span><span class="p">))</span>
 
     <span class="n">D_known</span> <span class="o">=</span> <span class="n">_np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">C_known</span><span class="p">,</span> <span class="n">St_known</span><span class="p">)</span>
 
     <span class="n">mcrar</span> <span class="o">=</span> <span class="n">McrAR</span><span class="p">()</span>
-    <span class="n">mcrar</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">D_known</span><span class="p">,</span> <span class="n">ST</span><span class="o">=</span><span class="n">St_known</span><span class="p">)</span>
+    <span class="n">mcrar</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">D_known</span><span class="p">,</span> <span class="n">ST</span><span class="o">=</span><span class="n">St_known</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="c1"># assert_equal(1, mcrar.n_iter_opt)</span>
-    <span class="k">assert</span> <span class="p">((</span><span class="n">mcrar</span><span class="o">.</span><span class="n">D_</span> <span class="o">-</span> <span class="n">D_known</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">1e-10</span>
-    <span class="k">assert</span> <span class="p">((</span><span class="n">mcrar</span><span class="o">.</span><span class="n">D_opt_</span> <span class="o">-</span> <span class="n">D_known</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">1e-10</span>
+    <span class="k">assert</span> <span class="p">((</span><span class="n">mcrar</span><span class="o">.</span><span class="n">D_</span> <span class="o">-</span> <span class="n">D_known</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">1e-10</span>
+    <span class="k">assert</span> <span class="p">((</span><span class="n">mcrar</span><span class="o">.</span><span class="n">D_opt_</span> <span class="o">-</span> <span class="n">D_known</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">1e-10</span>
 
     <span class="n">mcrar</span> <span class="o">=</span> <span class="n">McrAR</span><span class="p">()</span>
     <span class="n">mcrar</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">D_known</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="n">C_known</span><span class="p">)</span>
     <span class="c1"># assert_equal(1, mcrar.n_iter_opt)</span>
-    <span class="k">assert</span> <span class="p">((</span><span class="n">mcrar</span><span class="o">.</span><span class="n">D_</span> <span class="o">-</span> <span class="n">D_known</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">1e-10</span>
-    <span class="k">assert</span> <span class="p">((</span><span class="n">mcrar</span><span class="o">.</span><span class="n">D_opt_</span> <span class="o">-</span> <span class="n">D_known</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">1e-10</span>
+    <span class="k">assert</span> <span class="p">((</span><span class="n">mcrar</span><span class="o">.</span><span class="n">D_</span> <span class="o">-</span> <span class="n">D_known</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">1e-10</span>
+    <span class="k">assert</span> <span class="p">((</span><span class="n">mcrar</span><span class="o">.</span><span class="n">D_opt_</span> <span class="o">-</span> <span class="n">D_known</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">1e-10</span>
 </pre></div>
 
           </div>

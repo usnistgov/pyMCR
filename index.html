@@ -13,7 +13,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Installation" href="installing.html" />
@@ -72,9 +72,9 @@ $(document).ready(function(){
 <div class="line"><br /></div>
 <div class="line"><br /></div>
 </div>
-<a class="reference external image-reference" href="https://travis-ci.com/CCampJr/pyMCR"><img alt="Travis CI Status" src="https://travis-ci.com/CCampJr/pyMCR.svg?branch=0.3.X" /></a>
-<a class="reference external image-reference" href="https://ci.appveyor.com/project/CCampJr/pyMCR"><img alt="AppVeyor CI Status" src="https://ci.appveyor.com/api/projects/status/ajld1bj7jo4oweio/branch/0.3.X?svg=true" /></a>
-<a class="reference external image-reference" href="https://codecov.io/gh/CCampJr/pyMCR"><img alt="Codecov" src="https://codecov.io/gh/CCampJr/pyMCR/branch/0.3.X/graph/badge.svg" /></a>
+<a class="reference external image-reference" href="https://travis-ci.com/CCampJr/pyMCR"><img alt="Travis CI Status" src="https://travis-ci.com/CCampJr/pyMCR.svg?branch=master" /></a>
+<a class="reference external image-reference" href="https://ci.appveyor.com/project/CCampJr/pyMCR"><img alt="AppVeyor CI Status" src="https://ci.appveyor.com/api/projects/status/ajld1bj7jo4oweio/branch/master?svg=true" /></a>
+<a class="reference external image-reference" href="https://codecov.io/gh/CCampJr/pyMCR"><img alt="Codecov" src="https://codecov.io/gh/CCampJr/pyMCR/branch/master/graph/badge.svg" /></a>
 <a class="reference external image-reference" href="https://pypi.org/project/pyMCR/"><img alt="PyPI - Python Version" src="https://img.shields.io/pypi/pyversions/pyMCR.svg" /></a>
 <a class="reference external image-reference" href="https://pypi.org/project/pyMCR/"><img alt="PyPI Project Page" src="https://img.shields.io/pypi/v/pyMCR.svg" /></a>
 <a class="reference external image-reference" href="https://github.com/usnistgov/pyMCR/blob/master/LICENSE.md"><img alt="NIST Public Domain" src="https://img.shields.io/badge/License-NIST%20Public%20Domain-green.svg" /></a>
@@ -175,8 +175,41 @@ some more-advanced MCR-ALS packages.<ul>
 </li>
 </ul>
 </div>
+<div class="section" id="logging">
+<h2>Logging<a class="headerlink" href="#logging" title="Permalink to this headline">¶</a></h2>
+<p><strong>New in pyMCR 0.3.1</strong>, Python’s native logging module is now used to capture messages. Though this is not as
+convenient as print() statements, it has many advantages.</p>
+<ul class="simple">
+<li>Logging module docs: <a class="reference external" href="https://docs.python.org/3.7/library/logging.html">https://docs.python.org/3.7/library/logging.html</a></li>
+<li>Logging tutorial: <a class="reference external" href="https://docs.python.org/3.7/howto/logging.html#logging-basic-tutorial">https://docs.python.org/3.7/howto/logging.html#logging-basic-tutorial</a></li>
+<li>Logging cookbook: <a class="reference external" href="https://docs.python.org/3.7/howto/logging-cookbook.html#logging-cookbook">https://docs.python.org/3.7/howto/logging-cookbook.html#logging-cookbook</a></li>
+</ul>
+<p>A simple example that prints simplified logging messages to the stdout (command line):</p>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="c1"># Need to import pymcr or mcr prior to setting up the logger</span>
+<span class="kn">from</span> <span class="nn">pymcr.mcr</span> <span class="k">import</span> <span class="n">McrAR</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;pymcr&#39;</span><span class="p">)</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
+
+<span class="c1"># StdOut is a &quot;stream&quot;; thus, StreamHandler</span>
+<span class="n">stdout_handler</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">StreamHandler</span><span class="p">(</span><span class="n">stream</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
+
+<span class="c1"># Set the message format. Simple and removing log level or date info</span>
+<span class="n">stdout_format</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%(message)s</span><span class="s1">&#39;</span><span class="p">)</span>  <span class="c1"># Just a basic message akin to print statements</span>
+<span class="n">stdout_handler</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">stdout_format</span><span class="p">)</span>
+
+<span class="n">logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">stdout_handler</span><span class="p">)</span>
+
+<span class="c1"># Begin your code for pyMCR below</span>
+</pre></div>
+</div>
+</div>
 <div class="section" id="basic-usage">
 <h2>Basic Usage<a class="headerlink" href="#basic-usage" title="Permalink to this headline">¶</a></h2>
+<p>See also <a class="reference internal" href="usage.html"><span class="doc">Usage and Examples</span></a>.</p>
 <div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pymcr.mcr</span> <span class="k">import</span> <span class="n">McrAR</span>
 <span class="n">mcrar</span> <span class="o">=</span> <span class="n">McrAR</span><span class="p">()</span>
 
@@ -248,6 +281,7 @@ multivariate curve resolution–alternating least squares (MCR-ALS)”, Nature P
 </li>
 <li><a class="reference internal" href="#available-methods">Available methods</a></li>
 <li><a class="reference internal" href="#software-design-philosophy">Software Design Philosophy</a></li>
+<li><a class="reference internal" href="#logging">Logging</a></li>
 <li><a class="reference internal" href="#basic-usage">Basic Usage</a></li>
 <li><a class="reference internal" href="#example-results">Example Results</a></li>
 <li><a class="reference internal" href="#citing-this-software">Citing this Software</a></li>
