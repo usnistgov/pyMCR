@@ -8,9 +8,11 @@ This document records all notable changes to
 This project adheres to `PEP 440 -- Version Identification 
 and Dependency Specification <https://www.python.org/dev/peps/pep-0440/>`_.
 
-0.3.1
-------
+0.3.1 (19-05-17)
+-----------------
 
+- Implemented logging and removed print() statements
+- Removed Jupyter Notebook from forthcoming pub -- will return in the future with better examples
 - Minor fixes to CI
 
 

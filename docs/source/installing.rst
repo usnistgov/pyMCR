@@ -5,14 +5,14 @@ Installation
 
 Dependencies
 ---------------------
-Note: the versions are those that have been tested, but older/newer
-versions may also work.
+Note: the versions are those that have been tested (at some point), 
+but older/newer versions may also work.
 
-- Python 3.4, 3.5, 3.6 (3.4.4, 3.5.2, 3.6.1), 3.7.1
-- numpy (1.9.3, 1.11.1, 1.11.3+mkl, 1.14.6)
+- Python (3.4, 3.5, 3.6, 3.7)
+- numpy (1.9.3, 1.11.1, 1.11.3+mkl, 1.14.6, 1.16.2)
 - scipy (1.0.0, 1.0.1, 1.1.0)
 - sklearn, optional (0.20)
-- Sphinx (1.4.5, 1.5.2, 1.6.4) -- only for documentation building
+- Sphinx, optional (1.4.5, 1.5.2, 1.6.4, 1.8.4) -- only for documentation building
 
 Notes and Known Issues
 ----------------------
@@ -52,12 +52,9 @@ Git Static copy
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 The documentation was built using Sphinx.::
 
-  # Build all APIs
-  # From within the docs/ directory
-  sphinx-apidoc -o ./source/ ../pymcr/
-
-  # Build API w/o pyuic5-generated files
-  sphinx-apidoc -f -o .\source\ ..\pymcr\ 
+  # From within the docs/ directory (Note: on Windows sphinx-apidoc.exe)
+  # Exclude setup.py from doc-build
+  sphinx-apidoc -f -o ./source/ .. ../setup.py
 
   make html  
   # On Windows
