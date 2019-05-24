@@ -23,7 +23,6 @@ and Dependency Specification <https://www.python.org/dev/peps/pep-0440/>`_.
 -   Added Jupyter Notebook that generates images from forthcoming publication.
 -   Perform semi-learning: assigning some input ST or C components to be static in fit method.
 -   Main class pymcr.mcr.McrAls renamed to pymcr.mcr.McrAR 
-
 -   **Constraints**
 
     -   Non-negative cumulative summation
