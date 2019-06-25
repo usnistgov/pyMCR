@@ -291,6 +291,8 @@ class McrAR:
 
         if verbose:
             _logger.setLevel(_logging.DEBUG)
+        else:
+            _logger.setLevel(_logging.INFO)
 
         # Ensure only C or ST provided
         if (C is None) & (ST is None):
