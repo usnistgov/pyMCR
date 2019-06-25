@@ -8,6 +8,14 @@ This document records all notable changes to
 This project adheres to `PEP 440 -- Version Identification 
 and Dependency Specification <https://www.python.org/dev/peps/pep-0440/>`_.
 
+0.3.2 (19-06-25)
+----------------
+
+- Jupyter Notebook in Examples from `JRes NIST publication <https://doi.org/10.6028/jres.124.018>`_.
+- Minor tweeks and fixes
+- Added Conda-Forge badge
+
+
 0.3.1 (19-05-17)
 -----------------
 
@@ -17,7 +25,7 @@ and Dependency Specification <https://www.python.org/dev/peps/pep-0440/>`_.
 
 
 0.3.0 (19-04-22)
-------
+-----------------
 
 -   Documentation: https://pages.nist.gov/pyMCR or build locally via Sphinx
 -   Added Jupyter Notebook that generates images from forthcoming publication.
