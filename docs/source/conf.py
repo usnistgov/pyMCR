@@ -27,11 +27,13 @@ author = 'Charles H. Camp Jr.'
 
 # The full version, including alpha/beta/rc tags
 # M.m.s
-release = pkg_resources.require('pymcr')[0].version
-print('Release: {}'.format(release))
+release = '0.3.2'
+# release = pkg_resources.require('pymcr')[0].version
+# print('Release: {}'.format(release))
 
 # M.m
-version = release[:release.rfind('.')]
+# version = release[:release.rfind('.')]
+version = '0.3'
 
 print('Version: {}'.format(version))
 
