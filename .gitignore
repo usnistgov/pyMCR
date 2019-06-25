@@ -11,8 +11,9 @@ __pycache__/
 *.xlsx
 *.pickle
 
-# Old Examples
+# Old Examples and outputs
 Examples/Old/
+Examples/outputs/*
 
 # C extensions
 *.so

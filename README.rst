@@ -20,6 +20,10 @@
     :alt: PyPI Project Page
     :target: https://pypi.org/project/pyMCR/
 
+.. image:: https://anaconda.org/conda-forge/pymcr/badges/version.svg
+    :alt: Anaconda Cloud
+    :target: https://anaconda.org/conda-forge/pymcr
+
 .. image:: https://img.shields.io/badge/License-NIST%20Public%20Domain-green.svg
     :alt: NIST Public Domain
     :target: https://github.com/usnistgov/pyMCR/blob/master/LICENSE.md
@@ -28,6 +32,10 @@ pyMCR: Multivariate Curve Resolution in Python
 ===============================================================
 
 Documentation available online at https://pages.nist.gov/pyMCR
+
+Software DOI: https://doi.org/10.18434/M32064
+
+Manuscript DOI: https://doi.org/10.6028/jres.124.018
 
 pyMCR is a small package for performing multivariate curve resolution.
 Currently, it implements a simple alternating regression scheme (MCR-AR). The most common
@@ -233,7 +241,10 @@ From ``Examples/Demo.ipynb``:
 Citing this Software
 --------------------
 
-Coming soon...
+If you use *pyMCR*, citing the following article is much appreciated:
+
+-   `C. H. Camp Jr., "pyMCR: A Python Library for MultivariateCurve Resolution Analysis with Alternating Regression (MCR-AR)", 124, 1-10 (2019).
+    <https://doi.org/10.6028/jres.124.018>_.
 
 
 References
