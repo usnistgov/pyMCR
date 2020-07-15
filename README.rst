@@ -243,7 +243,9 @@ Citing this Software
 
 If you use *pyMCR*, citing the following article is much appreciated:
 
--   `C. H. Camp Jr., "pyMCR: A Python Library for MultivariateCurve Resolution Analysis with Alternating Regression (MCR-AR)", 124, 1-10 (2019).
+-   `C. H. Camp Jr., "pyMCR: A Python Library for Multivariate Curve Resolution 
+    Analysis with Alternating Regression (MCR-AR)", Journal of Research of 
+    National Institute of Standards and Technology 124, 1-10 (2019)
     <https://doi.org/10.6028/jres.124.018>`_.
 
 
