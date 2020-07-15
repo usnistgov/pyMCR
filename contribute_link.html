@@ -1,11 +1,9 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
     <title>Contributing &#8212; pyMCR 0.3.2 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -88,51 +86,54 @@ $(document).ready(function(){
 <h1>Contributing<a class="headerlink" href="#contributing" title="Permalink to this headline">¶</a></h1>
 <p><strong>Thank you for your interest in contributing!</strong> This document is in pre-pre-alpha stage, so feel free to make edits and suggestions through Pull Requests.</p>
 <ul class="simple">
-<li>Until pyMCR gets to v1.0.X; the versioning will increment by 0.1 for every new release that adds new functionality.</li>
-<li>Pull-requests that do not add new functionality, will be merged into the <strong>0.3.X</strong> branch prior to being merged into <strong>master</strong>.</li>
-<li>Functional changes will be merged into the <strong>0.4.X</strong> branch.</li>
-<li><strong>Avoid adding external dependencies</strong> unless absolutely necessary – try to stick to the SciPy stack.</li>
-<li>All functional contributions should have associated tests added to the <em>/pymcr/tests</em> directory.</li>
-<li>Testing is performed via pytest</li>
-<li>Test coverage should be &gt; 90%, with some exceptions</li>
-<li>After contributing, please add your name to the bottom of the README file. No matter how small, all contributors will be recognized.</li>
-<li><a class="reference external" href="https://gist.github.com/CCampJr/dca856a4322c9640f857956ba08161e6">Gist of the release process</a></li>
+<li><p>Until pyMCR gets to v1.0.X; the versioning will increment by 0.1 for every new release that adds new functionality.</p></li>
+<li><p>Pull-requests that do not add new functionality, will be merged into the <strong>0.3.X</strong> branch prior to being merged into <strong>master</strong>.</p></li>
+<li><p>Functional changes will be merged into the <strong>0.4.X</strong> branch.</p></li>
+<li><p><strong>Avoid adding external dependencies</strong> unless absolutely necessary – try to stick to the SciPy stack.</p></li>
+<li><p>All functional contributions should have associated tests added to the <em>/pymcr/tests</em> directory.</p></li>
+<li><p>Testing is performed via pytest</p></li>
+<li><p>Test coverage should be &gt; 90%, with some exceptions</p></li>
+<li><p>After contributing, please add your name to the bottom of the README file. No matter how small, all contributors will be recognized.</p></li>
+<li><p><a class="reference external" href="https://gist.github.com/CCampJr/dca856a4322c9640f857956ba08161e6">Gist of the release process</a></p></li>
 </ul>
 <div class="section" id="style-notes">
 <h2>Style Notes<a class="headerlink" href="#style-notes" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li>External imports (e.g., import numpy as _np) should have a prepended underscore to prevent
+<li><p>External imports (e.g., import numpy as _np) should have a prepended underscore to prevent
 code completion from identifying numpy as belonging to the pymcr module. (Demos and test files
-exempt).</li>
-<li>Avoid all-capitalized variables unless constants.</li>
-<li>For mathematical functions involving matrix math, capitalized and lower-case variables names
-are permissable to distinguish between vectors and matrices.</li>
+exempt).</p></li>
+<li><p>Avoid all-capitalized variables unless constants.</p></li>
+<li><p>For mathematical functions involving matrix math, capitalized and lower-case variables names
+are permissable to distinguish between vectors and matrices.</p></li>
 </ul>
 </div>
 <div class="section" id="commit-messages">
 <h2>Commit Messages<a class="headerlink" href="#commit-messages" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li>I’m working on implementing a standardized notation for commit messages to facilitate auto-changelog. Comments encouraged (send me an email or leave an issue)</li>
+<li><p>I’m working on implementing a standardized notation for commit messages to facilitate auto-changelog. Comments encouraged (send me an email or leave an issue)</p></li>
 </ul>
 <div class="section" id="branches">
 <h3>Branches<a class="headerlink" href="#branches" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li><strong>0.2.X</strong>: Old version<ul>
-<li>Non-new functionality</li>
-<li>Typos in 0.2.X docstrings</li>
+<li><p><strong>0.2.X</strong>: Old version</p>
+<ul>
+<li><p>Non-new functionality</p></li>
+<li><p>Typos in 0.2.X docstrings</p></li>
 </ul>
 </li>
-<li><strong>0.3.X</strong>: Updates to current <strong>master</strong><ul>
-<li>Non-new functionality</li>
-<li>Typos and <strong>master</strong> branch documentation</li>
+<li><p><strong>0.3.X</strong>: Updates to current <strong>master</strong></p>
+<ul>
+<li><p>Non-new functionality</p></li>
+<li><p>Typos and <strong>master</strong> branch documentation</p></li>
 </ul>
 </li>
-<li><strong>0.4.X</strong>: Next version of pyMCR<ul>
-<li>New functionality</li>
-<li>New regressors</li>
-<li>New constraints</li>
-<li>New modules</li>
-<li>Documentation for new features</li>
+<li><p><strong>0.4.X</strong>: Next version of pyMCR</p>
+<ul>
+<li><p>New functionality</p></li>
+<li><p>New regressors</p></li>
+<li><p>New constraints</p></li>
+<li><p>New modules</p></li>
+<li><p>Documentation for new features</p></li>
 </ul>
 </li>
 </ul>
@@ -200,13 +201,11 @@ RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.</p>
     </ul>
    </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>

@@ -1,11 +1,9 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
     <title>API Reference &#8212; pyMCR 0.3.2 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -16,7 +14,7 @@
     <script type="text/javascript" src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="pyMCR" href="modules.html" />
+    <link rel="next" title="usnistgov_pymcr" href="modules.html" />
     <link rel="prev" title="Contributing" href="contribute_link.html" />
 <link rel="stylesheet" href="https://pages.nist.gov/nist-header-footer/css/nist-combined.css">
   <script src="https://code.jquery.com/jquery-1.12.4.min.js" type="text/javascript"></script>
@@ -58,7 +56,7 @@ $(document).ready(function(){
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="modules.html" title="pyMCR"
+          <a href="modules.html" title="usnistgov_pymcr"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="contribute_link.html" title="Contributing"
@@ -82,14 +80,14 @@ See <a class="reference internal" href="genindex.html"><span class="std std-ref"
 <p>Functions to condition / preprocess data</p>
 <div class="section" id="functions">
 <h3>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h3>
-<table border="1" class="longtable docutils">
+<table class="longtable docutils align-default">
 <colgroup>
-<col width="10%" />
-<col width="90%" />
+<col style="width: 10%" />
+<col style="width: 90%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="pymcr.html#pymcr.condition.standardize" title="pymcr.condition.standardize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pymcr.condition.standardize</span></code></a>(X[,&nbsp;mean_ctr,&nbsp;…])</td>
-<td>Standardization of data</td>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="pymcr.html#pymcr.condition.standardize" title="pymcr.condition.standardize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pymcr.condition.standardize</span></code></a>(X[, mean_ctr, …])</p></td>
+<td><p>Standardization of data</p></td>
 </tr>
 </tbody>
 </table>
@@ -102,44 +100,44 @@ See <a class="reference internal" href="genindex.html"><span class="std std-ref"
 or overwrite input depending on copy attribute.</p>
 <div class="section" id="classes">
 <h3>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h3>
-<table border="1" class="longtable docutils">
+<table class="longtable docutils align-default">
 <colgroup>
-<col width="10%" />
-<col width="90%" />
+<col style="width: 10%" />
+<col style="width: 90%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="pymcr.html#pymcr.constraints.ConstraintNonneg" title="pymcr.constraints.ConstraintNonneg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pymcr.constraints.ConstraintNonneg</span></code></a>([copy])</td>
-<td>Non-negativity constraint.</td>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="pymcr.html#pymcr.constraints.ConstraintNonneg" title="pymcr.constraints.ConstraintNonneg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pymcr.constraints.ConstraintNonneg</span></code></a>([copy])</p></td>
+<td><p>Non-negativity constraint.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="pymcr.html#pymcr.constraints.ConstraintCumsumNonneg" title="pymcr.constraints.ConstraintCumsumNonneg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pymcr.constraints.ConstraintCumsumNonneg</span></code></a>([…])</td>
-<td>Cumulative-Summation non-negativity constraint. All negative</td>
+<tr class="row-even"><td><p><a class="reference internal" href="pymcr.html#pymcr.constraints.ConstraintCumsumNonneg" title="pymcr.constraints.ConstraintCumsumNonneg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pymcr.constraints.ConstraintCumsumNonneg</span></code></a>([…])</p></td>
+<td><p>Cumulative-Summation non-negativity constraint. All negative</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="pymcr.html#pymcr.constraints.ConstraintZeroEndPoints" title="pymcr.constraints.ConstraintZeroEndPoints"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pymcr.constraints.ConstraintZeroEndPoints</span></code></a>([…])</td>
-<td>Enforce the endpoints (or the mean over a range) is zero</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="pymcr.html#pymcr.constraints.ConstraintZeroEndPoints" title="pymcr.constraints.ConstraintZeroEndPoints"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pymcr.constraints.ConstraintZeroEndPoints</span></code></a>([…])</p></td>
+<td><p>Enforce the endpoints (or the mean over a range) is zero</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="pymcr.html#pymcr.constraints.ConstraintZeroCumSumEndPoints" title="pymcr.constraints.ConstraintZeroCumSumEndPoints"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pymcr.constraints.ConstraintZeroCumSumEndPoints</span></code></a>([…])</td>
-<td>Enforce the endpoints of the cumsum (or the mean over a range) is near-zero.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="pymcr.html#pymcr.constraints.ConstraintZeroCumSumEndPoints" title="pymcr.constraints.ConstraintZeroCumSumEndPoints"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pymcr.constraints.ConstraintZeroCumSumEndPoints</span></code></a>([…])</p></td>
+<td><p>Enforce the endpoints of the cumsum (or the mean over a range) is near-zero.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="pymcr.html#pymcr.constraints.ConstraintNorm" title="pymcr.constraints.ConstraintNorm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pymcr.constraints.ConstraintNorm</span></code></a>([axis,&nbsp;…])</td>
-<td>Normalization constraint.</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="pymcr.html#pymcr.constraints.ConstraintNorm" title="pymcr.constraints.ConstraintNorm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pymcr.constraints.ConstraintNorm</span></code></a>([axis, …])</p></td>
+<td><p>Normalization constraint.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="pymcr.html#pymcr.constraints.ConstraintReplaceZeros" title="pymcr.constraints.ConstraintReplaceZeros"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pymcr.constraints.ConstraintReplaceZeros</span></code></a>([…])</td>
-<td>Samples that sum-to-zero across axis are replaced with a vector of 0’s except for a 1 at feature if a single value.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="pymcr.html#pymcr.constraints.ConstraintReplaceZeros" title="pymcr.constraints.ConstraintReplaceZeros"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pymcr.constraints.ConstraintReplaceZeros</span></code></a>([…])</p></td>
+<td><p>Samples that sum-to-zero across axis are replaced with a vector of 0’s except for a 1 at feature if a single value.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="pymcr.html#pymcr.constraints.ConstraintCutBelow" title="pymcr.constraints.ConstraintCutBelow"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pymcr.constraints.ConstraintCutBelow</span></code></a>([…])</td>
-<td>Cut values below (and not-equal to) a certain threshold.</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="pymcr.html#pymcr.constraints.ConstraintCutBelow" title="pymcr.constraints.ConstraintCutBelow"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pymcr.constraints.ConstraintCutBelow</span></code></a>([…])</p></td>
+<td><p>Cut values below (and not-equal to) a certain threshold.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="pymcr.html#pymcr.constraints.ConstraintCompressBelow" title="pymcr.constraints.ConstraintCompressBelow"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pymcr.constraints.ConstraintCompressBelow</span></code></a>([…])</td>
-<td>Compress values below (and not-equal to) a certain threshold (set to value)</td>
+<tr class="row-even"><td><p><a class="reference internal" href="pymcr.html#pymcr.constraints.ConstraintCompressBelow" title="pymcr.constraints.ConstraintCompressBelow"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pymcr.constraints.ConstraintCompressBelow</span></code></a>([…])</p></td>
+<td><p>Compress values below (and not-equal to) a certain threshold (set to value)</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="pymcr.html#pymcr.constraints.ConstraintCutAbove" title="pymcr.constraints.ConstraintCutAbove"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pymcr.constraints.ConstraintCutAbove</span></code></a>([…])</td>
-<td>Cut values above (and not-equal to) a certain threshold</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="pymcr.html#pymcr.constraints.ConstraintCutAbove" title="pymcr.constraints.ConstraintCutAbove"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pymcr.constraints.ConstraintCutAbove</span></code></a>([…])</p></td>
+<td><p>Cut values above (and not-equal to) a certain threshold</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="pymcr.html#pymcr.constraints.ConstraintCompressAbove" title="pymcr.constraints.ConstraintCompressAbove"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pymcr.constraints.ConstraintCompressAbove</span></code></a>([…])</td>
-<td>Compress values above (and not-equal to) a certain threshold (set to value)</td>
+<tr class="row-even"><td><p><a class="reference internal" href="pymcr.html#pymcr.constraints.ConstraintCompressAbove" title="pymcr.constraints.ConstraintCompressAbove"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pymcr.constraints.ConstraintCompressAbove</span></code></a>([…])</p></td>
+<td><p>Compress values above (and not-equal to) a certain threshold (set to value)</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="pymcr.html#pymcr.constraints.ConstraintPlanarize" title="pymcr.constraints.ConstraintPlanarize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pymcr.constraints.ConstraintPlanarize</span></code></a>(…[,&nbsp;…])</td>
-<td>Set a particular target to a plane</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="pymcr.html#pymcr.constraints.ConstraintPlanarize" title="pymcr.constraints.ConstraintPlanarize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pymcr.constraints.ConstraintPlanarize</span></code></a>(…[, …])</p></td>
+<td><p>Set a particular target to a plane</p></td>
 </tr>
 </tbody>
 </table>
@@ -150,14 +148,14 @@ or overwrite input depending on copy attribute.</p>
 <p>MCR Main Class for Computation</p>
 <div class="section" id="id1">
 <h3>Classes<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
-<table border="1" class="longtable docutils">
+<table class="longtable docutils align-default">
 <colgroup>
-<col width="10%" />
-<col width="90%" />
+<col style="width: 10%" />
+<col style="width: 90%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="pymcr.html#pymcr.mcr.McrAR" title="pymcr.mcr.McrAR"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pymcr.mcr.McrAR</span></code></a>([c_regr,&nbsp;st_regr,&nbsp;…])</td>
-<td>Multivariate Curve Resolution - Alternating Regression</td>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="pymcr.html#pymcr.mcr.McrAR" title="pymcr.mcr.McrAR"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pymcr.mcr.McrAR</span></code></a>([c_regr, st_regr, …])</p></td>
+<td><p>Multivariate Curve Resolution - Alternating Regression</p></td>
 </tr>
 </tbody>
 </table>
@@ -169,14 +167,14 @@ or overwrite input depending on copy attribute.</p>
 <p>All functions must take C, ST, D_actual, D_calculated</p>
 <div class="section" id="id2">
 <h3>Functions<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
-<table border="1" class="longtable docutils">
+<table class="longtable docutils align-default">
 <colgroup>
-<col width="10%" />
-<col width="90%" />
+<col style="width: 10%" />
+<col style="width: 90%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="pymcr.html#pymcr.metrics.mse" title="pymcr.metrics.mse"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pymcr.metrics.mse</span></code></a>(C,&nbsp;ST,&nbsp;D_actual,&nbsp;D_calculated)</td>
-<td>Mean square error</td>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="pymcr.html#pymcr.metrics.mse" title="pymcr.metrics.mse"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pymcr.metrics.mse</span></code></a>(C, ST, D_actual, D_calculated)</p></td>
+<td><p>Mean square error</p></td>
 </tr>
 </tbody>
 </table>
@@ -189,20 +187,20 @@ or overwrite input depending on copy attribute.</p>
 <p>NOTE: <a href="#id4"><span class="problematic" id="id5">coef_</span></a> will be X.T, which is the formalism that scikit-learn follows</p>
 <div class="section" id="id3">
 <h3>Classes<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
-<table border="1" class="longtable docutils">
+<table class="longtable docutils align-default">
 <colgroup>
-<col width="10%" />
-<col width="90%" />
+<col style="width: 10%" />
+<col style="width: 90%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="pymcr.html#pymcr.regressors.LinearRegression" title="pymcr.regressors.LinearRegression"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pymcr.regressors.LinearRegression</span></code></a>()</td>
-<td>Abstract class for linear regression methods</td>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="pymcr.html#pymcr.regressors.LinearRegression" title="pymcr.regressors.LinearRegression"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pymcr.regressors.LinearRegression</span></code></a>()</p></td>
+<td><p>Abstract class for linear regression methods</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="pymcr.html#pymcr.regressors.OLS" title="pymcr.regressors.OLS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pymcr.regressors.OLS</span></code></a>(*args,&nbsp;**kwargs)</td>
-<td>Ordinary least squares regression</td>
+<tr class="row-even"><td><p><a class="reference internal" href="pymcr.html#pymcr.regressors.OLS" title="pymcr.regressors.OLS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pymcr.regressors.OLS</span></code></a>(*args, **kwargs)</p></td>
+<td><p>Ordinary least squares regression</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="pymcr.html#pymcr.regressors.NNLS" title="pymcr.regressors.NNLS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pymcr.regressors.NNLS</span></code></a>(*args,&nbsp;**kwargs)</td>
-<td>Non-negative constrained least squares regression</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="pymcr.html#pymcr.regressors.NNLS" title="pymcr.regressors.NNLS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pymcr.regressors.NNLS</span></code></a>(*args, **kwargs)</p></td>
+<td><p>Non-negative constrained least squares regression</p></td>
 </tr>
 </tbody>
 </table>
@@ -219,23 +217,23 @@ or overwrite input depending on copy attribute.</p>
   <h3><a href="index.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">API Reference</a><ul>
-<li><a class="reference internal" href="#module-pymcr.condition"><code class="docutils literal notranslate"><span class="pre">pymcr.condition</span></code>: Functions to condition / preprocess data</a><ul>
+<li><a class="reference internal" href="#module-pymcr.condition"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pymcr.condition</span></code>: Functions to condition / preprocess data</a><ul>
 <li><a class="reference internal" href="#functions">Functions</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#module-pymcr.constraints"><code class="docutils literal notranslate"><span class="pre">pymcr.constraints</span></code>: Built-in constraints</a><ul>
+<li><a class="reference internal" href="#module-pymcr.constraints"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pymcr.constraints</span></code>: Built-in constraints</a><ul>
 <li><a class="reference internal" href="#classes">Classes</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#module-pymcr.mcr"><code class="docutils literal notranslate"><span class="pre">pymcr.mcr</span></code>: MCR Main Class for Computation</a><ul>
+<li><a class="reference internal" href="#module-pymcr.mcr"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pymcr.mcr</span></code>: MCR Main Class for Computation</a><ul>
 <li><a class="reference internal" href="#id1">Classes</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#module-pymcr.metrics"><code class="docutils literal notranslate"><span class="pre">pymcr.metrics</span></code>: Metrics used in pyMCR</a><ul>
+<li><a class="reference internal" href="#module-pymcr.metrics"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pymcr.metrics</span></code>: Metrics used in pyMCR</a><ul>
 <li><a class="reference internal" href="#id2">Functions</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#module-pymcr.regressors"><code class="docutils literal notranslate"><span class="pre">pymcr.regressors</span></code>: Built-in regression methods</a><ul>
+<li><a class="reference internal" href="#module-pymcr.regressors"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pymcr.regressors</span></code>: Built-in regression methods</a><ul>
 <li><a class="reference internal" href="#id3">Classes</a></li>
 </ul>
 </li>
@@ -248,7 +246,7 @@ or overwrite input depending on copy attribute.</p>
                         title="previous chapter">Contributing</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="modules.html"
-                        title="next chapter">pyMCR</a></p>
+                        title="next chapter">usnistgov_pymcr</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -257,13 +255,11 @@ or overwrite input depending on copy attribute.</p>
     </ul>
    </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
@@ -282,7 +278,7 @@ or overwrite input depending on copy attribute.</p>
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="modules.html" title="pyMCR"
+          <a href="modules.html" title="usnistgov_pymcr"
              >next</a> |</li>
         <li class="right" >
           <a href="contribute_link.html" title="Contributing"

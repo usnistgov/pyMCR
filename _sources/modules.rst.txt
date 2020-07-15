@@ -1,5 +1,5 @@
-pyMCR
-=====
+usnistgov_pymcr
+===============
 
 .. toctree::
    :maxdepth: 4

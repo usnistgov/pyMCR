@@ -1,12 +1,10 @@
 
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
     <title>Index &#8212; pyMCR 0.3.2 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -137,14 +135,14 @@ $(document).ready(function(){
 </li>
       <li><a href="pymcr.html#pymcr.mcr.McrAR.C_opt_">C_opt_ (pymcr.mcr.McrAR attribute)</a>
 </li>
-      <li><a href="pymcr.html#pymcr.regressors.LinearRegression.coef_">coef_ (pymcr.regressors.LinearRegression attribute)</a>
+      <li><a href="pymcr.html#pymcr.regressors.NNLS.coef_">coef_ (pymcr.regressors.NNLS attribute)</a>
 
       <ul>
-        <li><a href="pymcr.html#pymcr.regressors.NNLS.coef_">(pymcr.regressors.NNLS attribute)</a>
-</li>
         <li><a href="pymcr.html#pymcr.regressors.OLS.coef_">(pymcr.regressors.OLS attribute)</a>
 </li>
       </ul></li>
+      <li><a href="pymcr.html#pymcr.regressors.LinearRegression.coef_">coef_() (pymcr.regressors.LinearRegression property)</a>
+</li>
       <li><a href="pymcr.html#pymcr.constraints.Constraint">Constraint (class in pymcr.constraints)</a>
 </li>
       <li><a href="pymcr.html#pymcr.constraints.ConstraintCompressAbove">ConstraintCompressAbove (class in pymcr.constraints)</a>
@@ -177,11 +175,11 @@ $(document).ready(function(){
 <h2 id="D">D</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="pymcr.html#pymcr.mcr.McrAR.D_">D_ (pymcr.mcr.McrAR attribute)</a>
+      <li><a href="pymcr.html#pymcr.mcr.McrAR.D_">D_() (pymcr.mcr.McrAR property)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="pymcr.html#pymcr.mcr.McrAR.D_opt_">D_opt_ (pymcr.mcr.McrAR attribute)</a>
+      <li><a href="pymcr.html#pymcr.mcr.McrAR.D_opt_">D_opt_() (pymcr.mcr.McrAR property)</a>
 </li>
       <li><a href="pymcr.tests.html#pymcr.tests.test_mcr.dataset">dataset() (in module pymcr.tests.test_mcr)</a>
 </li>
@@ -249,7 +247,9 @@ $(document).ready(function(){
 <h2 id="N">N</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="pymcr.html#pymcr.mcr.McrAR.n_features">n_features (pymcr.mcr.McrAR attribute)</a>, <a href="pymcr.html#pymcr.mcr.McrAR.n_features">[1]</a>
+      <li><a href="pymcr.html#pymcr.mcr.McrAR.n_features">n_features (pymcr.mcr.McrAR attribute)</a>
+</li>
+      <li><a href="pymcr.html#pymcr.mcr.McrAR.n_features">n_features() (pymcr.mcr.McrAR property)</a>
 </li>
       <li><a href="pymcr.html#pymcr.mcr.McrAR.n_iter">n_iter (pymcr.mcr.McrAR attribute)</a>
 </li>
@@ -257,9 +257,13 @@ $(document).ready(function(){
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="pymcr.html#pymcr.mcr.McrAR.n_samples">n_samples (pymcr.mcr.McrAR attribute)</a>, <a href="pymcr.html#pymcr.mcr.McrAR.n_samples">[1]</a>
+      <li><a href="pymcr.html#pymcr.mcr.McrAR.n_samples">n_samples (pymcr.mcr.McrAR attribute)</a>
 </li>
-      <li><a href="pymcr.html#pymcr.mcr.McrAR.n_targets">n_targets (pymcr.mcr.McrAR attribute)</a>, <a href="pymcr.html#pymcr.mcr.McrAR.n_targets">[1]</a>
+      <li><a href="pymcr.html#pymcr.mcr.McrAR.n_samples">n_samples() (pymcr.mcr.McrAR property)</a>
+</li>
+      <li><a href="pymcr.html#pymcr.mcr.McrAR.n_targets">n_targets (pymcr.mcr.McrAR attribute)</a>
+</li>
+      <li><a href="pymcr.html#pymcr.mcr.McrAR.n_targets">n_targets() (pymcr.mcr.McrAR property)</a>
 </li>
       <li><a href="pymcr.html#pymcr.regressors.NNLS">NNLS (class in pymcr.regressors)</a>
 </li>
@@ -480,13 +484,11 @@ $(document).ready(function(){
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
