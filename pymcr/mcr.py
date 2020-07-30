@@ -118,6 +118,22 @@ class McrAR:
     exit_tol_n_above_min : bool
         Exited iterations due to maximum number of half-iterations for which
         the error metric increased above the minimum error
+    C : ndarray
+        Initial C matrix estimate. Only provide initial C OR S^T.
+
+    ST : ndarray
+        Initial S^T matrix estimate. Only provide initial C OR S^T.
+
+    st_fix : list
+        The spectral component numbers to keep fixed.
+
+    c_fix : list
+        The concentration component numbers to keep fixed.
+
+    c_first : bool
+        Calculate C first when both C and ST are provided. c_fix and st_fix
+        must also be provided in this circumstance.
+
 
     Notes
     -----
@@ -136,11 +152,31 @@ class McrAR:
                  st_constraints=[ConstraintNonneg()],
                  max_iter=50, err_fcn=mse,
                  tol_increase=0.0, tol_n_increase=10, tol_err_change=None,
-                 tol_n_above_min=10
+                 tol_n_above_min=10, C=None, ST=None, c_fix=None, st_fix=None, c_first=True,
                  ):
         """
         Multivariate Curve Resolution - Alternating Regression
         """
+        # Ensure only C or ST provided
+        if (C is None) & (ST is None):
+            raise TypeError('C or ST estimate must be provided')
+        elif (C is not None) & (ST is not None) & ((c_fix is None) |
+                                                   (st_fix is None)):
+            err_str1 = 'Only C or ST estimate must be provided, '
+            raise TypeError(
+                err_str1 + 'unless c_fix and st_fix are both provided')
+        else:
+            if C is not None:
+                C = _np.asanyarray(C)
+                C = C.reshape([_np.prod([C.shape[:-1]]), -1])
+            if ST is not None:
+                ST = _np.asanyarray(ST)
+                ST = ST.reshape([-1, _np.prod([ST.shape[1:]])])
+            self.C_ = C
+            self.ST_ = ST
+            self.c_fix = c_fix
+            self.st_fix = st_fix
+            self.c_first = c_first
 
         self.max_iter = max_iter
 
@@ -159,9 +195,6 @@ class McrAR:
         self.st_regressor = self._check_regr(st_regr)
         self.c_fit_kwargs = c_fit_kwargs
         self.st_fit_kwargs = st_fit_kwargs
-
-        self.C_ = None
-        self.ST_ = None
 
         self.C_opt_ = None
         self.ST_opt_ = None
@@ -202,6 +235,13 @@ class McrAR:
         else:
             raise ValueError('Input class '
                              '{} does not have a \'fit\' method'.format(mth))
+
+    def transform(self, data, **kwargs):
+        return self.C_opt_
+
+    @property
+    def components_(self):
+        return self.ST_opt_
 
     @property
     def D_(self):
@@ -244,8 +284,7 @@ class McrAR:
         else:
             return ([val > x for x in self.err].count(True) == 0)
 
-    def fit(self, D, C=None, ST=None, st_fix=None, c_fix=None, c_first=True,
-            verbose=False, post_iter_fcn=None, post_half_fcn=None):
+    def fit(self, D, verbose=False, post_iter_fcn=None, post_half_fcn=None):
         """
         Perform MCR-AR. D = CS^T. Solve for C and S^T iteratively.
 
@@ -253,22 +292,6 @@ class McrAR:
         ----------
         D : ndarray
             D matrix
-
-        C : ndarray
-            Initial C matrix estimate. Only provide initial C OR S^T.
-
-        ST : ndarray
-            Initial S^T matrix estimate. Only provide initial C OR S^T.
-
-        st_fix : list
-            The spectral component numbers to keep fixed.
-
-        c_fix : list
-            The concentration component numbers to keep fixed.
-
-        c_first : bool
-            Calculate C first when both C and ST are provided. c_fix and st_fix
-            must also be provided in this circumstance.
 
         verbose : bool
             Log iteration and per-least squares err results. See Notes.
@@ -294,17 +317,6 @@ class McrAR:
         else:
             _logger.setLevel(_logging.INFO)
 
-        # Ensure only C or ST provided
-        if (C is None) & (ST is None):
-            raise TypeError('C or ST estimate must be provided')
-        elif (C is not None) & (ST is not None) & ((c_fix is None) |
-                                                   (st_fix is None)):
-            err_str1 = 'Only C or ST estimate must be provided, '
-            raise TypeError(
-                err_str1 + 'unless c_fix and st_fix are both provided')
-        else:
-            self.C_ = C
-            self.ST_ = ST
 
         self.n_increase = 0
         self.n_above_min = 0
@@ -317,7 +329,7 @@ class McrAR:
             self.n_iter = num + 1
 
             # Both st and c provided, but c_first is False
-            if both_condition & (num == 0) & (not c_first):
+            if both_condition & (num == 0) & (not self.c_first):
                 special_skip_c = True
             else:
                 special_skip_c = False
@@ -333,16 +345,16 @@ class McrAR:
                 C_temp = self.c_regressor.coef_
 
                 # Apply fixed C's
-                if c_fix:
-                    C_temp[:, c_fix] = self.C_[:, c_fix]
+                if self.c_fix:
+                    C_temp[:, self.c_fix] = self.C_[:, self.c_fix]
 
                 # Apply c-constraints
                 for constr in self.c_constraints:
                     C_temp = constr.transform(C_temp)
 
                 # Apply fixed C's
-                if c_fix:
-                    C_temp[:, c_fix] = self.C_[:, c_fix]
+                if self.c_fix:
+                    C_temp[:, self.c_fix] = self.C_[:, self.c_fix]
 
                 D_calc = _np.dot(C_temp, self.ST_)
 
@@ -419,16 +431,16 @@ class McrAR:
                 ST_temp = self.st_regressor.coef_.T
 
                 # Apply fixed ST's
-                if st_fix:
-                    ST_temp[st_fix] = self.ST_[st_fix]
+                if self.st_fix:
+                    ST_temp[self.st_fix] = self.ST_[self.st_fix]
 
                 # Apply ST-constraints
                 for constr in self.st_constraints:
                     ST_temp = constr.transform(ST_temp)
 
                 # Apply fixed ST's
-                if st_fix:
-                    ST_temp[st_fix] = self.ST_[st_fix]
+                if self.st_fix:
+                    ST_temp[self.st_fix] = self.ST_[self.st_fix]
 
                 D_calc = _np.dot(self.C_, ST_temp)
 
