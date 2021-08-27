@@ -1,6 +1,7 @@
 .. -*- mode: rst -*-
 
-.. image:: https://github.com/CCampJr/pyMCR/actions/workflows/python-app.yml/badge.svg)
+.. image:: https://github.com/CCampJr/pyMCR/actions/workflows/python-app.yml/badge.svg
+    :alt: Github Actions CI Status
 
 .. image:: https://travis-ci.com/CCampJr/pyMCR.svg?branch=master
     :alt: Travis CI Status
