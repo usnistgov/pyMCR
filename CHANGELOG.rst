@@ -8,6 +8,13 @@ This document records all notable changes to
 This project adheres to `PEP 440 -- Version Identification 
 and Dependency Specification <https://www.python.org/dev/peps/pep-0440/>`_.
 
+0.3.3 ()
+---------
+
+- Logging setup by default upon importing the library.
+- Updated Jupyter Notebooks to reflect the change to the logging setup
+- Minor bug fixes
+
 0.3.2 (19-06-25)
 ----------------
 
