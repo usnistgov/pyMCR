@@ -8,7 +8,7 @@ with open('README.rst', encoding='utf-8') as f:
     long_description = f.read()
 
 setup(name='pyMCR',
-      version = '0.3.2',
+      version = '0.3.3a0',
       description = 'Multivariate Curve Resolution in Python',
       long_description = long_description,
       url = 'https://github.com/usnistgov/pyMCR',
