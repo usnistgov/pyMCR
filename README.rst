@@ -3,14 +3,6 @@
 .. image:: https://github.com/CCampJr/pyMCR/actions/workflows/python-app.yml/badge.svg
     :alt: Github Actions CI Status
 
-.. image:: https://travis-ci.com/CCampJr/pyMCR.svg?branch=master
-    :alt: Travis CI Status
-    :target: https://travis-ci.com/CCampJr/pyMCR
-
-.. image:: https://ci.appveyor.com/api/projects/status/ajld1bj7jo4oweio/branch/master?svg=true
-    :alt: AppVeyor CI Status
-    :target: https://ci.appveyor.com/project/CCampJr/pyMCR
-
 .. image:: https://codecov.io/gh/CCampJr/pyMCR/branch/master/graph/badge.svg
     :alt: Codecov
     :target: https://codecov.io/gh/CCampJr/pyMCR
