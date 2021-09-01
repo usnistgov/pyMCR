@@ -1,6 +1,5 @@
 """ MCR Main Class for Computation"""
 import sys as _sys
-import copy as _copy
 
 import numpy as _np
 import logging as _logging
@@ -304,6 +303,7 @@ class McrAR:
             the docs.
 
         """
+        D = _np.asanyarray(D)
 
         if verbose:
             _logger.setLevel(_logging.DEBUG)
@@ -314,11 +314,11 @@ class McrAR:
             temp = self.fit_kwargs.get('C')
             if (temp is not None) & (C is None):
                 C = temp
-                
+
             temp = self.fit_kwargs.get('ST')
             if (temp is not None) & (ST is None):
                 ST = temp
-            
+
             temp = self.fit_kwargs.get('st_fix')
             if (temp is not None) & (st_fix is None):
                 st_fix = temp
@@ -344,8 +344,8 @@ class McrAR:
             raise TypeError(
                 err_str1 + 'unless c_fix and st_fix are both provided')
         else:
-            self.C_ = C
-            self.ST_ = ST
+            self.C_ = _np.asanyarray(C) if C is not None else C
+            self.ST_ = _np.asanyarray(ST) if ST is not None else ST
 
         self.n_increase = 0
         self.n_above_min = 0
