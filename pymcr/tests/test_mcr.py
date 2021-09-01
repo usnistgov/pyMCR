@@ -1,13 +1,12 @@
 import numpy as np
 
 
-from numpy.testing import assert_allclose, assert_equal, assert_array_less
+from numpy.testing import assert_equal
 
 import pytest
 
 import pymcr
 from pymcr.mcr import McrAR
-from pymcr.metrics import mse
 from pymcr.constraints import ConstraintNonneg, ConstraintNorm
 
 @pytest.fixture(scope="function")
