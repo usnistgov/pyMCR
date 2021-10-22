@@ -1,8 +1,9 @@
 .. -*- mode: rst -*-
 
 .. image:: https://github.com/CCampJr/pyMCR/actions/workflows/python-app.yml/badge.svg
-    :alt: Github Actions CI Status
-
+    :alt: pytest
+    :target: https://github.com/CCampJr/pyMCR/actions/workflows/python-app.yml
+    
 .. image:: https://codecov.io/gh/CCampJr/pyMCR/branch/master/graph/badge.svg
     :alt: Codecov
     :target: https://codecov.io/gh/CCampJr/pyMCR
