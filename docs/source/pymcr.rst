@@ -5,6 +5,7 @@ Subpackages
 -----------
 
 .. toctree::
+   :maxdepth: 4
 
    pymcr.tests
 
@@ -50,7 +51,6 @@ pymcr.regressors module
    :members:
    :undoc-members:
    :show-inheritance:
-
 
 Module contents
 ---------------

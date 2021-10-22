@@ -8,6 +8,8 @@ from . import condition
 import sys
 import logging as _logging
 
+from ._version import __version__
+
 _logger = _logging.getLogger('pymcr')
 _logger.setLevel(_logging.DEBUG)
 
@@ -19,3 +21,4 @@ stdout_format = _logging.Formatter('%(message)s')  # Just a basic message akin t
 stdout_handler.setFormatter(stdout_format)
 
 _logger.addHandler(stdout_handler)
+
