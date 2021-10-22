@@ -52,7 +52,6 @@ pymcr.tests.test\_regressors module
    :undoc-members:
    :show-inheritance:
 
-
 Module contents
 ---------------
 

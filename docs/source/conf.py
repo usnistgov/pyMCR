@@ -20,20 +20,24 @@ sys.path.insert(0, os.path.abspath('../..'))
 
 
 # -- Project information -----------------------------------------------------
-
 project = 'pyMCR'
 # copyright = '2019, Charles H. Camp Jr.'
 author = 'Charles H. Camp Jr.'
 
 # The full version, including alpha/beta/rc tags
 # M.m.s
-release = '0.3.2'
+# get __version__ from _version.py
+with open('../../pymcr/_version.py') as f:
+    exec(f.read())
+# VERSION = __version__  # noqa: F821
+
+release = __version__  # noqa: F821
 # release = pkg_resources.require('pymcr')[0].version
 # print('Release: {}'.format(release))
 
 # M.m
-# version = release[:release.rfind('.')]
-version = '0.3'
+version = release[:release.rfind('.')]
+# version = '0.3'
 
 print('Version: {}'.format(version))
 
