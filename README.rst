@@ -166,6 +166,9 @@ Perform the install:
 Logging
 --------
 
+**New in pyMCR 0.4.*, the logging module is now automatically loaded and setup during import (via __init__.py) to print messages**. You do not need to do the logger setup below.
+
+
 **New in pyMCR 0.3.1**, Python's native logging module is now used to capture messages. Though this is not as 
 convenient as print() statements, it has many advantages.
 
