@@ -4,6 +4,7 @@ include LICENSE.md
 include README.rst
 include CONTRIBUTING.rst
 include CHANGELOG.rst
+include requirements.txt
 recursive-include docs *
 prune docs/build
 recursive-include Examples *
