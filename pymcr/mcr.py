@@ -1,5 +1,6 @@
 """ MCR Main Class for Computation"""
 import sys as _sys
+import copy as _copy
 
 import numpy as _np
 import logging as _logging
@@ -29,6 +30,9 @@ class McrAR:
     st_regr : str, class
         Instantiated regression class (or string, see Notes) for calculating
         the S^T matrix
+
+    fit_kwargs : dict
+        kwargs sent to fit and fit_transform methods
 
     c_fit_kwargs : dict
         kwargs sent to c_regr.fit method
@@ -77,6 +81,9 @@ class McrAR:
     ST_ : ndarray [n_targets, n_features]
         Most recently calculated S^T matrix (that did not cause a tolerance
         failure)
+
+    components_ : ndarray [n_targets, n_features]
+        Synonym for ST_, providing sklearn like compatibility
 
     C_opt_ : ndarray [n_samples, n_targets]
         [Optimal] C matrix for lowest err attribute
@@ -131,8 +138,8 @@ class McrAR:
 
     """
 
-    def __init__(self, c_regr=OLS(), st_regr=OLS(), c_fit_kwargs={},
-                 st_fit_kwargs={}, c_constraints=[ConstraintNonneg()],
+    def __init__(self, c_regr=OLS(), st_regr=OLS(), fit_kwargs={},
+                 c_fit_kwargs={}, st_fit_kwargs={}, c_constraints=[ConstraintNonneg()],
                  st_constraints=[ConstraintNonneg()],
                  max_iter=50, err_fcn=mse,
                  tol_increase=0.0, tol_n_increase=10, tol_err_change=None,
@@ -141,6 +148,8 @@ class McrAR:
         """
         Multivariate Curve Resolution - Alternating Regression
         """
+
+        self.fit_kwargs = fit_kwargs
 
         self.max_iter = max_iter
 
@@ -282,6 +291,13 @@ class McrAR:
         Notes
         -----
 
+        -   Parameters to fit will SUPERCEDE anything in fit_kwargs, if provided during McrAR
+            instantiation.
+            -   Note that providing C (or ST) to fit_kwargs and providing ST (or C) to fit or
+                fit_transform will raise an error.
+            -   When in doubt, clear fit_kwargs via self.fit_kwargs = {}
+            -   Does not affect verbose or c_first parameters
+
         -   pyMCR (>= 0.3.1) uses the native Python logging module
             rather than print statements; thus, to see the messages, one will
             need to log-to-file or stream to stdout. More info is available in
@@ -293,6 +309,31 @@ class McrAR:
             _logger.setLevel(_logging.DEBUG)
         else:
             _logger.setLevel(_logging.INFO)
+
+        if self.fit_kwargs:
+            temp = self.fit_kwargs.get('C')
+            if (temp is not None) & (C is None):
+                C = temp
+                
+            temp = self.fit_kwargs.get('ST')
+            if (temp is not None) & (ST is None):
+                ST = temp
+            
+            temp = self.fit_kwargs.get('st_fix')
+            if (temp is not None) & (st_fix is None):
+                st_fix = temp
+
+            temp = self.fit_kwargs.get('c_fix')
+            if (temp is not None) & (c_fix is None):
+                c_fix = temp
+
+            temp = self.fit_kwargs.get('post_iter_fcn')
+            if (temp is not None) & (post_iter_fcn is None):
+                post_iter_fcn = temp
+
+            temp = self.fit_kwargs.get('post_half_fcn')
+            if (temp is not None) & (post_iter_fcn is None):
+                post_half_fcn = temp
 
         # Ensure only C or ST provided
         if (C is None) & (ST is None):
@@ -513,6 +554,32 @@ class McrAR:
                     self.exit_tol_err_change = True
                     break
 
+    def fit_transform(self, D, **kwargs):
+        """
+        This performs the same purpose as the fit method, but returns the C_ matrix.
+        Really, it's just to enable sklearn-expectant APIs compatible with pyMCR.
+
+        It is recommended to use the fit method and retrieve your results from C_ and ST_
+
+        See documentation for the fit method
+
+        Returns
+        --------
+
+        C_ : ndarray
+            C-matrix is returned
+
+        """
+
+        self.fit(D, **kwargs)
+
+        return self.C_
+
+    @property
+    def components_(self):
+        """ This is just provided for sklearn-like functionality """
+
+        return self.ST_
 
 if __name__ == '__main__':  # pragma: no cover
     # PyMCR uses the Logging facility to capture messaging

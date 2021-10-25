@@ -8,6 +8,17 @@ This document records all notable changes to
 This project adheres to `PEP 440 -- Version Identification 
 and Dependency Specification <https://www.python.org/dev/peps/pep-0440/>`_.
 
+0.5.0 (21-10-25)
+-----------------
+
+-   Providing sklearn-like features
+    -   Added fit_transform method that acts like the `sklearn NMF fit_transform 
+        method <https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.NMF.html#sklearn.decomposition.NMF.fit>`_.
+        -   Returns C_
+    -   Added components_ attribute, which is synonymous with ST_
+    -   Added fit_kwargs parameter to McrAR that will pass forward to the fit and fit_transform methods
+    -   One can, e.g., set the ST or C guess from instantiation instead of calling fit or fit_transform
+
 0.4.0 (21-10-22)
 -----------------
 
