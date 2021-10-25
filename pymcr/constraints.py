@@ -72,13 +72,13 @@ class ConstraintCumsumNonneg(Constraint):
 
     def transform(self, A):
         """ Apply cumsum nonnegative constraint"""
-        
+
         if self.copy:
             return A*(_np.cumsum(A, self.axis) > 0)
         else:
             A *= (_np.cumsum(A, self.axis) > 0)
             return A
-        
+
 
 class ConstraintZeroEndPoints(Constraint):
     """
@@ -168,7 +168,7 @@ class ConstraintZeroCumSumEndPoints(Constraint):
     def __init__(self, nodes=None, axis=-1, copy=False):
         """ A must be non-negative"""
         super().__init__(copy)
-        
+
         self.nodes = nodes
         if [0, 1, -1].count(axis) != 1:
             raise TypeError('Axis must be 0, 1, or -1')
@@ -177,7 +177,7 @@ class ConstraintZeroCumSumEndPoints(Constraint):
 
     def transform(self, A):
         """ Apply cumsum nonnegative constraint"""
-        
+
         meaner = A.mean(self.axis)
 
         if self.nodes:
@@ -227,7 +227,7 @@ class ConstraintZeroCumSumEndPoints(Constraint):
                 else:
                     A -= meaner[:, None]
                     return A
-      
+
 
 class ConstraintNorm(Constraint):
     """
@@ -282,7 +282,7 @@ class ConstraintNorm(Constraint):
 
     def transform(self, A):
         """ Apply normalization constraint """
-        
+
         if self.copy:
             if self.axis == 0:
                 if not self.fix:  # No fixed axes
@@ -311,7 +311,7 @@ class ConstraintNorm(Constraint):
 
                     return A * scaler
         else:  # Overwrite original data
-            if A.dtype != _np.float:
+            if A.dtype != float:
                 raise TypeError('A.dtype must be float for',
                                 'in-place math (copy=False)')
 
@@ -412,7 +412,7 @@ class ConstraintReplaceZeros(Constraint):
                 return A
         else:
             return A
-        
+
 
 class _CutExclude(Constraint):
     """
@@ -447,7 +447,7 @@ class _CutExclude(Constraint):
     def _make_excl_mat(self, A_shape):
         X, Y = _np.meshgrid(_np.arange(A_shape[1]), _np.arange(A_shape[0]))
         if self.exclude is None:
-            self._excl_mat = _np.zeros(X.shape, dtype=_np.bool)
+            self._excl_mat = _np.zeros(X.shape, dtype=bool)
         else:
             if self.exclude_axis == 0:
                 self._excl_mat = _np.in1d(Y.ravel(), self.exclude).reshape(Y.shape)
@@ -594,7 +594,7 @@ class ConstraintCompressAbove(Constraint):
 
     def transform(self, A):
         """ Apply compress-above value constraint"""
-        
+
         if self.copy:
             return A*(A <= self.value) + self.value*(A > self.value)
         else:
@@ -602,7 +602,7 @@ class ConstraintCompressAbove(Constraint):
             A *= (A <= self.value)
             A += temp
             return A
-        
+
 class ConstraintPlanarize(Constraint):
     """
     Set a particular target to a plane
@@ -669,8 +669,8 @@ class ConstraintPlanarize(Constraint):
     def _setup_xy(self, scaler):
 
         self.scaler = scaler
-        self._x = scaler*_np.arange(self.shape[1], dtype=_np.float)
-        self._y = scaler*_np.arange(self.shape[0], dtype=_np.float)
+        self._x = scaler*_np.arange(self.shape[1], dtype=float)
+        self._y = scaler*_np.arange(self.shape[0], dtype=float)
 
         self._X, self._Y = _np.meshgrid(self._x, self._y)
         self._X = self._X.ravel()
@@ -678,7 +678,7 @@ class ConstraintPlanarize(Constraint):
 
     def transform(self, A):
         """ Set targets, t, to fit planes """
-        
+
         if (self.scaler is None) | (self.recalc):
             self._setup_xy(1e3 * _np.abs(A.max() - A.min()))
 
@@ -726,11 +726,11 @@ class ConstraintPlanarize(Constraint):
             return A2
         else:
             return A
-        
+
 
 if __name__ == '__main__':  # pragma: no cover
-    A = _np.array([[1, 2, 3, 4], [4, 5, 6, 7], [7, 8, 9, 10]]).astype(_np.float)
-    A_transform = _np.array([[1, 2, 3, 4], [4, 0, 0, 0], [0, 0, 0, 0]]).astype(_np.float)
+    A = _np.array([[1, 2, 3, 4], [4, 5, 6, 7], [7, 8, 9, 10]]).astype(float)
+    A_transform = _np.array([[1, 2, 3, 4], [4, 0, 0, 0], [0, 0, 0, 0]]).astype(float)
 
     constr = ConstraintCutAbove(copy=True, value=4)
     out = constr.transform(A)
