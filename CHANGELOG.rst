@@ -8,6 +8,11 @@ This document records all notable changes to
 This project adheres to `PEP 440 -- Version Identification 
 and Dependency Specification <https://www.python.org/dev/peps/pep-0440/>`_.
 
+0.5.1 (21-10-25)
+-----------------
+
+-   Fixed numpy deprecated dtype specifications
+
 0.5.0 (21-10-25)
 -----------------
 
@@ -22,29 +27,29 @@ and Dependency Specification <https://www.python.org/dev/peps/pep-0440/>`_.
 0.4.0 (21-10-22)
 -----------------
 
-- Moved to Github actions for CD
-- Logging setup by default upon importing the library.
-- Updated Jupyter Notebooks to reflect the change to the logging setup
-- Minor bug fixes
+-   Moved to Github actions for CD
+-   Logging setup by default upon importing the library.
+-   Updated Jupyter Notebooks to reflect the change to the logging setup
+-   Minor bug fixes
 
 0.3.3 (21-10-22)
 -----------------
-- Moved to Github actions for CI
+-   Moved to Github actions for CI
 
 0.3.2 (19-06-25)
 ----------------
 
-- Jupyter Notebook in Examples from `JRes NIST publication <https://doi.org/10.6028/jres.124.018>`_.
-- Minor tweeks and fixes
-- Added Conda-Forge badge
+-   Jupyter Notebook in Examples from `JRes NIST publication <https://doi.org/10.6028/jres.124.018>`_.
+-   Minor tweeks and fixes
+-   Added Conda-Forge badge
 
 
 0.3.1 (19-05-17)
 -----------------
 
-- Implemented logging and removed print() statements
-- Removed Jupyter Notebook from forthcoming pub -- will return in the future with better examples
-- Minor fixes to CI
+-   Implemented logging and removed print() statements
+-   Removed Jupyter Notebook from forthcoming pub -- will return in the future with better examples
+-   Minor fixes to CI
 
 
 0.3.0 (19-04-22)
