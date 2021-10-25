@@ -36,6 +36,14 @@ pymcr.tests.test\_mcr module
    :undoc-members:
    :show-inheritance:
 
+pymcr.tests.test\_mcr\_sklearn\_like module
+-------------------------------------------
+
+.. automodule:: pymcr.tests.test_mcr_sklearn_like
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 pymcr.tests.test\_metrics module
 --------------------------------
 
