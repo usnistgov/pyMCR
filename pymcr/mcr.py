@@ -373,6 +373,9 @@ class McrAR:
                 self.c_regressor.fit(self.ST_.T, D.T, **self.c_fit_kwargs)
                 C_temp = self.c_regressor.coef_
 
+                # Remove Nan values in C_temp
+                C_temp = _np.nan_to_num(C_temp)
+                
                 # Apply fixed C's
                 if c_fix:
                     C_temp[:, c_fix] = self.C_[:, c_fix]
