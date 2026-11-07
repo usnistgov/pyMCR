@@ -10,7 +10,7 @@ from numpy.testing import (assert_equal, assert_array_equal,
 
 try:
     from sklearn.linear_model import LinearRegression, Ridge
-except:
+except ImportError:
     flag_sklearn = False
 else:
     flag_sklearn = True
